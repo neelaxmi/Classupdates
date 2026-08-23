@@ -1,354 +1,569 @@
- <html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Title & SEO Description -->
-    <title>SAKSHAM | THE OWNER - Class Updates</title>
-    <meta name="description" content="Welcome to the official profile of Saksham, owner of Class Updates. Stay updated with the latest educational resources, class news, and exclusive content.">
-    <link rel="canonical" href="https://classupdates.netlify.app/">
-    
-    <!-- Social Media (Open Graph) - Makes links look good when shared -->
-    <meta property="og:title" content="SAKSHAM | THE OWNER">
-    <meta property="og:description" content="Official profile of Saksham, owner of Class Updates.">
-    <meta property="og:url" content="https://classupdates.netlify.app/">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="/pictures/owner.jpg">
-    
-    <!-- Search Engine Verification -->
-    <meta name="google-site-verification" content="iatylsdA3ilcUEyKshZLLZmpDIh6TMUdj7qjgoLTWxw">
-    <meta name="google-site-verification" content="rWdQ0z5hXY23RxW5JVZ0ids6fLyKLO7EWaZbx6yByVs">
-    
-    <!-- Browser & App Settings -->
-    <meta name="theme-color" content="#0f172a">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Class Updates">
-    <link rel="manifest" href="/manifest.json">
-    <link rel="icon" type="image/jpeg" href="/pictures/owner.jpg">
-    <link rel="apple-touch-icon" href="/pictures/owner.jpg">
-    
-    <!-- Combined Fonts & Styles -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="/css/owner.css">
-    
-    <!-- Scripts -->
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1485462286791974" crossorigin="anonymous"></script>
+    <title>MRIDUL // SAKSHAM — Elite Coder & Tech Innovator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- GSAP & ScrollTrigger CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Three.js CDN for Cyberpunk 3D Background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Google Fonts: Fira Code & Orbitron -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cyberDark: '#050505',
+                        cyberCard: 'rgba(10, 15, 25, 0.75)',
+                        cyberGreen: '#00ff66',
+                        cyberBlue: '#00f0ff',
+                        cyberSaffron: '#ff9900',
+                    },
+                    fontFamily: {
+                        orbitron: ['Orbitron', 'sans-serif'],
+                        fira: ['Fira Code', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #050505;
+            color: #e2e8f0;
+            font-family: 'Fira Code', monospace;
+            overflow-x: hidden;
+            cursor: none;
+        }
+        /* Custom Futuristic Cursor */
+        .cursor-dot, .cursor-circle {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #00ff66;
+        }
+        .cursor-circle {
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(0, 240, 255, 0.6);
+            background-color: rgba(0, 240, 255, 0.05);
+        }
+        /* Glowing Utilities */
+        .glow-green { text-shadow: 0 0 10px rgba(0,255,102,0.6), 0 0 20px rgba(0,255,102,0.3); }
+        .glow-blue { text-shadow: 0 0 10px rgba(0,240,255,0.6), 0 0 20px rgba(0,240,255,0.3); }
+        .glow-saffron { text-shadow: 0 0 10px rgba(255,153,0,0.6), 0 0 20px rgba(255,153,0,0.3); }
+        .box-glow-blue { box-shadow: 0 0 20px rgba(0, 240, 255, 0.15), inset 0 0 15px rgba(0, 240, 255, 0.05); }
+        .box-glow-green { box-shadow: 0 0 20px rgba(0, 255, 102, 0.15), inset 0 0 15px rgba(0, 255, 102, 0.05); }
+        
+        /* Glassmorphism */
+        .glass-panel {
+            background: rgba(10, 14, 23, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 240, 255, 0.15);
+        }
+        .glass-panel:hover {
+            border-color: rgba(0, 255, 102, 0.4);
+        }
+
+        /* Glitch Animation */
+        .glitch {
+            position: relative;
+        }
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+        }
+        .glitch::before {
+            left: 2px; text-shadow: -2px 0 #ff0055; clip: rect(44px, 450px, 56px, 0); animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        .glitch::after {
+            left: -2px; text-shadow: -2px 0 #00f0ff; clip: rect(85px, 450px, 140px, 0); animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-anim {
+            0% { clip: rect(31px, 9999px, 94px, 0); }
+            20% { clip: rect(112px, 9999px, 76px, 0); }
+            40% { clip: rect(85px, 9999px, 5px, 0); }
+            60% { clip: rect(27px, 9999px, 119px, 0); }
+            80% { clip: rect(64px, 9999px, 99px, 0); }
+            100% { clip: rect(12px, 9999px, 45px, 0); }
+        }
+        @keyframes glitch-anim2 {
+            0% { clip: rect(76px, 9999px, 12px, 0); }
+            20% { clip: rect(34px, 9999px, 89px, 0); }
+            40% { clip: rect(98px, 9999px, 23px, 0); }
+            60% { clip: rect(14px, 9999px, 67px, 0); }
+            80% { clip: rect(52px, 9999px, 110px, 0); }
+            100% { clip: rect(89px, 9999px, 4px, 0); }
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #00f0ff55; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00ff66; }
+    </style>
 </head>
+<body class="selection:bg-cyberGreen selection:text-black">
 
-<body>
+    <!-- Custom Cursor Elements -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-circle" id="cursor-circle"></div>
 
-    <div id="cursor"></div>
-    
-    <div id="cursor-dot"></div>
-    <div id="progress"></div>
-    <div class="vfx-overlay"></div>
-    <div id="map-bg"></div>
+    <!-- 3D Three.js Interactive Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
 
-    <div id="vanta-bg"></div>
-    
-    
+    <!-- Top Navigation Header -->
+    <header class="fixed top-0 left-0 w-full z-50 glass-panel border-b border-cyberBlue/20 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <div class="w-3 h-3 bg-cyberGreen rounded-full animate-ping"></div>
+            <span class="font-orbitron font-bold text-cyberBlue tracking-wider text-lg">SYSTEM//MRIDUL.EXE</span>
+        </div>
+        <nav class="hidden md:flex space-x-8 text-sm text-slate-300">
+            <a href="#about" class="hover:text-cyberGreen transition-colors">// 01.CORE</a>
+            <a href="#metrics" class="hover:text-cyberBlue transition-colors">// 02.METRICS</a>
+            <a href="#projects" class="hover:text-cyberSaffron transition-colors">// 03.TERMINAL</a>
+            <a href="#attributes" class="hover:text-cyberGreen transition-colors">// 04.ATTRIBUTES</a>
+        </nav>
+        <div class="text-xs font-mono text-cyberGreen border border-cyberGreen/40 px-3 py-1 rounded bg-cyberGreen/10">
+            STATUS: ONLINE
+        </div>
+    </header>
 
-    <section id="home">
-      
-        <div class="hero-content">
-
-            <h2 data-aos="fade-down"> INFO ABOUT OWNER....</h2>
-            <h1 class="glitch" data-text="SAKSHAM">SAKSHAM</h1>
-            <p style="color: #ccc; margin-top: 1rem; font-size: 1.2rem; text-shadow: 1px 1px 2px black;">
-                <span id="typewriter"></span><span class="cursor-blink">|</span>
+    <!-- Hero Section -->
+    <section class="min-h-screen flex flex-col justify-center items-center px-4 pt-24 relative">
+        <div class="max-w-4xl text-center z-10">
+            <div class="inline-block mb-4 px-4 py-1 rounded-full border border-cyberSaffron/50 bg-cyberSaffron/10 text-cyberSaffron text-xs tracking-widest uppercase">
+                ⚡ NO MERCY. POLITICS IS IN THE BLOOD.
+            </div>
+            <h1 class="font-orbitron text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight mb-4 glitch" data-text="MRIDUL (SAKSHAM)">
+                MRIDUL <span class="text-cyberBlue">(SAKSHAM)</span>
+            </h1>
+            <p class="text-lg sm:text-xl text-cyberGreen font-mono mb-6 glow-green">
+                &gt; Tech Innovator | EdTech Founder | Coder | Lifter
             </p>
-            
-            <div class="prime-line" data-aos="fade-right">
+            <blockquote class="italic text-slate-400 max-w-lg mx-auto mb-8 border-l-2 border-cyberBlue pl-4 text-sm font-mono">
                 "No one is busy until you are important to them."
+            </blockquote>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#projects" class="px-8 py-3 bg-cyberBlue/10 hover:bg-cyberBlue text-cyberBlue hover:text-black border border-cyberBlue font-orbitron font-bold rounded transition-all duration-300 box-glow-blue">
+                    ACCESS TERMINAL
+                </a>
+                <a href="#metrics" class="px-8 py-3 bg-cyberGreen/10 hover:bg-cyberGreen text-cyberGreen hover:text-black border border-cyberGreen font-orbitron font-bold rounded transition-all duration-300">
+                    VIEW MILESTONES
+                </a>
             </div>
-
-            <div class="badge-container" data-aos="fade-up">
-                
-                <div class="badge">
-                    <img src="/pictures/hindu.jpeg" class="badge-img" alt="Hindu Icon">
-                    HINDU 
-                </div>
-
-                <div class="badge">
-                    <img src="/pictures/rss.jpeg" class="badge-img" alt="RSS Icon">
-                    RSS MEMBER
-                </div>
-
-                <div class="badge">
-                    <img src="/pictures/bjp.jpeg" class="badge-img" alt="BJP Icon">
-                    BJP CORE
-                </div>
-            </div>
-            </div>
+        </div>
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce text-slate-500 text-xs tracking-widest">
+            ↓ SCROLL TO INITIALIZE SEQUENCE
+        </div>
     </section>
 
-    <section id="about">
-        <h2 class="glitch" style="font-size: 3rem;" data-text="PROFILE INFO">PROFILE INFO</h2>
-        
-        <div style="display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 2rem;">
-<div class="terminal-window" data-aos="fade-right" style="flex: 1; min-width: 300px;">
-    <div class="terminal-header">
-        <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
-        <span style="margin-left: auto; color: #555; font-size: 0.8rem;">root@saksham:~/identity</span>
-    </div>
-    <div class="cmd-line">> whoami</div>
-    
-    <div style="padding: 10px; margin-top: 10px;">
-        <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 1.5rem;">
-            IDENTITY: <span class="highlight">SAKSHAM</span><br>
-            CLASS: <span class="highlight">12th Pass-out</span><br>
-            LOCATION: <span class="highlight">UTTAR PRADESH, INDIA</span><br>
-            TARGET: <span class="highlight">NEET (Score: 251 - RELOADING FOR 2026...)</span><br>
-            FUTURE CLASS: <span class="highlight">DOCTOR & PRIME MINISTER</span>
-        </p>
-        
-        <p style="border: 1px solid var(--primary); padding: 1rem; color: var(--primary); font-weight: bold; background: rgba(255, 153, 51, 0.1); font-size: 0.9rem;">
-            ⚠️ WARNING: NO MERCY. POLITICS IS IN THE BLOOD. 🤫
-        </p>
-    </div>
-</div>
+    <!-- Core Identity & Philosophy -->
+    <section id="about" class="py-20 px-6 max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="glass-panel p-8 rounded-xl box-glow-blue relative overflow-hidden">
+                <div class="absolute top-0 right-0 bg-cyberBlue text-black font-orbitron text-xs px-3 py-1 font-bold">CORE.DAT</div>
+                <h2 class="font-orbitron text-2xl font-bold text-cyberBlue mb-4">&gt; OPERATIVE PROFILE</h2>
+                <ul class="space-y-3 text-sm text-slate-300">
+                    <li><strong class="text-white">Real Name:</strong> Mridul (Aliases: Saksham / Saksen)</li>
+                    <li><strong class="text-white">Base Location:</strong> Uttar Pradesh, India</li>
+                    <li><strong class="text-white">Current Objective:</strong> Reloading for NEET UG (Target: Doctor & Prime Minister)</li>
+                    <li><strong class="text-white">Affiliations:</strong> Hindu | RSS Member | BJP Core</li>
+                </ul>
+            </div>
+            <div class="glass-panel p-8 rounded-xl box-glow-green relative overflow-hidden">
+                <div class="absolute top-0 right-0 bg-cyberGreen text-black font-orbitron text-xs px-3 py-1 font-bold">VISION.DAT</div>
+                <h2 class="font-orbitron text-2xl font-bold text-cyberGreen mb-4">&gt; MISSION DIRECTIVE</h2>
+                <p class="text-sm text-slate-300 leading-relaxed mb-4">
+                    Building elite digital architectures and scalable EdTech systems to reshape how knowledge is delivered. Uncompromising work ethic combined with rigorous physical dominance.
+                </p>
+                <div class="flex flex-wrap gap-2 pt-2">
+                    <span class="px-2.5 py-1 bg-cyberGreen/10 text-cyberGreen text-xs rounded border border-cyberGreen/30">EdTech Founder</span>
+                    <span class="px-2.5 py-1 bg-cyberBlue/10 text-cyberBlue text-xs rounded border border-cyberBlue/30">Full-Stack Coder</span>
+                    <span class="px-2.5 py-1 bg-cyberSaffron/10 text-cyberSaffron text-xs rounded border border-cyberSaffron/30">Heavy Lifter</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
-            <div style="flex: 1; min-width: 300px;">
-                <h3 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 1rem; text-shadow: 1px 1px 2px black;">
-                    <i class="fas fa-dumbbell"></i> PHYSICAL ATTRIBUTES
-                </h3>
+    <!-- Massive Milestones & Counters -->
+    <section id="metrics" class="py-20 px-6 bg-gradient-to-b from-transparent via-cyan-950/10 to-transparent">
+        <div class="max-w-6xl mx-auto text-center mb-12">
+            <h2 class="font-orbitron text-3xl font-bold text-cyberBlue mb-2">&gt; SYSTEM TRAFFIC & IMPACT METRICS</h2>
+            <p class="text-slate-400 text-sm">Real-time performance indicators across platforms.</p>
+        </div>
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Counter 1 -->
+            <div class="glass-panel p-8 rounded-xl text-center">
+                <div class="text-4xl md:text-5xl font-orbitron font-black text-cyberGreen mb-2">
+                    <span class="counter" data-target="51000">0</span>+
+                </div>
+                <h3 class="text-sm font-semibold text-white mb-1">Platform Users</h3>
+                <p class="text-xs text-slate-400">Reached in just 15 days on akmsir.netlify.app</p>
+            </div>
+            <!-- Counter 2 -->
+            <div class="glass-panel p-8 rounded-xl text-center">
+                <div class="text-4xl md:text-5xl font-orbitron font-black text-cyberBlue mb-2">
+                    <span class="counter" data-target="5000">0</span>+
+                </div>
+                <h3 class="text-sm font-semibold text-white mb-1">Telegram Community</h3>
+                <p class="text-xs text-slate-400">Active members across student networks</p>
+            </div>
+            <!-- Counter 3 -->
+            <div class="glass-panel p-8 rounded-xl text-center">
+                <div class="text-4xl md:text-5xl font-orbitron font-black text-cyberSaffron mb-2">
+                    <span class="counter" data-target="500">0</span>+
+                </div>
+                <h3 class="text-sm font-semibold text-white mb-1">Personal Channel Base</h3>
+                <p class="text-xs text-slate-400">Dedicated high-engagement subscribers</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ongoing Mega-Projects & Terminal Database -->
+    <section id="projects" class="py-20 px-6 max-w-6xl mx-auto">
+        <div class="text-center mb-12">
+            <h2 class="font-orbitron text-3xl font-bold text-cyberSaffron mb-2">&gt; PROJECT DATABASE [TERMINAL V2.4]</h2>
+            <p class="text-slate-400 text-sm">Flagship startups, web apps, and automated systems.</p>
+        </div>
+
+        <!-- Startup Highlights -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <div class="glass-panel p-6 rounded-xl border-l-4 border-cyberSaffron">
+                <h3 class="font-orbitron text-xl font-bold text-cyberSaffron mb-2">🚀 NEELAXMI (Flagship EdTech)</h3>
+                <p class="text-sm text-slate-300 mb-4">Revolutionizing study materials and education accessibility for thousands of aspirants nationwide with high-performance tools.</p>
+                <a href="https://github.com/neelaxmi" target="_blank" class="text-xs font-mono text-cyberBlue hover:underline">&gt; View GitHub Repository</a>
+            </div>
+            <div class="glass-panel p-6 rounded-xl border-l-4 border-cyberBlue">
+                <h3 class="font-orbitron text-xl font-bold text-cyberBlue mb-2">⚡ JARVIS (AI System)</h3>
+                <p class="text-sm text-slate-300 mb-4">Next-generation automated AI-powered tool currently in development pipeline for seamless study optimization.</p>
+                <span class="text-xs font-mono text-cyberGreen">&gt; STATUS: COMILING CORE...</span>
+            </div>
+        </div>
+
+        {/* Terminal UI Box */}
+        <div class="glass-panel rounded-lg overflow-hidden border border-cyberBlue/30 shadow-2xl">
+            <div class="bg-black/80 px-4 py-2 border-b border-cyberBlue/20 flex items-center justify-between">
+                <div class="flex space-x-2">
+                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+                <span class="text-xs text-slate-400 font-mono">root@saksen-terminal:~#</span>
+                <span class="text-xs text-cyberGreen font-mono">SECURE</span>
+            </div>
+            <div class="p-6 font-mono text-sm space-y-4 max-h-[500px] overflow-y-auto">
+                <p class="text-cyberGreen">&gt; Initializing project database index...</p>
                 
-                <div class="stat-card">
-                    <div class="stat-value">165 KG</div>
-                    <div class="stat-label">Deadlift (District Champion)</div>
-                    <div style="width: 100%; height: 5px; background: #333; margin-top: 10px;">
-                        <div style="width: 95%; height: 100%; background: var(--primary); box-shadow: 0 0 10px var(--primary);"></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                    <!-- Website Items -->
+                    <div class="p-4 bg-black/40 rounded border border-cyberBlue/20 hover:border-cyberBlue transition-all">
+                        <div class="text-cyberBlue font-bold mb-1">AKM Sir Module Discussion</div>
+                        <div class="text-xs text-slate-400 mb-2">Helper module for NEET aspirants.</div>
+                        <a href="https://akmsirdiscussion.netlify.app/" target="_blank" class="text-xs text-cyberGreen hover:underline">&gt; LAUNCH_URL [akmsirdiscussion.netlify.app]</a>
+                    </div>
+                    <div class="p-4 bg-black/40 rounded border border-cyberBlue/20 hover:border-cyberBlue transition-all">
+                        <div class="text-cyberBlue font-bold mb-1">NEET Countdown Timer</div>
+                        <div class="text-xs text-slate-400 mb-2">Real-time countdown and schedule tracker.</div>
+                        <a href="https://neetcountdown2026.netlify.app/" target="_blank" class="text-xs text-cyberGreen hover:underline">&gt; LAUNCH_URL [neetcountdown2026.netlify.app]</a>
+                    </div>
+                    <div class="p-4 bg-black/40 rounded border border-cyberBlue/20 hover:border-cyberBlue transition-all">
+                        <div class="text-cyberBlue font-bold mb-1">Saksen Quiz Corner</div>
+                        <div class="text-xs text-slate-400 mb-2">Interactive testing ground for core topics.</div>
+                        <a href="https://saksenquiz.netlify.app/" target="_blank" class="text-xs text-cyberGreen hover:underline">&gt; LAUNCH_URL [saksenquiz.netlify.app]</a>
+                    </div>
+                    <div class="p-4 bg-black/40 rounded border border-cyberBlue/20 hover:border-cyberBlue transition-all">
+                        <div class="text-cyberBlue font-bold mb-1">Unacademy Class Update</div>
+                        <div class="text-xs text-slate-400 mb-2">Live notification and resource aggregator.</div>
+                        <a href="https://Classupdates.netlify.app/" target="_blank" class="text-xs text-cyberGreen hover:underline">&gt; LAUNCH_URL [Classupdates.netlify.app]</a>
+                    </div>
+                    <div class="p-4 bg-black/40 rounded border border-cyberBlue/20 hover:border-cyberBlue transition-all">
+                        <div class="text-cyberBlue font-bold mb-1">DPP Analysis Tools</div>
+                        <div class="text-xs text-slate-400 mb-2">Performance tracking data analytics suite.</div>
+                        <a href="https://dppanalysis.netlify.app/" target="_blank" class="text-xs text-cyberGreen hover:underline">&gt; LAUNCH_URL [dppanalysis.netlify.app]</a>
+                    </div>
+                    <div class="p-4 bg-black/40 rounded border border-cyberBlue/20 hover:border-cyberBlue transition-all">
+                        <div class="text-cyberBlue font-bold mb-1">Diwali Celebration VFX</div>
+                        <div class="text-xs text-slate-400 mb-2">Immersive holiday interactive light show.</div>
+                        <a href="http://diwalisak.netlify.app/" target="_blank" class="text-xs text-cyberGreen hover:underline">&gt; LAUNCH_URL [diwalisak.netlify.app]</a>
                     </div>
                 </div>
+
+                <div class="border-t border-slate-800 pt-4 mt-4">
+                    <p class="text-cyberSaffron font-bold mb-2">&gt; ACTIVE TELEGRAM AUTOMATION BOTS:</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-3 bg-black/40 rounded border border-cyberSaffron/30">
+                            <span class="text-white font-semibold">Neelaxmi Bot:</span> <a href="https://telegram.me/Saksen_main_bot" target="_blank" class="text-cyberSaffron hover:underline">@Saksen_main_bot</a>
+                        </div>
+                        <div class="p-3 bg-black/40 rounded border border-cyberSaffron/30">
+                            <span class="text-white font-semibold">Lectures Bot:</span> <a href="https://telegram.me/Lecture_extractor2_bot" target="_blank" class="text-cyberSaffron hover:underline">@Lecture_extractor2_bot</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Physical & Mental Attributes (Beyond Coding) -->
+    <section id="attributes" class="py-20 px-6 max-w-6xl mx-auto">
+        <div class="text-center mb-12">
+            <h2 class="font-orbitron text-3xl font-bold text-cyberGreen mb-2">&gt; BEYOND CODING: PHYSICAL & MENTAL STATS</h2>
+            <p class="text-slate-400 text-sm">Peak human performance metrics in strength training and strategy.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Strength Training Stats -->
+            <div class="glass-panel p-8 rounded-xl">
+                <h3 class="font-orbitron text-xl font-bold text-cyberGreen mb-6 flex items-center justify-between">
+                    <span>🏋️ STRENGTH METRICS</span>
+                    <span class="text-xs px-2 py-1 bg-cyberGreen/20 text-cyberGreen rounded">District Champion</span>
+                </h3>
                 
-                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-                    <div class="stat-card" style="flex: 1;">
-                        <div class="stat-value" style="font-size: 1.8rem;">75 KG</div>
-                        <div class="stat-label">Clean & Jerk</div>
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-slate-300">Deadlift</span>
+                            <span class="text-cyberGreen font-bold">165 KG</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
+                            <div class="skill-bar bg-cyberGreen h-full rounded-full transition-all duration-1000" style="width: 0%" data-width="95%"></div>
+                        </div>
                     </div>
-                    <div class="stat-card" style="flex: 1;">
-                        <div class="stat-value" style="font-size: 1.8rem;">55 KG</div>
-                        <div class="stat-label">Snatch</div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-slate-300">Clean & Jerk</span>
+                            <span class="text-cyberBlue font-bold">75 KG</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
+                            <div class="skill-bar bg-cyberBlue h-full rounded-full transition-all duration-1000" style="width: 0%" data-width="70%"></div>
+                        </div>
                     </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-slate-300">Snatch</span>
+                            <span class="text-cyberSaffron font-bold">55 KG</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
+                            <div class="skill-bar bg-cyberSaffron h-full rounded-full transition-all duration-1000" style="width: 55%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mental Sharpness / Chess -->
+            <div class="glass-panel p-8 rounded-xl flex flex-col justify-between">
+                <div>
+                    <h3 class="font-orbitron text-xl font-bold text-cyberBlue mb-4">♟️ TACTICAL SHARPNESS</h3>
+                    <p class="text-sm text-slate-300 mb-6">Strategic calculation tested via rapid and blitz chess match formats.</p>
                     
+                    <div class="bg-black/50 p-6 rounded-lg border border-cyberBlue/30 space-y-3">
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-slate-400">Platform:</span>
+                            <span class="text-white font-bold">Chess.com</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-slate-400">Handle:</span>
+                            <a href="https://www.chess.com/member/sss_saksham21" target="_blank" class="text-cyberBlue hover:underline font-bold">sss_saksham21</a>
+                        </div>
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-slate-400">Status:</span>
+                            <span class="text-cyberGreen font-semibold flex items-center gap-2">
+                                <span class="w-2 h-2 bg-cyberGreen rounded-full animate-pulse"></span> Active Strategist
+                            </span>
+                        </div>
+                    </div>
                 </div>
                 
-                <h3 style="font-family: 'Orbitron'; color: var(--primary); margin-top: 2.5rem; margin-bottom: 1rem; text-shadow: 1px 1px 2px black;">
-                <i class="fas fa-chess-knight"></i> CHESS STATUS
-                </h3>
-                
-                <div class="stat-card">
-    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px;">
-        <div>
-            <div class="stat-value" id="chess-rating">Loading...</div>
-            <div class="stat-label">Rapid Points</div>
-        </div>
-        <div style="text-align: right;">
-            <div class="stat-value" id="chess-rank" style="font-size: 1.1rem; color: #ccc;">---</div>
-            <div class="stat-label">Global Rank</div>
-        </div>
-    </div>
-
-    <div style="width: 100%; height: 1px; background: #333; margin-bottom: 15px;"></div>
-
-    <div style="display: flex; justify-content: space-between; text-align: center;">
-        <div style="flex: 1;">
-            <div id="chess-wins" style="color: #00ff00; font-weight: bold; font-size: 1.3rem; text-shadow: 0 0 5px #00ff00;">0</div>
-            <div class="stat-label" style="font-size: 0.7rem;">WON</div>
-        </div>
-        <div style="flex: 1; border-left: 1px solid #333; border-right: 1px solid #333;">
-            <div id="chess-losses" style="color: #ff3333; font-weight: bold; font-size: 1.3rem; text-shadow: 0 0 5px #ff3333;">0</div>
-            <div class="stat-label" style="font-size: 0.7rem;">LOST</div>
-        </div>
-        <div style="flex: 1;">
-            <div id="chess-winrate" style="color: var(--primary); font-weight: bold; font-size: 1.3rem;">0%</div>
-            <div class="stat-label" style="font-size: 0.7rem;">WIN RATE</div>
-        </div>
-    </div>
-
-    <div style="width: 100%; height: 5px; background: #333; margin-top: 12px; border-radius: 3px; overflow: hidden;">
-        <div id="chess-progress" style="width: 0%; height: 100%; background: var(--primary); box-shadow: 0 0 10px var(--primary); transition: width 1s ease-in-out;"></div>
-    </div>
-</div>
-
+                <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-500 text-center font-mono">
+                    CHESS API CONNECTION: SECURE // REFRESHING DATA...
+                </div>
             </div>
         </div>
     </section>
 
-    <section id="projects">
-        <h2 class="glitch" style="font-size: 3rem;" data-text="DATABASE">DATABASE</h2>
-
-        <div class="stats-grid">
-            <div class="terminal-window" data-aos="flip-left">
-                <div class="terminal-header">
-                    <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
-                    <span style="margin-left: auto; color: #555; font-size: 0.8rem;">root@saksham:~/websites</span>
-                </div>
-                <div class="cmd-line">> ls -la ./projects</div>
-                
-                <div class="project-list">
-                    <div class="project-item"><span>▸ <a href="https://akmsirdiscussion.netlify.app/" target="_blank" class="highlight">AKM SIR MODULE DISCUSSION</a></span> <span class="highlight"> [HELPER ]</span></div>
-                    <div class="project-item"><span>▸ <a href="https://neetcountdown2026.netlify.app/" target="_blank" class="highlight">NEET COUNTDOWN</a></span> <span class="highlight"> [TIMER]</span></div>
-                    <div class="project-item"><span>▸ <a href="https://saksenquiz.netlify.app/" target="_blank" class="highlight">SAKSEN QUIZ CORNER </a></span> <span class="highlight"> [MEGA PROJECT ]</span></div>
-                    <div class="project-item"><span>▸ <a href="http://Classupdates.netlify.app/" target="_blank" class="highlight">UNACADEMY CLASS UPDATE</a></span> <span class="highlight"> [MEGA PROJECT ]</span></div>
-                    <div class="project-item"><span>▸ <a href="https://dppanalysis.netlify.app/" target="_blank" class="highlight">DPP ANALYSIS TOOLS</a></span> <span class="highlight"> [DATA]</span></div>
-                    <div class="project-item"><span>▸ <a href="" target="_blank" class="highlight">DAILY SCHEDULE TRACKER</a></span> <span class="highlight"> [APP]</span></div>
-                    <div class="project-item"><span>▸ <a href="http://diwalisak.netlify.app/" target="_blank" class="highlight">DIWALI CELEBRATION</a></span> <span class="highlight"> [VFX]</span></div>
-                    <div class="project-item" style="color: #666;">▸ [LOADING MORE...]</div>
-                </div>
-            </div>
-
-            <div class="terminal-window" data-aos="flip-right">
-                <div class="terminal-header">
-                    <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
-                    <span style="margin-left: auto; color: #555; font-size: 0.8rem;">root@saksham:~/bots</span>
-                </div>
-                <div class="cmd-line">> ./run_bots.sh</div>
-                
-                <div class="project-list">
-                    <div class="project-item">
-                        <span>▸ <a href="https://telegram.me/Saksen_main_bot" target="_blank" class="highlight">NEELAXMI BOT</a></span>
-                        <span class="highlight"> [RUNNABLE]</span>
-                        <br><span style="font-size: 0.8rem; color: #888;">-- access study material</span>
-                    </div>
-                    <div class="project-item">
-                        <span>▸ <a href="https://telegram.me/Lecture_extractor2_bot" target="_blank" class="highlight">LECTURES BOT</a></span> <span class="highlight"> [RUNNABLE]</span>
-                        <br><span style="font-size: 0.8rem; color: #888;">-- access teachers lectures</span>
-                    </div>
-                    <div class="project-item" style="color: #666;">▸ [COMING MORE SOON...]</div>
-                </div>
-              </div>
-        </div>
-    </section>
-    <footer>
-        <p>CREATED BY SAKSHAM © 2025 | </p>
-        <div style="font-size: 1.5rem; margin-top: 1rem;">
-            <i class="fab fa-instagram" style="margin: 0 10px;"></i>
-            <i class="fab fa-telegram" style="margin: 0 10px;"></i>
-            <i class="fab fa-twitter" style="margin: 0 10px;"></i>
+    <!-- Footer -->
+    <footer class="py-12 px-6 border-t border-cyberBlue/20 text-center text-xs text-slate-500 font-mono">
+        <div class="max-w-4xl mx-auto space-y-4">
+            <p class="text-cyberBlue">&gt; MRIDUL (SAKSHAM) // SYSTEM ARCHITECTURE 2026</p>
+            <p>ALL RIGHTS RESERVED. NO MERCY.</p>
         </div>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.fog.min.js"></script>
-
+    <!-- JavaScript Execution Engine -->
     <script>
-        VANTA.FOG({
-            el: "#vanta-bg",
-            mouseControls: true,
-            touchControls: true,
-            gyroControls: false,
-            minHeight: 200.00,
-            minWidth: 200.00,
-            highlightColor: 0xff9933, // Saffron
-            midtoneColor: 0x138808,   // Green
-            lowlightColor: 0x000000,  // Dark base
-            baseColor: 0x050505,      // Background
-            blurFactor: 0.7,          // Controls smoke density
-            speed: 1.8,               // Controls animation speed
-            zoom: 1.0
-        });
-
-        const cursor = document.getElementById('cursor');
+        // Custom Cursor Movement
         const cursorDot = document.getElementById('cursor-dot');
-        
-        async function fetchChessStats() {
-    const username = 'sss_saksham21'; // <--- Change this
-    try {
-        const response = await fetch(`https://api.chess.com/pub/player/${username}/stats`);
-        const data = await response.json();
-        
-        if (data.chess_rapid) {
-            const rapid = data.chess_rapid;
-            const wins = rapid.record.win;
-            const losses = rapid.record.loss;
-            const draws = rapid.record.draw;
-            const totalGames = wins + losses + draws;
-            const winRate = ((wins / totalGames) * 100).toFixed(1);
+        const cursorCircle = document.getElementById('cursor-circle');
 
-            // Update UI
-            document.getElementById('chess-rating').innerText = rapid.last.rating;
-            document.getElementById('chess-wins').innerText = wins;
-            document.getElementById('chess-losses').innerText = losses;
-            document.getElementById('chess-winrate').innerText = winRate + '%';
-            document.getElementById('chess-progress').style.width = winRate + '%';
-            document.getElementById('chess-rank').innerText = 'Best: ' + rapid.best.rating;
-        }
-    } catch (error) {
-        console.error("Error fetching Chess.com stats:", error);
-        document.getElementById('chess-rating').innerText = "Error";
-    }
-}
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
 
-fetchChessStats();
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
 
-        
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-            cursorDot.style.left = e.clientX + 'px';
-            cursorDot.style.top = e.clientY + 'px';
-        });
-
-        document.addEventListener('mousedown', () => {
-            cursor.style.transform = "scale(0.8)";
-        });
-        document.addEventListener('mouseup', () => {
-            cursor.style.transform = "scale(1)";
-        });
-
-        const text = "CODER | LIFTER | NEET UG STUDENT | SILENTLY WORKING";
-        const typeWriterElement = document.getElementById('typewriter');
-        let i = 0;
-        
-        function typeWriter() {
-            if (i < text.length) {
-                typeWriterElement.innerHTML += text.charAt(i);
-                i++;
-                setTimeout(typeWriter, 100);
-            }
-        }
-        setTimeout(typeWriter, 1000);
-        gsap.registerPlugin(ScrollTrigger);
-
-        gsap.utils.toArray("section").forEach(section => {
-            gsap.from(section.children, {
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top 80%",
-                    toggleActions: "play none none reverse"
-                },
-                y: 50,
-                opacity: 0,
-                duration: 1,
-                stagger: 0.2
+            // Smooth trailing circle animation using GSAP
+            gsap.to(cursorCircle, {
+                left: posX,
+                top: posY,
+                duration: 0.15,
+                ease: "power2.out"
             });
         });
 
-        window.onscroll = function() {
-            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            let scrolled = (winScroll / height) * 100;
-            document.getElementById("progress").style.width = scrolled + "%";
-        };
+        // Hover scale effects on interactive items
+        document.querySelectorAll('a, button, input, .glass-panel').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                cursorCircle.style.transform = 'translate(-50%, -50%) scale(1.6)';
+                cursorCircle.style.backgroundColor = 'rgba(0, 255, 102, 0.1)';
+                cursorCircle.style.borderColor = '#00ff66';
+            });
+            item.addEventListener('mouseleave', () => {
+                cursorCircle.style.transform = 'translate(-50%, -50%) scale(1)';
+                cursorCircle.style.backgroundColor = 'rgba(0, 240, 255, 0.05)';
+                cursorCircle.style.borderColor = 'rgba(0, 240, 255, 0.6)';
+            });
+        });
 
-    </script>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8Q10YQK6DZ"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-8Q10YQK6DZ');
-    </script>
-        <script src="/history.js"></script>
+        // Three.js Interactive Particle Background
+        const canvas = document.getElementById('bg-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
 
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // Create Particle Grid
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 1500;
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for(let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 45;
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.04,
+            color: 0x00f0ff,
+            transparent: true,
+            opacity: 0.7,
+            blending: THREE.AdditiveBlending
+        });
+
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+
+        camera.position.z = 15;
+
+        // Mouse interaction effect on 3D particles
+        let mouseX = 0;
+        let mouseY = 0;
+
+        window.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX / window.innerWidth) - 0.5;
+            mouseY = (event.clientY / window.innerHeight) - 0.5;
+        });
+
+        // Animation Loop
+        const clock = new THREE.Clock();
+        function animateBackground() {
+            const elapsedTime = clock.getElapsedTime();
+
+            particlesMesh.rotation.y = elapsedTime * 0.03 + (mouseX * 0.5);
+            particlesMesh.rotation.x = elapsedTime * 0.02 + (mouseY * 0.5);
+
+            renderer.render(scene, camera);
+            requestAnimationFrame(animateBackground);
+        }
+        animateBackground();
+
+        // Window resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // GSAP ScrollTrigger & Animated Counters
+        document.addEventListener("DOMContentLoaded", () => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Counter Animation
+            const counters = document.querySelectorAll('.counter');
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                
+                ScrollTrigger.create({
+                    trigger: counter,
+                    start: "top 85%",
+                    onEnter: () => {
+                        gsap.to({ val: 0 }, {
+                            val: target,
+                            duration: 2,
+                            ease: "power2.out",
+                            onUpdate: function() {
+                                counter.innerText = Math.floor(this.targets()[0].val).toLocaleString();
+                            }
+                        });
+                    },
+                    once: true
+                });
+            });
+
+            // Strength Progress Bar Animation
+            const skillBars = document.querySelectorAll('.skill-bar');
+            skillBars.forEach(bar => {
+                const targetWidth = bar.getAttribute('data-width');
+                ScrollTrigger.create({
+                    trigger: bar,
+                    start: "top 90%",
+                    onEnter: () => {
+                        bar.style.width = targetWidth;
+                    },
+                    once: true
+                });
+            });
+
+            // Fade-in Stagger for Sections
+            gsap.from(".glass-panel", {
+                scrollTrigger: {
+                    trigger: "#about",
+                    start: "top 80%",
+                },
+                y: 40,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.2,
+                ease: "power3.out"
+            });
+        });
+    </script>
 </body>
-<script src="/js/head-loader.js"></script>
 </html>
