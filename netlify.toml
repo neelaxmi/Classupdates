@@ -13,7 +13,7 @@
     Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
-  for = "/sw-proctor-cache.js"
+  for = "/quiz/sw-proctor-cache.js"
   [headers.values]
     # The service worker file itself should NOT be cached long-term — the
     # browser needs to re-check it on every page load so updates to it are
