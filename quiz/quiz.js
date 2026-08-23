@@ -11,12 +11,8 @@ let timerInterval = null;
 let isPaused = false;
 let currentMode = 'test';
 let checkedQuestions = {};
-
-// True only when the currently-loaded quiz document has `test_quiz: true` in Firebase.
-// This is the single source of truth for all "strict test mode" lockdown behavior:
-// no manual question navigation, no timer customization, no practice/quiz-mode choice.
 let currentQuizIsTest = false;
-let lockedTestDurationMinutes = null; // set from Firebase data when currentQuizIsTest, read directly (not from the <select>) so it can't be tampered with
+let lockedTestDurationMinutes = null; 
 const DEFAULT_TEST_MODE_MINUTES_FALLBACK = 20; // used only if a locked quiz has no durationMinutes set
 
 const quizEls = {
@@ -681,20 +677,40 @@ if (tokenUnlockEls.input) {
 
 const loadQuiz = async (uid) => {
     quizEls.loader.classList.remove('hidden');
-    
-    const doc = await db.collection('quizzes').doc(uid).get();
+
+    let doc = await db.collection('quizzes').doc(uid).get();
+
+    // Not a direct quiz doc ID — see if it's a custom alias/short link
+    // instead (e.g. ?uid=neet-mock-1). Aliases live in a separate
+    // `quiz_aliases` collection mapping slug -> real quiz doc id. Old
+    // ?uid=<realFirestoreId> links resolve on the very first read above and
+    // never touch this extra lookup, so nothing about them changes.
+    if (!doc.exists) {
+        try {
+            const aliasDoc = await db.collection('quiz_aliases').doc(uid).get();
+            if (aliasDoc.exists && aliasDoc.data().quizId) {
+                uid = aliasDoc.data().quizId; // switch to the real doc id for everything below
+                doc = await db.collection('quizzes').doc(uid).get();
+            }
+        } catch (e) {
+            console.warn('Alias lookup failed:', e);
+        }
+    }
+
     if(!doc.exists) {
         document.getElementById('error-text').textContent = "Quiz not found or deleted.";
         document.getElementById('error-message-area').classList.remove('hidden');
         return;
     }
-    const data = doc.data();
 
-    // ===== Pre-Flight Gating Check (Step 0) =====
-    // Must happen before ANYTHING else below — including the resume-attempt
-    // check and showPreQuizInitModal() — so a paid quiz can't be reached by
-    // racing the page load or by a saved in-progress attempt. If unlocked,
-    // this falls straight through to the normal flow beneath it unchanged.
+    // Keep the global currentQuizId (used for progress saves, violation
+    // logs, token gating, etc. elsewhere in this file) pointed at the REAL
+    // doc id too, even when the page was opened via a custom alias link —
+    // so results/leaderboard stay in one place regardless of which link a
+    // student used to get here.
+    currentQuizId = uid;
+
+    const data = doc.data();
     if (data.isPaid === true && !isQuizUnlockedInSession(uid)) {
         quizEls.loader.classList.add('hidden');
         showTokenUnlockModal(uid, data.title, () => loadQuiz(uid));
@@ -705,15 +721,8 @@ const loadQuiz = async (uid) => {
     quizEls.setupTitle.textContent = data.title;
     allQuestions = data.questions.map((q,i)=>({...q, id:`Q${i+1}`}));
 
-    // Strict Test Mode lockdown flag — comes straight from Firebase and is never
-    // settable by anything in the client. Everything below that reads this
-    // variable is defense-in-depth: even if someone re-enables a disabled
-    // <select> via devtools, beginSelectedQuiz() re-forces the values below.
     currentQuizIsTest = data.test_quiz === true;
 
-    // --- MODULE 2: PRACTICE INCORRECT ---
-    // If the dashboard sent us here in retry-incorrect mode, filter the freshly-loaded
-    // question bank down to just the questions the user got wrong on that attempt.
     const urlParams = new URLSearchParams(window.location.search);
     let retryIncorrectActive = false;
     if (urlParams.get('mode') === 'retry-incorrect') {
