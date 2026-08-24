@@ -314,21 +314,22 @@ const submitQuiz = async (isTimeout = false) => {
     resultEls.submit.disabled = true;
     resultEls.submit.innerHTML = '<span class="loader w-4 h-4 border-2 mr-2 inline-block"></span> Processing...';
 
-    // Release the camera and stop the local face-detection loop — proctoring
-    // is only needed while the quiz itself is active.
     if (typeof window.stopProctoring === 'function') window.stopProctoring();
     const proctorViolationCount = (typeof violationCount !== 'undefined') ? violationCount : 0;
     const proctorViolationLog = (typeof violationLog !== 'undefined') ? violationLog : [];
     const autoSubmittedForViolations = proctorViolationCount > 3;
 
     let score = 0;
+    let wrongCount = 0;
     const detailed = questions.map(q => {
         const u = userAnswers[q.id];
         const isCorrect = u === q.answer;
         if(isCorrect) score++;
+        else if (u !== null && u !== undefined) wrongCount++; // answered but wrong (skipped = neither)
         const timeSpent = 20;
         return { qId: q.id, qText: q.question, imageUrl: q.imageUrl || null, userAnswer: u||null, correctAnswer: q.answer, isCorrect, timeSpent };
     });
+    const skippedCount = Math.max(0, questions.length - score - wrongCount);
 
     const totalQuizDuration = questions.length > 0 && questions[0].durationMinutes ? (questions[0].durationMinutes * 60) : (questions.length * 60);
     const totalTimeSpent = totalQuizDuration - timeLeft; 
@@ -338,6 +339,8 @@ const submitQuiz = async (isTimeout = false) => {
         quizId: currentQuizId,
         quizTitle: resultEls.title.textContent,
         score, total: questions.length,
+        wrong: wrongCount,
+        skipped: skippedCount,
         answers: detailed,
         status: autoSubmittedForViolations ? 'Auto-Submitted (Proctoring Violation)' : (isTimeout ? 'Timed Out' : 'Completed'),
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -381,15 +384,193 @@ const submitQuiz = async (isTimeout = false) => {
 function updateSummaryData(data) {
     resultEls.resTitle.textContent = data.quizTitle;
 
-    const pct = Math.round((data.score / data.total) * 100);
-    resultEls.resScore.textContent = `${data.score} / ${data.total}`;
+
+    let wrong = typeof data.wrong === 'number' ? data.wrong : undefined;
+    let skipped = typeof data.skipped === 'number' ? data.skipped : undefined;
+    if ((wrong === undefined || skipped === undefined) && Array.isArray(data.answers)) {
+        wrong = data.answers.filter(a => !a.isCorrect && a.userAnswer !== null && a.userAnswer !== undefined).length;
+        skipped = data.answers.filter(a => a.userAnswer === null || a.userAnswer === undefined).length;
+    }
+
+    const avg = data.total > 0 ? Math.round(data.totalTimeSeconds / data.total) : 0;
+
+    const normalized = normalizeResult({
+        total: data.total,
+        correct: data.score,
+        wrong, skipped,
+        averageTime: avg,
+        quizTitle: data.quizTitle,
+        date: data.timestamp || null,
+    });
+
+    resultEls.resScore.textContent = `${normalized.marksScore} / ${normalized.maxMarks}`;
+    resultEls.resScore.classList.toggle('text-red-600', normalized.marksScore < 0);
+    resultEls.resScore.classList.toggle('dark:text-red-500', normalized.marksScore < 0);
+    resultEls.resScore.classList.toggle('text-brand-600', normalized.marksScore >= 0);
+    resultEls.resScore.classList.toggle('dark:text-brand-500', normalized.marksScore >= 0);
+
+    const pct = data.total > 0 ? Math.round((data.score / data.total) * 100) : 0;
     resultEls.resAccuracy.textContent = `${pct}%`;
     resultEls.resAccBar.style.width = `${pct}%`;
     resultEls.resTime.textContent = data.timeTaken;
     resultEls.resRank.textContent = data.rank || "Top 50%";
-    
-    const avg = data.total > 0 ? Math.round(data.totalTimeSeconds / data.total) : 0;
     resultEls.resAvgTime.textContent = `${avg}s`;
+
+    renderNeetDashboard(normalized);
+}
+
+// ---------------------------------------------------------------------------
+// NEET-style dashboard rendering (added). All calculation lives in
+// scoring.js — this only reads a pre-normalized `result` object and paints
+// the DOM, so the formula/rank table can be swapped later with zero changes
+// here.
+// ---------------------------------------------------------------------------
+
+function standingBadgeClasses(standing) {
+    if (standing === 'Needs Improvement') return 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400';
+    if (standing === 'Good') return 'bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400';
+    return 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400';
+}
+
+function standingColor(standing) {
+    if (standing === 'Needs Improvement') return '#ef4444';
+    if (standing === 'Good') return '#f59e0b';
+    return '#10b981';
+}
+
+function renderQuestionDonut(result) {
+    const donut = document.getElementById('neet-donut');
+    if (!donut) return;
+    const total = result.totalPolls || 0;
+    if (total <= 0) {
+        donut.style.background = '#e2e8f0';
+        return;
+    }
+    const correctPct = (result.correct / total) * 100;
+    const wrongPct = (result.wrong / total) * 100;
+    const c1 = correctPct;
+    const c2 = c1 + wrongPct;
+    donut.style.background = `conic-gradient(#10b981 0% ${c1}%, #ef4444 ${c1}% ${c2}%, #cbd5e1 ${c2}% 100%)`;
+}
+
+function renderNeetDashboard(result) {
+    if (!document.getElementById('neet-score')) return; // markup not present — nothing to do
+    const { totalPolls: total, correct, wrong, skipped, accuracy, attemptAccuracy, syntheticScore, standing, predictedRank } = result;
+
+    // Score hero
+    document.getElementById('neet-score').textContent = syntheticScore;
+    const badge = document.getElementById('neet-standing-badge');
+    badge.textContent = standing;
+    badge.className = 'inline-block px-4 py-1.5 rounded-full text-sm font-bold mb-4 ' + standingBadgeClasses(standing);
+    document.getElementById('neet-rank').textContent = predictedRank;
+
+    document.getElementById('neet-accuracy').textContent = `${Math.round(accuracy * 100)}%`;
+    document.getElementById('neet-correct').textContent = correct;
+    document.getElementById('neet-wrong').textContent = wrong;
+    document.getElementById('neet-skipped').textContent = skipped;
+
+    // Score scale marker — position along the 0-720 scale
+    const markerPct = Math.max(0, Math.min(100, (syntheticScore / 720) * 100));
+    document.getElementById('neet-score-marker').style.left = `${markerPct}%`;
+
+    // Question performance donut
+    renderQuestionDonut(result);
+    document.getElementById('neet-donut-total').textContent = total;
+    document.getElementById('neet-donut-correct').textContent = correct;
+    document.getElementById('neet-donut-wrong').textContent = wrong;
+    document.getElementById('neet-donut-skipped').textContent = skipped;
+
+    // Accuracy analysis
+    document.getElementById('neet-acc-overall').textContent = `${Math.round(accuracy * 100)}%`;
+    document.getElementById('neet-acc-attempted').textContent = `${correct + wrong} / ${total}`;
+    document.getElementById('neet-acc-attempt').textContent = `${Math.round(attemptAccuracy * 100)}%`;
+
+    // Performance summary + improvement suggestions
+    document.getElementById('neet-summary-text').textContent = generatePerformanceSummary(standing);
+    const list = document.getElementById('neet-suggestions-list');
+    list.innerHTML = '';
+    generateImprovementSuggestions(result).forEach(s => {
+        const li = document.createElement('li');
+        li.textContent = s;
+        list.appendChild(li);
+    });
+
+    renderHistoricalPerformance();
+}
+
+// Reuses the same `user_results/{uid}/attempts` collection fetchHistory()
+// already queries for the Attempt History tab — no new storage added, per
+// spec section 10 ("reuse that data ... if historical data does NOT already
+// exist, do not invent it").
+async function renderHistoricalPerformance() {
+    const wrap = document.getElementById('neet-history-wrap');
+    if (!wrap) return;
+
+    try {
+        const snapshot = await db.collection('user_results').doc(CURRENT_USER_ID).collection('attempts')
+            .where('quizId', '==', currentQuizId)
+            .get();
+
+        if (snapshot.empty || snapshot.size < 2) {
+            // Nothing to trend yet with 0-1 attempts — keep it hidden rather
+            // than showing an empty/pointless chart.
+            wrap.classList.add('hidden');
+            return;
+        }
+
+        let attempts = [];
+        snapshot.forEach(doc => attempts.push({ id: doc.id, ...doc.data() }));
+        attempts.sort((a, b) => {
+            const tA = a.timestamp ? a.timestamp.seconds : 0;
+            const tB = b.timestamp ? b.timestamp.seconds : 0;
+            return tA - tB; // oldest -> newest, left-to-right trend
+        });
+
+        const historyResults = attempts.map(a => {
+            let wrong = typeof a.wrong === 'number' ? a.wrong : undefined;
+            let skipped = typeof a.skipped === 'number' ? a.skipped : undefined;
+            if ((wrong === undefined || skipped === undefined) && Array.isArray(a.answers)) {
+                wrong = a.answers.filter(x => !x.isCorrect && x.userAnswer !== null && x.userAnswer !== undefined).length;
+                skipped = a.answers.filter(x => x.userAnswer === null || x.userAnswer === undefined).length;
+            }
+            return normalizeResult({ total: a.total, correct: a.score, wrong, skipped });
+        });
+
+        const stats = calculateHistoricalStats(historyResults);
+        document.getElementById('neet-hist-avg').textContent = stats.averageScore;
+        document.getElementById('neet-hist-best').textContent = stats.bestScore;
+        document.getElementById('neet-hist-low').textContent = stats.lowestScore;
+        document.getElementById('neet-hist-avgacc').textContent = `${stats.averageAccuracy}%`;
+        document.getElementById('neet-hist-count').textContent = stats.totalQuizzes;
+
+        const barsWrap = document.getElementById('neet-hist-bars');
+        barsWrap.innerHTML = '';
+        historyResults.forEach((r, i) => {
+            const barHeightPct = Math.max(6, Math.round((r.syntheticScore / 720) * 100));
+            const bar = document.createElement('div');
+            bar.className = 'flex flex-col items-center justify-end gap-1 flex-1 min-w-0 h-full';
+            bar.innerHTML = `
+                <span class="text-[10px] font-semibold text-slate-500 dark:text-slate-400">${r.syntheticScore}</span>
+                <div class="w-full max-w-[28px] rounded-t-md" style="height:${barHeightPct}%; background:${standingColor(r.standing)};"></div>
+                <span class="text-[10px] text-slate-400">#${i + 1}</span>
+            `;
+            barsWrap.appendChild(bar);
+        });
+
+        wrap.classList.remove('hidden');
+    } catch (e) {
+        console.error('❌ Error (Result.js): Failed to load historical performance.', e);
+        wrap.classList.add('hidden');
+    }
+}
+
+// Info-tooltip toggles for the synthetic score / predicted rank explainers.
+// Kept visually unobtrusive (hidden by default, toggled on tap) per spec.
+if (document.getElementById('neet-score-info-btn')) {
+    document.getElementById('neet-score-info-btn').onclick = () => document.getElementById('neet-score-tooltip').classList.toggle('hidden');
+}
+if (document.getElementById('neet-rank-info-btn')) {
+    document.getElementById('neet-rank-info-btn').onclick = () => document.getElementById('neet-rank-tooltip').classList.toggle('hidden');
 }
 
 function renderFinalResult(data) {
@@ -412,9 +593,7 @@ function switchTab(tab) {
                 btn.className = "tab-active whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center";
                 view.classList.remove('hidden');
                 
-                // Trigger video load only when tab is clicked
                 if (tab === 'video' && typeof loadVideoSolution === 'function') {
-                    // Pass the currentQuizId which is global in auth.js/result.js context
                     loadVideoSolution(currentQuizId); 
                 }
             } else {
