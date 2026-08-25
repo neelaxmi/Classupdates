@@ -149,6 +149,7 @@ input[type=range]::-moz-range-thumb {
     opacity: 1;
 }
 
+/* ===== NTA CBT Question Palette button states ===== */
 .qp-btn {
     width: 100%;
     aspect-ratio: 1 / 1;
@@ -488,12 +489,8 @@ input[type=range]::-moz-range-thumb {
 
             <div id="view-summary" class="space-y-6 animate-fade-in">
 
-                <!-- ============================================================
-                     NEET-style performance dashboard (added).
-                     Populated by renderNeetDashboard() in result.js, driven by
-                     scoring.js. The original 4-card summary grid + button
-                     further below is kept exactly as it was.
-                ============================================================= -->
+
+
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div class="glass-panel rounded-xl p-6 relative overflow-hidden">
                         <dt class="text-sm font-medium text-slate-500 dark:text-slate-400 truncate">Total Score</dt>
@@ -524,7 +521,7 @@ input[type=range]::-moz-range-thumb {
 
                 <!-- Score hero -->
                 <div class="glass-panel rounded-2xl p-6 sm:p-8 text-center relative overflow-hidden">
-                    <p class="text-xs font-semibold tracking-widest text-slate-400 uppercase mb-2">Your predicted Performance on NEET EXAM </p>
+                    <p class="text-xs font-semibold tracking-widest text-slate-400 uppercase mb-2">Your Performance</p>
                     <div class="flex items-end justify-center gap-2 mb-2">
                         <span id="neet-score" class="text-6xl sm:text-7xl font-extrabold text-slate-900 dark:text-white leading-none">0</span>
                         <span class="text-xl sm:text-2xl text-slate-400 font-medium mb-1">/ 720</span>
@@ -579,6 +576,7 @@ input[type=range]::-moz-range-thumb {
                     </div>
                 </div>
 
+                <!-- Question performance + accuracy analysis -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div class="glass-panel rounded-xl p-5 sm:p-6">
                         <p class="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-4">Question Performance</p>
@@ -608,6 +606,15 @@ input[type=range]::-moz-range-thumb {
                     </div>
                 </div>
 
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <button id="btn-practice-wrong" type="button" class="hidden flex-1 inline-flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-red-500 hover:bg-red-600 text-white text-sm font-semibold shadow-sm transition active:scale-[0.98]">
+                        <i class="fa-solid fa-rotate-left"></i> Practice Mistakes (<span id="btn-practice-wrong-count">0</span>)
+                    </button>
+                    <button id="btn-practice-unattempted" type="button" class="hidden flex-1 inline-flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold shadow-sm transition active:scale-[0.98]">
+                        <i class="fa-solid fa-circle-question"></i> Practice Unattempted (<span id="btn-practice-unattempted-count">0</span>)
+                    </button>
+                </div>
+
                 <div class="glass-panel rounded-xl p-5 sm:p-6">
                     <p class="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">Performance Summary</p>
                     <p id="neet-summary-text" class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4">—</p>
@@ -627,9 +634,6 @@ input[type=range]::-moz-range-thumb {
                     </div>
                 </div>
 
-
-                
-                
                 <div class="flex justify-center mt-10">
                     <button onclick="window.location.replace('/quiz/dashboard.html')" class="inline-flex items-center justify-center px-8 py-3 bg-brand-600 hover:bg-brand-500 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
                         Go to Dashboard
@@ -759,6 +763,7 @@ input[type=range]::-moz-range-thumb {
             </div>
             <p class="text-slate-500 dark:text-slate-400 mb-5 relative z-10 text-sm">Please read the instructions carefully and choose how you want to attempt this test.</p>
 
+            <!-- Instructions -->
             <div class="relative z-10 bg-slate-50 dark:bg-slate-700/40 border border-slate-200 dark:border-slate-700 rounded-xl p-4 mb-5">
                 <h4 class="text-sm font-bold text-slate-700 dark:text-slate-200 mb-2 uppercase tracking-wide">Instructions</h4>
                 <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-300">
@@ -771,6 +776,7 @@ input[type=range]::-moz-range-thumb {
                 </ul>
             </div>
 
+            <!-- Mode selection -->
             <div class="relative z-10 mb-5">
                 <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">Choose Test Mode</label>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -876,7 +882,6 @@ input[type=range]::-moz-range-thumb {
         </div>
     </div>    
 
-    <!-- ===== Camera / Proctoring Consent Modal (shown before every attempt) ===== -->
     <div id="proctor-consent-modal" class="hidden fixed inset-0 z-[65] bg-slate-900/90 backdrop-blur-md flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-700 text-center">
             <div class="w-16 h-16 bg-indigo-100 dark:bg-indigo-900/30 text-primary rounded-full flex items-center justify-center mx-auto mb-4">
@@ -913,7 +918,7 @@ input[type=range]::-moz-range-thumb {
                     <i class="fa-solid fa-robot text-2xl"></i>
                 </div>
                 <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-2">Unlock AI Explanations</h2>
-                <p class="text-slate-600 dark:text-slate-400 text-sm">
+                <p id="ai-provider-desc" class="text-slate-600 dark:text-slate-400 text-sm">
                     To get detailed explanations for your answers, please enter your personal <strong>Google Gemini API Key</strong>.
                 </p>
             </div>
@@ -922,10 +927,17 @@ input[type=range]::-moz-range-thumb {
 
             <div class="space-y-4">
                 <div>
+                    <label for="ai-provider-select" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">AI Provider</label>
+                    <select id="ai-provider-select" class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary dark:bg-slate-700 dark:text-white transition-all outline-none">
+                        <option value="gemini">Google Gemini</option>
+                        <option value="grok">xAI Grok</option>
+                    </select>
+                </div>
+                <div>
                     <label for="gemini-api-key-input" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">API Key</label>
                     <input type="password" id="gemini-api-key-input" placeholder="Paste your API Key here (AIza...)"
                            class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary dark:bg-slate-700 dark:text-white transition-all outline-none">
-                    <p class="text-xs text-slate-500 mt-1">Your key is saved locally to your profile.</p>
+                    <p class="text-xs text-slate-500 mt-1">Your key is saved to your profile and only used for your own explanation requests.</p>
                 </div>
 
                 <button id="modal-save-gemini-key" class="w-full py-3 bg-primary hover:bg-indigo-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/30 transition-all transform active:scale-95">
@@ -933,7 +945,7 @@ input[type=range]::-moz-range-thumb {
                 </button>
                 
                 <div class="grid grid-cols-2 gap-3 pt-2">
-                    <a href="https://aistudio.google.com/app/apikey" target="_blank" class="flex items-center justify-center px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg transition-colors">
+                    <a id="ai-provider-getkey-link" href="https://aistudio.google.com/app/apikey" target="_blank" class="flex items-center justify-center px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg transition-colors">
                         <i class="fa-solid fa-key mr-2"></i> Get Key
                     </a>
                      <a href="Gemini.html"  class="flex items-center justify-center px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg transition-colors">
@@ -1015,6 +1027,7 @@ input[type=range]::-moz-range-thumb {
 
 
     <script>
+
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw-proctor-cache.js').catch(() => {});
@@ -1061,11 +1074,9 @@ input[type=range]::-moz-range-thumb {
             openBtn?.addEventListener("click", openPalette);
             closeBtn1?.addEventListener("click", closePalette);
             overlay?.addEventListener("click", closePalette);
-            
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape' && window.innerWidth < 1024) closePalette();
             });
-
             window.addEventListener('resize', () => {
                 if (window.innerWidth >= 1024) closePalette();
             });
