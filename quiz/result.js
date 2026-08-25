@@ -21,7 +21,9 @@ const resultEls = {
     saveKeyBtn: document.getElementById('modal-save-gemini-key'),
     cancelKeyBtn: document.getElementById('modal-cancel-gemini-key'),
     apiErrorMsg: document.getElementById('gemini-error-message'), 
-    
+    providerSelect: document.getElementById('ai-provider-select'),
+    providerDesc: document.getElementById('ai-provider-desc'),
+    getKeyLink: document.getElementById('ai-provider-getkey-link'),
 };
 
 
@@ -44,9 +46,74 @@ const markdownToHtml = (markdown) => {
     return html;
 };
 
-const showGeminiApiModal = (errorMessage = null, questionDetails = null) => {
+
+
+const AI_PROVIDERS = {
+    gemini: {
+        label: 'Google Gemini',
+        keyField: 'geminiApiKey',
+        keyPlaceholder: 'Paste your Gemini API Key here (AIza...)',
+        getKeyUrl: 'https://aistudio.google.com/app/apikey',
+        buildUrl: (key) => `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`,
+        buildHeaders: () => ({ 'Content-Type': 'application/json' }),
+        buildBody: (prompt) => ({ contents: [{ parts: [{ text: prompt }] }] }),
+        extractText: (data) => data.candidates?.[0]?.content?.parts?.[0]?.text,
+        extractErrorMessage: (errData) => errData?.error?.message,
+        friendlyError: (status, apiMsg) => {
+            if (status === 400 && apiMsg && (apiMsg.includes("API key not valid") || apiMsg.includes("Invalid API Key"))) {
+                return "Your Gemini API Key is invalid or has expired. Please update it to continue using the AI explanation feature.";
+            }
+            if (status === 429) return "You have reached the API rate limit for this key. Please try again later, or update your key if you believe this is an error.";
+            if (status === 403) return "Access denied (403). Your API key may not have the necessary permissions or the request is blocked. Please check your key status.";
+            return "The Gemini API call failed due to an unknown error. Please try again or update your API key.";
+        },
+    },
+    grok: {
+        label: 'xAI Grok',
+        keyField: 'grokApiKey',
+        keyPlaceholder: 'Paste your Grok (xAI) API Key here (xai-...)',
+        getKeyUrl: 'https://console.x.ai/',
+        buildUrl: () => `https://api.x.ai/v1/chat/completions`,
+        buildHeaders: (key) => ({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` }),
+        buildBody: (prompt) => ({ model: 'grok-4-fast', messages: [{ role: 'user', content: prompt }] }),
+        extractText: (data) => data.choices?.[0]?.message?.content,
+        extractErrorMessage: (errData) => errData?.error?.message,
+        friendlyError: (status, apiMsg) => {
+            if (status === 401) return "Your Grok API Key is invalid or has expired. Please update it to continue using the AI explanation feature.";
+            if (status === 429) return "You have reached the API rate limit for this key. Please try again later, or update your key if you believe this is an error.";
+            if (status === 403) return "Access denied (403). Your API key may not have the necessary permissions or the request is blocked. Please check your key status.";
+            return "The Grok API call failed due to an unknown error. Please try again or update your API key.";
+        },
+    },
+};
+
+function getStoredApiKey(providerId) {
+    if (providerId === 'gemini') return typeof userGeminiApiKey !== 'undefined' ? userGeminiApiKey : null;
+    if (providerId === 'grok') return typeof userGrokApiKey !== 'undefined' ? userGrokApiKey : null;
+    return null;
+}
+
+function getPreferredProvider() {
+    const stored = localStorage.getItem('preferredAiProvider');
+    return (stored && AI_PROVIDERS[stored]) ? stored : 'gemini';
+}
+function setPreferredProvider(providerId) {
+    localStorage.setItem('preferredAiProvider', providerId);
+}
+
+function populateProviderModal(providerId) {
+    const provider = AI_PROVIDERS[providerId] || AI_PROVIDERS.gemini;
+    resultEls.providerSelect.value = providerId;
+    resultEls.apiKeyInput.placeholder = provider.keyPlaceholder;
+    resultEls.apiKeyInput.value = getStoredApiKey(providerId) || '';
+    resultEls.providerDesc.innerHTML = `To get detailed explanations for your answers, please enter your personal <strong>${provider.label} API Key</strong>.`;
+    resultEls.getKeyLink.href = provider.getKeyUrl;
+}
+
+const showGeminiApiModal = (errorMessage = null, questionDetails = null, providerId = null) => {
+    const provider = providerId || getPreferredProvider();
     resultEls.apiModal.classList.remove('hidden');
-    resultEls.apiKeyInput.value = userGeminiApiKey || ''; 
+    populateProviderModal(provider);
     currentQuestionForExplanation = questionDetails || currentQuestionForExplanation;
     
     if (errorMessage) {
@@ -55,11 +122,14 @@ const showGeminiApiModal = (errorMessage = null, questionDetails = null) => {
     } else {
         resultEls.apiErrorMsg.classList.add('hidden');
     }
+
+    resultEls.providerSelect.onchange = () => populateProviderModal(resultEls.providerSelect.value);
     
     resultEls.saveKeyBtn.onclick = () => {
         const key = resultEls.apiKeyInput.value.trim();
+        const selectedProvider = resultEls.providerSelect.value;
         if (key) {
-            saveUserApiKey(key);
+            saveUserApiKey(key, selectedProvider);
         } else {
             alert("Please enter a valid API key.");
         }
@@ -73,21 +143,25 @@ const showGeminiApiModal = (errorMessage = null, questionDetails = null) => {
 };
 
 
-const saveUserApiKey = async (key) => {
+const saveUserApiKey = async (key, providerId = 'gemini') => {
     if (!CURRENT_USER_ID) return console.error("❌ Error (Result.js): User ID not available to save API key.");
+    const provider = AI_PROVIDERS[providerId] || AI_PROVIDERS.gemini;
     try {
         await db.collection('users').doc(CURRENT_USER_ID).set({
-            geminiApiKey: key,
+            [provider.keyField]: key,
             lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
         }, { merge: true });
         
-        userGeminiApiKey = key; 
-        alert("Gemini API Key saved successfully! You can now get explanations.");
+        if (providerId === 'gemini') userGeminiApiKey = key;
+        else if (providerId === 'grok') userGrokApiKey = key;
+        setPreferredProvider(providerId);
+
+        alert(`${provider.label} API Key saved successfully! You can now get explanations.`);
         resultEls.apiModal.classList.add('hidden');
         // Clear error message on success
         resultEls.apiErrorMsg.classList.add('hidden');
         
-        console.log("✅ Success (Result.js): New Gemini API Key saved to Firestore.");
+        console.log(`✅ Success (Result.js): New ${provider.label} API Key saved to Firestore.`);
         
         if (currentQuestionForExplanation) {
             console.log("Info (Result.js): Attempting to fetch explanation after successful key save.");
@@ -102,7 +176,7 @@ const saveUserApiKey = async (key) => {
 };
 
 const showApiKeyModal = (questionDetails) => {
-    showGeminiApiModal("Please enter your Gemini API Key to use the AI explanation feature.", questionDetails);
+    showGeminiApiModal("Please enter your API Key to use the AI explanation feature.", questionDetails);
 };
 
 
@@ -144,24 +218,35 @@ const toggleExplanation = (explanationId, qId) => {
     }
 };
 
-// --- GEMINI EXPLANATION LOGIC (with Caching and Regeneration) ---
+
+function sharedExplanationDocId(qId) {
+    return `${currentQuizId}_${qId}`;
+}
 
 const fetchExplanation = async (questionDetails, isRegenerate = false) => {
     const { qId, qText, userAnswer, correctAnswer, explanationId } = questionDetails;
     
     const explanationElement = document.getElementById(explanationId);
-    
-    if (!userGeminiApiKey) {
-        explanationElement.classList.remove('hidden'); 
-        showApiKeyModal(questionDetails);
-        return; 
-    }
-    
     const ans = currentResultData.answers.find(a => a.qId === qId);
-    const cachedHtml = ans?.generatedExplanation || explanationCache[qId];
+
+    let cachedHtml = ans?.generatedExplanation || explanationCache[qId];
+
+    if (!cachedHtml && !isRegenerate) {
+        try {
+            const sharedDoc = await db.collection('quiz_explanations').doc(sharedExplanationDocId(qId)).get();
+            if (sharedDoc.exists && sharedDoc.data().explanationHtml) {
+                cachedHtml = sharedDoc.data().explanationHtml;
+                if (ans) ans.generatedExplanation = cachedHtml;
+                explanationCache[qId] = cachedHtml;
+                console.log("Info (Result.js): Explanation found in the SHARED community cache — no API call needed.");
+            }
+        } catch (e) {
+            console.warn("⚠️ Warning (Result.js): Shared explanation cache lookup failed — will fall back to generating.", e);
+        }
+    }
 
     if (cachedHtml && !isRegenerate) {
-        console.log("Info (Result.js): Explanation found in cache. Rendering cached content.");
+        console.log("Info (Result.js): Rendering cached explanation.");
         
         explanationElement.innerHTML = `
             <div class="mt-4 p-4 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600">
@@ -179,6 +264,14 @@ const fetchExplanation = async (questionDetails, isRegenerate = false) => {
         return;
     }
 
+    const providerId = getPreferredProvider();
+    const apiKey = getStoredApiKey(providerId);
+
+    if (!apiKey) {
+        explanationElement.classList.remove('hidden'); 
+        showApiKeyModal(questionDetails);
+        return; 
+    }
 
     explanationElement.innerHTML = `<p class="text-center py-2 text-primary font-medium"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Generating explanation...</p>`;
 
@@ -199,14 +292,14 @@ const fetchExplanation = async (questionDetails, isRegenerate = false) => {
         If the user was correct, confirm their answer and provide deeper context or supplementary facts related to the topic.
         Format the response using simple Markdown (like **bold**, ### headings, * bullet points, and code blocks using three backticks).
     `;
+
+    const provider = AI_PROVIDERS[providerId];
     
     try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${userGeminiApiKey}`, {
+        const response = await fetch(provider.buildUrl(apiKey), {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }],
-            }),
+            headers: provider.buildHeaders(apiKey),
+            body: JSON.stringify(provider.buildBody(prompt)),
         });
 
         if (!response.ok) {
@@ -214,29 +307,20 @@ const fetchExplanation = async (questionDetails, isRegenerate = false) => {
             try {
                 errorData = await response.json();
             } catch {
-                errorData = { error: { message: "Could not parse API error response." } };
+                errorData = {};
             }
             
-            let errorMessage = "The Gemini API call failed due to an unknown error. Please try again or update your API key.";
-            const responseStatus = response.status;
-            const apiErrorMsg = errorData.error?.message;
-
-            if (responseStatus === 400 && apiErrorMsg && (apiErrorMsg.includes("API key not valid") || apiErrorMsg.includes("Invalid API Key"))) {
-                errorMessage = "Your Gemini API Key is invalid or has expired. Please update it to continue using the AI explanation feature.";
-            } else if (responseStatus === 429) {
-                errorMessage = "You have reached the API rate limit for this key. Please try again later, or update your key if you believe this is an error.";
-            } else if (responseStatus === 403) {
-                 errorMessage = "Access denied (403). Your API key may not have the necessary permissions or the request is blocked. Please check your key status.";
-            }
+            const apiErrorMsg = provider.extractErrorMessage(errorData);
+            const errorMessage = provider.friendlyError(response.status, apiErrorMsg);
             
-            showGeminiApiModal(errorMessage, questionDetails);
-            throw new Error(`Gemini API Error (Status: ${responseStatus}): ${errorMessage}`);
+            showGeminiApiModal(errorMessage, questionDetails, providerId);
+            throw new Error(`${provider.label} API Error (Status: ${response.status}): ${errorMessage}`);
         }
 
         const data = await response.json();
-        const explanationText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't generate an explanation. Check your API key and usage limits.";
+        const explanationText = provider.extractText(data) || "Sorry, I couldn't generate an explanation. Check your API key and usage limits.";
         
-        console.log("✅ Success (Result.js): Fetched explanation from Gemini API for question:", qId);
+        console.log(`✅ Success (Result.js): Fetched explanation from ${provider.label} for question:`, qId);
 
         const formattedHtml = markdownToHtml(explanationText);
         
@@ -245,7 +329,21 @@ const fetchExplanation = async (questionDetails, isRegenerate = false) => {
         }
         explanationCache[qId] = formattedHtml; 
 
-        // 5. Render the explanation text
+        try {
+            await db.collection('quiz_explanations').doc(sharedExplanationDocId(qId)).set({
+                quizId: currentQuizId,
+                qId,
+                explanationHtml: formattedHtml,
+                provider: providerId,
+                generatedBy: CURRENT_USER_ID || null,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+            console.log("✅ Success (Result.js): Explanation saved to the shared community cache.");
+        } catch (e) {
+            console.warn("⚠️ Warning (Result.js): Could not save explanation to the shared cache (it still rendered for you).", e);
+        }
+
+        // Render the explanation text
         explanationElement.innerHTML = `
             <div class="mt-4 p-4 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600">
                 <h4 class="font-bold text-primary mb-2">Detailed Explanation:</h4>
@@ -280,20 +378,20 @@ const fetchExplanation = async (questionDetails, isRegenerate = false) => {
 
 
     } catch (error) {
-        console.error("❌ Error (Result.js): Gemini API Call Failed.", error);
+        console.error(`❌ Error (Result.js): ${provider.label} API Call Failed.`, error);
         
-        if (!error.message.includes('Gemini API Error')) {
+        if (!error.message.includes('API Error')) {
             explanationElement.innerHTML = `
                 <p class="text-red-500 mt-4"><i class="fa-solid fa-triangle-exclamation mr-2"></i> Network or client error generating explanation. Try again.</p>
             `;
         } else {
              explanationElement.innerHTML = `
-                <p class="text-red-500 mt-4"><i class="fa-solid fa-triangle-exclamation mr-2"></i> ${error.message.split('- ')[1]}</p>
+                <p class="text-red-500 mt-4"><i class="fa-solid fa-triangle-exclamation mr-2"></i> ${error.message.split('- ')[1] || error.message}</p>
             `;
         }
 
         document.getElementById(`toggle-icon-${qId}`).className = 'fa-solid fa-robot mr-2';
-        document.getElementById(`toggle-text-${qId}`).textContent = 'Get AI Explanation (Gemini)';
+        document.getElementById(`toggle-text-${qId}`).textContent = 'DETAILED SOLUTION ';
         document.getElementById(`regenerate-btn-${qId}`)?.classList.add('hidden');
     }
 };
@@ -314,6 +412,7 @@ const submitQuiz = async (isTimeout = false) => {
     resultEls.submit.disabled = true;
     resultEls.submit.innerHTML = '<span class="loader w-4 h-4 border-2 mr-2 inline-block"></span> Processing...';
 
+
     if (typeof window.stopProctoring === 'function') window.stopProctoring();
     const proctorViolationCount = (typeof violationCount !== 'undefined') ? violationCount : 0;
     const proctorViolationLog = (typeof violationLog !== 'undefined') ? violationLog : [];
@@ -331,7 +430,7 @@ const submitQuiz = async (isTimeout = false) => {
     });
     const skippedCount = Math.max(0, questions.length - score - wrongCount);
 
-    const totalQuizDuration = questions.length > 0 && questions[0].durationMinutes ? (questions[0].durationMinutes * 60) : (questions.length * 60);
+    const totalQuizDuration = quizStartDurationSeconds > 0 ? quizStartDurationSeconds : (questions.length * 60);
     const totalTimeSpent = totalQuizDuration - timeLeft; 
     const formattedTime = formatTime(totalTimeSpent > 0 ? totalTimeSpent : 0);
     
@@ -384,7 +483,6 @@ const submitQuiz = async (isTimeout = false) => {
 function updateSummaryData(data) {
     resultEls.resTitle.textContent = data.quizTitle;
 
-
     let wrong = typeof data.wrong === 'number' ? data.wrong : undefined;
     let skipped = typeof data.skipped === 'number' ? data.skipped : undefined;
     if ((wrong === undefined || skipped === undefined) && Array.isArray(data.answers)) {
@@ -419,12 +517,6 @@ function updateSummaryData(data) {
     renderNeetDashboard(normalized);
 }
 
-// ---------------------------------------------------------------------------
-// NEET-style dashboard rendering (added). All calculation lives in
-// scoring.js — this only reads a pre-normalized `result` object and paints
-// the DOM, so the formula/rank table can be swapped later with zero changes
-// here.
-// ---------------------------------------------------------------------------
 
 function standingBadgeClasses(standing) {
     if (standing === 'Needs Improvement') return 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400';
@@ -457,35 +549,26 @@ function renderNeetDashboard(result) {
     if (!document.getElementById('neet-score')) return; // markup not present — nothing to do
     const { totalPolls: total, correct, wrong, skipped, accuracy, attemptAccuracy, syntheticScore, standing, predictedRank } = result;
 
-    // Score hero
     document.getElementById('neet-score').textContent = syntheticScore;
     const badge = document.getElementById('neet-standing-badge');
     badge.textContent = standing;
     badge.className = 'inline-block px-4 py-1.5 rounded-full text-sm font-bold mb-4 ' + standingBadgeClasses(standing);
     document.getElementById('neet-rank').textContent = predictedRank;
-
     document.getElementById('neet-accuracy').textContent = `${Math.round(accuracy * 100)}%`;
     document.getElementById('neet-correct').textContent = correct;
     document.getElementById('neet-wrong').textContent = wrong;
     document.getElementById('neet-skipped').textContent = skipped;
-
-    // Score scale marker — position along the 0-720 scale
     const markerPct = Math.max(0, Math.min(100, (syntheticScore / 720) * 100));
     document.getElementById('neet-score-marker').style.left = `${markerPct}%`;
-
-    // Question performance donut
     renderQuestionDonut(result);
     document.getElementById('neet-donut-total').textContent = total;
     document.getElementById('neet-donut-correct').textContent = correct;
     document.getElementById('neet-donut-wrong').textContent = wrong;
     document.getElementById('neet-donut-skipped').textContent = skipped;
-
-    // Accuracy analysis
     document.getElementById('neet-acc-overall').textContent = `${Math.round(accuracy * 100)}%`;
     document.getElementById('neet-acc-attempted').textContent = `${correct + wrong} / ${total}`;
     document.getElementById('neet-acc-attempt').textContent = `${Math.round(attemptAccuracy * 100)}%`;
 
-    // Performance summary + improvement suggestions
     document.getElementById('neet-summary-text').textContent = generatePerformanceSummary(standing);
     const list = document.getElementById('neet-suggestions-list');
     list.innerHTML = '';
@@ -496,12 +579,45 @@ function renderNeetDashboard(result) {
     });
 
     renderHistoricalPerformance();
+    setupPracticeButtons(currentResultData);
 }
 
-// Reuses the same `user_results/{uid}/attempts` collection fetchHistory()
-// already queries for the Attempt History tab — no new storage added, per
-// spec section 10 ("reuse that data ... if historical data does NOT already
-// exist, do not invent it").
+function getWrongQuestionIds(attemptData) {
+    if (!attemptData || !Array.isArray(attemptData.answers)) return [];
+    return attemptData.answers.filter(a => !a.isCorrect && a.userAnswer !== null && a.userAnswer !== undefined).map(a => a.qId);
+}
+function getUnattemptedQuestionIds(attemptData) {
+    if (!attemptData || !Array.isArray(attemptData.answers)) return [];
+    return attemptData.answers.filter(a => a.userAnswer === null || a.userAnswer === undefined).map(a => a.qId);
+}
+
+
+function startPracticeSession(mode, quizId, quizTitle, questionIds) {
+    if (!questionIds.length) return;
+    sessionStorage.setItem('retryQuizConfig', JSON.stringify({ mode, quizId: quizId || null, quizTitle: quizTitle || '', questionIds }));
+    const params = new URLSearchParams({ mode });
+    if (quizId) params.set('uid', quizId);
+    window.location.href = `/quiz/quizzes.html?${params.toString()}`;
+}
+
+function setupPracticeButtons(attemptData) {
+    const wrongBtn = document.getElementById('btn-practice-wrong');
+    const unattemptedBtn = document.getElementById('btn-practice-unattempted');
+    if (!wrongBtn || !unattemptedBtn || !attemptData) return;
+
+    const wrongIds = getWrongQuestionIds(attemptData);
+    const unattemptedIds = getUnattemptedQuestionIds(attemptData);
+
+    wrongBtn.classList.toggle('hidden', wrongIds.length === 0);
+    document.getElementById('btn-practice-wrong-count').textContent = wrongIds.length;
+    wrongBtn.onclick = () => startPracticeSession('retry-incorrect', attemptData.quizId, attemptData.quizTitle, wrongIds);
+
+    unattemptedBtn.classList.toggle('hidden', unattemptedIds.length === 0);
+    document.getElementById('btn-practice-unattempted-count').textContent = unattemptedIds.length;
+    unattemptedBtn.onclick = () => startPracticeSession('retry-unattempted', attemptData.quizId, attemptData.quizTitle, unattemptedIds);
+}
+
+
 async function renderHistoricalPerformance() {
     const wrap = document.getElementById('neet-history-wrap');
     if (!wrap) return;
@@ -512,8 +628,6 @@ async function renderHistoricalPerformance() {
             .get();
 
         if (snapshot.empty || snapshot.size < 2) {
-            // Nothing to trend yet with 0-1 attempts — keep it hidden rather
-            // than showing an empty/pointless chart.
             wrap.classList.add('hidden');
             return;
         }
@@ -564,8 +678,6 @@ async function renderHistoricalPerformance() {
     }
 }
 
-// Info-tooltip toggles for the synthetic score / predicted rank explainers.
-// Kept visually unobtrusive (hidden by default, toggled on tap) per spec.
 if (document.getElementById('neet-score-info-btn')) {
     document.getElementById('neet-score-info-btn').onclick = () => document.getElementById('neet-score-tooltip').classList.toggle('hidden');
 }
@@ -606,7 +718,6 @@ function switchTab(tab) {
     if (tab === 'detailed') renderMath(resultEls.detailedList);
 }
 
-// Set up tab listeners once
 if (document.getElementById('tab-summary')) document.getElementById('tab-summary').onclick = () => switchTab('summary');
 if (document.getElementById('tab-detailed')) document.getElementById('tab-detailed').onclick = () => switchTab('detailed');
 if (document.getElementById('tab-history')) document.getElementById('tab-history').onclick = () => switchTab('history');
@@ -616,7 +727,6 @@ if (document.getElementById('tab-video')) document.getElementById('tab-video').o
 function filterResults(type) {
     if(!currentResultData) return;
     
-    // Update filter buttons
     ['all','correct','incorrect'].forEach(f => {
         const btn = document.getElementById(`filter-${f}`);
         if(btn) { 
@@ -640,28 +750,24 @@ function filterResults(type) {
     }
     
     filtered.forEach((ans, idx) => {
-        // 1. Prepare Status Variables
+
         const status = ans.isCorrect ? 'Correct' : 'Incorrect';
         const colorClass = ans.isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700';
         const borderClass = ans.isCorrect ? 'border-l-4 border-green-500' : 'border-l-4 border-red-500';
         const icon = ans.isCorrect ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-xmark"></i>';
         
-        // 2. Retrieve Original Question Data & Safe Text for JS
         const originalQuestion = questions.find(q => q.id === ans.qId) || {};
         const explanationId = `explanation-for-${ans.qId}`;
         const userAnswerText = ans.userAnswer ? (originalQuestion.options ? originalQuestion.options[ans.userAnswer] : ans.userAnswer) : 'Skipped';
         const correctAnswerText = originalQuestion.options ? originalQuestion.options[ans.correctAnswer] : ans.correctAnswer;
         
-        // Escape special characters for the Regenerate button's onclick handler
         const safeQText = ans.qText.replace(/`/g, '\\`').replace(/'/g, '\\\'').replace(/"/g, '&quot;');
 
-        // 3. Prepare Explanation State
         const cachedExplanationHtml = ans.generatedExplanation || explanationCache[ans.qId];
         const isGenerated = !!cachedExplanationHtml;
         const explanationVisibleClass = isGenerated ? '' : 'hidden'; 
         const toggleButtonIcon = isGenerated ? 'fa-solid fa-chevron-up' : 'fa-solid fa-robot';
-        const toggleButtonText = isGenerated ? 'Minimize Explanation' : 'Get AI Explanation';
-
+        const toggleButtonText = isGenerated ? 'Minimize Explanation' : 'DETAILED SOLUTION ';
         const initialExplanationContent = cachedExplanationHtml ? `
             <div class="mt-4 p-4 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600">
                 <h4 class="font-bold text-primary mb-2">Detailed Explanation:</h4>
@@ -671,7 +777,6 @@ function filterResults(type) {
             </div>
         ` : '';
 
-        // 4. Generate Image HTML (New Logic)
         let imageHtml = '';
         if (ans.imageUrl) {
             imageHtml = `
@@ -784,34 +889,22 @@ const loadAttemptDetails = async (attemptId) => {
 function checkFeedbackRequirement() {
     const hasSubmitted = localStorage.getItem('feedbackSubmitted');
     
-    // Only show if NOT submitted before
     if (hasSubmitted !== 'true') {
         document.getElementById('feedback-modal').classList.remove('hidden');
     }
 }
 
-// Function to handle submission
 function submitFeedback(rating) {
-    // 1. Send data to your database (optional)
     console.log("User rated:", rating);
-    
-    // 2. Mark as submitted in localStorage
     localStorage.setItem('feedbackSubmitted', 'true');
-    
-    // 3. Hide modal
     document.getElementById('feedback-modal').classList.add('hidden');
     alert("Thank you for your feedback!");
 }
 
-// Function to handle skip
 function skipFeedback() {
-    // Just hide the modal (no localStorage set, so it asks next time)
     document.getElementById('feedback-modal').classList.add('hidden');
 }
 
-// Trigger this when results load
-// Add this call inside your result loading function (where you display the score)
-// checkFeedbackRequirement();
 
 const fetchHistory = async () => {
     try {
