@@ -2,11 +2,12 @@ let allQuestions = [];
 let questions = [];   
 let currentIndex = 0;
 let currentQuestionIndex = 0; 
-let totalQuestions = 0; 
+let totalQuestions = 0; // Initialize with 0
 let userAnswers = {};
 let visitedQuestions = {};
 let markedForReview = {};
 let timeLeft = 0;
+let quizStartDurationSeconds = 0;
 let timerInterval = null;
 let isPaused = false;
 let currentMode = 'test';
@@ -14,7 +15,6 @@ let checkedQuestions = {};
 let currentQuizIsTest = false;
 let lockedTestDurationMinutes = null; 
 const DEFAULT_TEST_MODE_MINUTES_FALLBACK = 20; 
-
 const quizEls = {
     loader: document.getElementById('loading-screen'),
     container: document.getElementById('quiz-container'),
@@ -49,6 +49,9 @@ const quizEls = {
     warningText: document.getElementById('warning-text')
 };
 
+// ============================================================
+// PROCTORING STATE (100% client-side — nothing here ever leaves the browser)
+// ============================================================
 const proctorEls = {
     consentModal: document.getElementById('proctor-consent-modal'),
     enableBtn: document.getElementById('proctor-enable-btn'),
@@ -70,9 +73,7 @@ const preQuizEls = {
     modeRadios: () => document.querySelectorAll('input[name="proctor_selection_mode"]')
 };
 
-
 let modelWarmupStarted = false;
-
 let faceModel = null;              // true once face-api.js's tiny_face_detector net is loaded
 let proctorStream = null;          // MediaStream from getUserMedia (never transmitted anywhere)
 let proctorDetectionTimer = null;  // setInterval handle for the detection loop
@@ -84,7 +85,6 @@ let pendingResume = false;         // true when the camera-consent step was trig
 function warmUpProctoringAssets() {
     if (modelWarmupStarted) return;
     modelWarmupStarted = true;
-
     loadWithRetry(() => loadFaceModel(30000), 4, 'face-detection model');
 }
 
@@ -107,24 +107,21 @@ async function loadWithRetry(loaderFn, maxAttempts, label) {
     return null;
 }
 
-
 document.addEventListener('change', (e) => {
     if (e.target && e.target.name === 'proctor_selection_mode' && e.target.value === 'cbt') {
         warmUpProctoringAssets();
     }
 });
-
 const initiallyChecked = document.querySelector('input[name="proctor_selection_mode"]:checked');
 if (initiallyChecked && initiallyChecked.value === 'cbt') warmUpProctoringAssets();
 
 let violationCount = 0;
-const MAX_VIOLATIONS = 4;    
+const MAX_VIOLATIONS = 3;          // exactly 3 warnings allowed; the 4th triggers auto-submit
 let violationLog = [];
 let violationModalOpen = false;
 
-
 let currentLanguage = 'en';
-const translationCache = new Map(); 
+const translationCache = new Map(); // `${lang}::${text}` -> translated text
 const langEls = { select: document.getElementById('language-select') };
 
 const MATH_PLACEHOLDER_RE = /%%MATH(\d+)%%/g;
@@ -359,6 +356,7 @@ const renderQuestion = () => {
     } else {
         if(quizEls.prev) quizEls.prev.disabled = currentIndex === 0;
         
+        // Final Question Logic
         if (currentIndex === questions.length - 1) {
             if(quizEls.next) quizEls.next.classList.add('hidden');
             if(quizEls.finalSubmit) quizEls.finalSubmit.classList.remove('hidden');
@@ -370,7 +368,6 @@ const renderQuestion = () => {
     
     updateQuestionPalette();
     renderMath(quizEls.container);
-
     if (currentLanguage !== 'en') {
         applyQuestionLanguage(currentLanguage);
     }
@@ -381,7 +378,7 @@ if(quizEls.clearBtn) {
     quizEls.clearBtn.onclick = () => {
         const qId = questions[currentIndex].id;
         delete userAnswers[qId];
-        delete markedForReview[qId];
+        delete markedForReview[qId]; 
         renderQuestion();
     };
 }
@@ -399,7 +396,7 @@ if(quizEls.markBtn) {
 
 const triggerEndModal = () => {
     if(quizEls.endQuizModal) quizEls.endQuizModal.classList.remove('hidden');
-    togglePause(true); // Pause timer while deciding
+    togglePause(true); 
 };
 
 if(quizEls.endQuizEarlyBtn) quizEls.endQuizEarlyBtn.onclick = triggerEndModal;
@@ -415,11 +412,10 @@ if(quizEls.cancelSubmitModalBtn) {
 if(quizEls.confirmSubmitModalBtn) {
     quizEls.confirmSubmitModalBtn.onclick = () => {
         if(quizEls.endQuizModal) quizEls.endQuizModal.classList.add('hidden');
-        submitQuiz(false); // Ensure you have submitQuiz() defined in your files
+        submitQuiz(false); 
     };
 }
 
-// ====== END NEW BUTTON ACTIONS ======
 
 const startTimer = () => {
     clearInterval(timerInterval);
@@ -475,7 +471,6 @@ if (preQuizEls.continueBtn) {
     };
 }
 
-
 const TOKEN_PORTAL_URL = "/token.html";
 
 const tokenUnlockEls = {
@@ -489,8 +484,6 @@ const tokenUnlockEls = {
 
 let tokenGateQuizId = null;
 let tokenGateOnUnlocked = null;
-
-
 const tokenUnlockSessionKey = (quizId) => `paidQuizUnlocked_${quizId}`;
 
 function isQuizUnlockedInSession(quizId) {
@@ -499,10 +492,8 @@ function isQuizUnlockedInSession(quizId) {
 }
 function markQuizUnlockedInSession(quizId) {
     try { sessionStorage.setItem(tokenUnlockSessionKey(quizId), '1'); }
-    catch (e) { 
-    }
+    catch (e) { /* sessionStorage unavailable — worst case the tab just asks again, not a hard failure */ }
 }
-
 
 function showTokenUnlockModal(quizId, quizTitle, onUnlocked) {
     tokenGateQuizId = quizId;
@@ -517,7 +508,6 @@ function showTokenUnlockModal(quizId, quizTitle, onUnlocked) {
     if (tokenUnlockEls.modal) tokenUnlockEls.modal.classList.remove('hidden');
     if (tokenUnlockEls.input) tokenUnlockEls.input.focus();
 }
-
 
 async function verifyAndConsumeToken(quizId, rawCode) {
     const code = String(rawCode || '').trim();
@@ -574,6 +564,7 @@ if (tokenUnlockEls.verifyBtn) {
 }
 
 if (tokenUnlockEls.input) {
+    // Digits only, 6 max — keeps stray characters from ever reaching the query.
     tokenUnlockEls.input.addEventListener('input', () => {
         tokenUnlockEls.input.value = tokenUnlockEls.input.value.replace(/\D/g, '').slice(0, 6);
     });
@@ -586,7 +577,6 @@ const loadQuiz = async (uid) => {
     quizEls.loader.classList.remove('hidden');
 
     let doc = await db.collection('quizzes').doc(uid).get();
-
 
     if (!doc.exists) {
         try {
@@ -606,10 +596,10 @@ const loadQuiz = async (uid) => {
         return;
     }
 
-
     currentQuizId = uid;
 
     const data = doc.data();
+
     if (data.isPaid === true && !isQuizUnlockedInSession(uid)) {
         quizEls.loader.classList.add('hidden');
         showTokenUnlockModal(uid, data.title, () => loadQuiz(uid));
@@ -623,17 +613,20 @@ const loadQuiz = async (uid) => {
     currentQuizIsTest = data.test_quiz === true;
 
     const urlParams = new URLSearchParams(window.location.search);
+    const retryModeParam = urlParams.get('mode'); // 'retry-incorrect' | 'retry-unattempted' | null
     let retryIncorrectActive = false;
-    if (urlParams.get('mode') === 'retry-incorrect') {
+    let retryModeLabel = '';
+    if (retryModeParam === 'retry-incorrect' || retryModeParam === 'retry-unattempted') {
         try {
             const retryConfig = JSON.parse(sessionStorage.getItem('retryQuizConfig') || 'null');
-            if (retryConfig && retryConfig.mode === 'retry-incorrect' && retryConfig.quizId === uid
+            if (retryConfig && retryConfig.mode === retryModeParam && retryConfig.quizId === uid
                 && Array.isArray(retryConfig.questionIds) && retryConfig.questionIds.length > 0) {
                 const wantedIds = new Set(retryConfig.questionIds);
                 const filtered = allQuestions.filter(q => wantedIds.has(q.id));
                 if (filtered.length > 0) {
                     allQuestions = filtered;
                     retryIncorrectActive = true;
+                    retryModeLabel = retryModeParam === 'retry-incorrect' ? 'Practice Incorrect' : 'Practice Unattempted';
                 }
             }
         } catch (e) {
@@ -644,7 +637,7 @@ const loadQuiz = async (uid) => {
     }
 
     quizEls.setupTitle.textContent = retryIncorrectActive
-        ? `${data.title} — Practice Incorrect (${allQuestions.length} Qs)`
+        ? `${data.title} — ${retryModeLabel} (${allQuestions.length} Qs)`
         : data.title;
 
     quizEls.setupSet.innerHTML = '';
@@ -725,7 +718,9 @@ const loadQuiz = async (uid) => {
             questions = allQuestions;
             currentIndex = s.currentIndex; 
             timeLeft = s.timeLeft; 
+            quizStartDurationSeconds = typeof s.quizStartDurationSeconds === 'number' ? s.quizStartDurationSeconds : s.timeLeft;
             userAnswers = s.userAnswers;
+            
             if(s.visitedQuestions) visitedQuestions = s.visitedQuestions;
             if(s.markedForReview) markedForReview = s.markedForReview;
             proctoringEnabled = !!s.proctoringEnabled;
@@ -750,7 +745,6 @@ const loadQuiz = async (uid) => {
     }
 
     quizEls.startBtn.onclick = () => {
-
         const modeInput = document.querySelector('input[name="quiz_mode"]:checked');
         pendingStartConfig = {
             mode: currentQuizIsTest ? 'test' : (modeInput ? modeInput.value : 'test'),
@@ -775,17 +769,24 @@ const beginSelectedQuiz = () => {
     if (!cfg) return;
     currentMode = cfg.mode;
     timeLeft = cfg.selectedTime * 60;
+    quizStartDurationSeconds = timeLeft; // remember the real starting duration for result.js's Total Time calc
     const [start, end] = cfg.rangeVal.split('-').map(Number);
+
     questions = allQuestions.slice(start, end);
     currentIndex = 0;
     userAnswers = {};
     visitedQuestions = {};
     markedForReview = {};
     checkedQuestions = {};
+
+    // Fresh violation state for this attempt
     violationCount = 0;
     violationLog = [];
     persistViolationState();
+
+    // Fresh proctoring-detection state for this attempt
     noFaceSince = null;
+
     startQuizSession();
 };
 
@@ -837,8 +838,8 @@ if (proctorEls.enableBtn) {
 
         try {
             if (!proctorStream) await setupProctorCamera();
-            warmUpProctoringAssets();
 
+            warmUpProctoringAssets();
             requestFullscreenMode();
             proctorEls.consentModal.classList.add('hidden');
             hideProctorFailureUI();
@@ -876,7 +877,6 @@ const startQuizSession = () => {
     
     quizEls.container.classList.remove('hidden');
     quizEls.time.textContent = formatTime(timeLeft);
-
     const paletteToggleBtn = document.getElementById('palette-toggle-btn');
     const paletteAside = document.getElementById('question-palette');
     if (currentQuizIsTest) {
@@ -924,6 +924,7 @@ const saveProgress = async () => {
     await db.collection('user_progress').doc(CURRENT_USER_ID).collection('saved_quizzes').doc(currentQuizId).set({
         currentIndex, 
         timeLeft, 
+        quizStartDurationSeconds, // so a resumed attempt still knows its real total duration
         userAnswers, 
         visitedQuestions,
         markedForReview,
@@ -1022,7 +1023,6 @@ function showAntiCheatAlert(message, isCritical = false) {
 }
 
 
-
 function quizActive() {
     return !!(quizContainer && !quizContainer.classList.contains('hidden') &&
         document.getElementById('result-box') &&
@@ -1059,7 +1059,6 @@ window.registerViolation = function (type, message) {
 
     togglePause(true);
 
-    // 4th violation (exceeds the 3-warning limit) -> immediate auto-submit, no dialog to dismiss.
     if (violationCount > MAX_VIOLATIONS) {
         stopFaceDetectionLoop();
         showAntiCheatAlert(`Maximum warnings (${MAX_VIOLATIONS}) exceeded — your quiz is being auto-submitted.`, true);
@@ -1099,9 +1098,6 @@ function handleVisibilityChange() {
         window.registerViolation('tab-switch', 'Tab switching / window minimizing detected!');
     }
 }
-
-
-
 async function setupProctorCamera() {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         throw new Error('Camera access is not supported in this browser.');
@@ -1115,6 +1111,7 @@ async function setupProctorCamera() {
         await proctorEls.video.play().catch(() => {});
     }
 }
+
 
 
 function waitForGlobal(name, timeoutMs) {
@@ -1132,12 +1129,11 @@ function waitForGlobal(name, timeoutMs) {
 
 async function loadFaceModel(remainingMs = 12000) {
     if (faceModel) return faceModel;
-
     console.log("Loading face-api tiny face detector...");
     await waitForGlobal('faceapi', remainingMs);
     await faceapi.nets.tinyFaceDetector.loadFromUri('/vendor/models');
 
-    faceModel = true; // face-api.js keeps the loaded net internally on faceapi.nets.tinyFaceDetector
+    faceModel = true; 
     console.log("Face model loaded successfully.");
     return faceModel;
 }
@@ -1149,7 +1145,6 @@ function setProctorStatus(state, text) {
             (state === 'ok' ? 'bg-emerald-400' : 'bg-red-500');
     }
 }
-
 
 let faceModelWatcherInterval = null;
 function watchForFaceModelReady() {
@@ -1217,8 +1212,11 @@ function stopProctoring() {
         proctorStream = null;
     }
 }
-window.stopProctoring = stopProctoring; 
+window.stopProctoring = stopProctoring; // exposed for result.js to call on final submit
 
+// ============================================================
+// FULLSCREEN ENFORCEMENT
+// ============================================================
 
 function requestFullscreenMode() {
     const el = document.documentElement;
