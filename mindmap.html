@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
-<title>Mindmaps — NEELAXMI </title>
+<title>Mindmaps — NEELAXMI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
 
-    <meta name="description" content="Neelaxmi The Helper: Official website for free NEET UG & JEE Main study materials, Unacademy DPP, modules, and powerful quiz centers. Join Neelaxmi The Union for daily updates and practice papers.">
+    <meta name="description" content="Neelaxmi The Helper: Official website for free NEET UG & JEE Main study materials,  modules, mindmaps and powerful quiz centers. Join Neelaxmi The Union for daily updates and practice papers.">
     <link rel="canonical" href="https://classupdates.netlify.app/">
 
     <!-- Open Graph (Social Sharing for WhatsApp/Telegram) -->
@@ -115,8 +115,8 @@
   /* ---------- Chapter grid ---------- */
   .grid{
     display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
-    gap:14px;
+    grid-template-columns:repeat(auto-fill,minmax(290px,4fr));
+    gap:34px;
   }
   .chapter-card{
     background:var(--surface);
@@ -379,6 +379,172 @@
     .mm-btn-group button{width:34px;height:34px;}
     .zoom-readout{height:34px;min-width:32px;font-size:10px;}
   }
+
+  /* ---------- Chapter icon (card + modal header) ---------- */
+  .chapter-card .card-icon{
+    width:40px;height:40px;
+    border-radius:10px;
+    background:rgba(20,33,61,0.06);
+    display:flex;align-items:center;justify-content:center;
+    font-size:20px;
+    flex:none;
+    overflow:hidden;
+  }
+  .chapter-card .card-icon img{width:100%;height:100%;object-fit:cover;}
+  .chapter-card .card-top-row{display:flex;align-items:center;gap:10px;justify-content:space-between;}
+  .modal-top-titles{flex-direction:row;align-items:center;gap:10px;}
+  .modal-icon{
+    width:32px;height:32px;border-radius:8px;flex:none;
+    background:rgba(20,33,61,0.06);
+    display:flex;align-items:center;justify-content:center;
+    font-size:16px;overflow:hidden;
+  }
+  .modal-icon img{width:100%;height:100%;object-fit:cover;}
+  .modal-top-titles .titles-text{display:flex;flex-direction:column;gap:2px;min-width:0;}
+
+  /* ---------- Popup background image ---------- */
+  .mm-viewport .mm-bg-image{
+    position:absolute;inset:0;
+    background-size:cover;
+    background-position:center;
+    opacity:0.16;
+    z-index:0;
+    pointer-events:none;
+  }
+  .mm-viewport .mm-bg-shade{
+    position:absolute;inset:0;
+    background:linear-gradient(180deg, rgba(242,244,248,0.55), rgba(242,244,248,0.9));
+    z-index:0;
+    pointer-events:none;
+  }
+  .mm-canvas{position:relative;z-index:1;}
+  .mm-toolbar, .mm-loading, .mm-empty{position:relative;z-index:5;}
+
+  /* ---------- Ownership watermark (tiled, diagonal, 40% visible) ---------- */
+  .mm-watermark{
+    position:absolute;inset:0;
+    z-index:3;
+    pointer-events:none;
+    opacity:0.4;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='150'%3E%3Ctext x='0' y='90' font-family='Space Grotesk,sans-serif' font-size='22' font-weight='700' letter-spacing='2' fill='%2314213D' transform='rotate(-28 130 75)'%3ENEELAXMI%3C/text%3E%3C/svg%3E");
+    background-repeat:repeat;
+    background-size:260px 150px;
+  }
+
+  /* ---------- Toast ---------- */
+  .toast{
+    position:fixed;
+    left:50%;bottom:26px;
+    transform:translate(-50%,16px);
+    background:var(--navy-deep);
+    color:#fff;
+    font-size:13.5px;
+    font-weight:500;
+    padding:11px 18px;
+    border-radius:10px;
+    box-shadow:0 10px 26px rgba(0,0,0,0.28);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .22s ease, transform .22s ease;
+    z-index:300;
+    display:flex;align-items:center;gap:8px;
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0);}
+  .toast svg{width:16px;height:16px;stroke:var(--teal-light);flex:none;}
+
+  /* ---------- Footer ---------- */
+  footer.site-footer{
+    background:var(--navy-deep);
+    color:#C7CEDD;
+    margin-top:40px;
+    padding:28px 20px 22px;
+  }
+  .footer-inner{
+    max-width:1120px;margin:0 auto;
+    display:flex;flex-wrap:wrap;
+    align-items:center;justify-content:space-between;
+    gap:16px;
+  }
+  .footer-brand{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;font-size:16px;color:#fff;
+    display:flex;align-items:center;gap:8px;
+  }
+  .footer-tag{font-size:12.5px;color:#8A96B0;margin-top:3px;}
+  .footer-links{display:flex;flex-wrap:wrap;gap:16px;}
+  .footer-links a{
+    color:#C7CEDD;text-decoration:none;font-size:13.5px;
+    display:flex;align-items:center;gap:6px;
+    transition:color .15s ease;
+  }
+  .footer-links a:hover{color:var(--amber);}
+  .footer-links svg{width:15px;height:15px;stroke:currentColor;flex:none;}
+  .footer-bottom{
+    max-width:1120px;margin:16px auto 0;
+    padding-top:14px;
+    border-top:1px solid rgba(255,255,255,0.08);
+    font-size:12px;color:#7C88A3;
+    text-align:center;
+  }
+
+  /* ---------- Telegram promo modal ---------- */
+  .tg-overlay{
+    position:fixed;inset:0;
+    background:rgba(11,23,48,0.6);
+    backdrop-filter:blur(2px);
+    display:none;
+    align-items:center;justify-content:center;
+    z-index:200;
+    padding:16px;
+  }
+  .tg-overlay.open{display:flex;animation:tgFadeIn .25s ease;}
+  @keyframes tgFadeIn{from{opacity:0;}to{opacity:1;}}
+  .tg-box{
+    background:var(--surface);
+    width:100%;max-width:360px;
+    border-radius:18px;
+    padding:26px 24px 22px;
+    text-align:center;
+    position:relative;
+    box-shadow:0 30px 60px rgba(0,0,0,0.4);
+    animation:tgPop .28s cubic-bezier(.22,1,.36,1);
+  }
+  @keyframes tgPop{from{transform:scale(.92);opacity:0;}to{transform:scale(1);opacity:1;}}
+  .tg-close{
+    position:absolute;top:12px;right:12px;
+    width:28px;height:28px;border-radius:50%;
+    border:none;background:rgba(20,33,61,0.06);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;color:var(--muted);
+  }
+  .tg-close:hover{background:rgba(20,33,61,0.12);color:var(--navy);}
+  .tg-close svg{width:14px;height:14px;stroke:currentColor;}
+  .tg-icon{
+    width:56px;height:56px;border-radius:16px;margin:0 auto 14px;
+    background:linear-gradient(135deg,#2AABEE,#229ED9);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .tg-icon svg{width:30px;height:30px;fill:#fff;}
+  .tg-box h3{margin:0 0 8px;font-size:19px;color:var(--navy-deep);}
+  .tg-box p{margin:0 0 20px;font-size:13.5px;color:var(--muted);line-height:1.5;}
+  .tg-join-btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    width:100%;
+    background:linear-gradient(135deg,#2AABEE,#229ED9);
+    color:#fff;font-weight:700;font-size:14.5px;
+    font-family:'IBM Plex Sans',sans-serif;
+    padding:13px 18px;border-radius:11px;
+    text-decoration:none;
+    box-shadow:0 8px 20px rgba(34,158,217,0.35);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .tg-join-btn:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(34,158,217,0.45);}
+  .tg-join-btn svg{width:18px;height:18px;fill:#fff;}
+  .tg-later{
+    display:block;margin-top:12px;font-size:12.5px;color:var(--muted);
+    background:none;border:none;cursor:pointer;text-decoration:underline;
+    font-family:'IBM Plex Sans',sans-serif;
+  }
 </style>
 </head>
 <body>
@@ -409,17 +575,70 @@
   </div>
 </main>
 
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">NEELAXMI</div>
+      <div class="footer-tag">Free NEET UG &amp; JEE Main study materials, DPPs &amp; quizzes.</div>
+    </div>
+    <div class="footer-links">
+      <a href="https://telegram.me/saksen_journey_offical" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        Telegram
+      </a>
+      <a href="https://classupdates.netlify.app/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+        Neelaxmi Home
+      </a>
+      <a href="https://neelaxmi.site/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Neelaxmi official
+      </a>
+
+      
+    </div>
+  </div>
+  <div class="footer-bottom">© <span id="footerYear"></span> NEELAXMI THE UNION · Team Saksen</div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<!-- Telegram join promo -->
+<div class="tg-overlay" id="tgOverlay">
+  <div class="tg-box">
+    <button class="tg-close" id="tgClose" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div class="tg-icon">
+      <svg viewBox="0 0 24 24"><path d="M21.5 2.5L2.7 10.1c-1.2.5-1.2 1.2-.2 1.5l4.8 1.5 1.8 5.7c.2.6.4.9.9.9.4 0 .6-.2.9-.5l2.2-2.1 4.6 3.4c.8.5 1.4.2 1.6-.8l3-14c.3-1.3-.5-1.9-1.8-1.2zM8.6 13.6l9.5-6-7.7 7-.3 3.1-1.5-4.1z"/></svg>
+    </div>
+    <h3>Join our Telegram</h3>
+    <p>Get daily DPPs, module updates and quiz alerts straight from Team NEELAXMI  — free, and first.</p>
+    <a class="tg-join-btn" id="tgJoinBtn" href="https://telegram.me/neelaxmi_official" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M21.5 2.5L2.7 10.1c-1.2.5-1.2 1.2-.2 1.5l4.8 1.5 1.8 5.7c.2.6.4.9.9.9.4 0 .6-.2.9-.5l2.2-2.1 4.6 3.4c.8.5 1.4.2 1.6-.8l3-14c.3-1.3-.5-1.9-1.8-1.2zM8.6 13.6l9.5-6-7.7 7-.3 3.1-1.5-4.1z"/></svg>
+      Join Telegram Channel
+    </a>
+    <button class="tg-later" id="tgLater">Maybe later</button>
+  </div>
+</div>
+
 <!-- Mindmap popup -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-top">
       <div class="modal-top-titles">
-        <h2 id="modalTitle">Chapter</h2>
-        <div class="sub" id="modalSub"></div>
+        <div class="modal-icon" id="modalIcon"><img src="/pictures/neelaxmi.png" alt="NEELAXMI" /></div>
+        <div class="titles-text">
+          <h2 id="modalTitle">Chapter</h2>
+          <div class="sub" id="modalSub"></div>
+        </div>
       </div>
       <div class="modal-top-actions">
         <button class="text-btn" id="expandAllBtnTop">Expand all</button>
         <button class="text-btn" id="collapseAllBtnTop">Collapse all</button>
+        <button class="icon-btn" id="shareBtn" aria-label="Share this mindmap" title="Share this mindmap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5l6.8-3.9M8.6 13.5l6.8 3.9"/></svg>
+        </button>
         <button class="icon-btn" id="closeModalBtn" aria-label="Close">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </button>
@@ -427,6 +646,9 @@
     </div>
     <div class="modal-status" id="modalStatus">Showing 0 of 0 topics</div>
     <div class="mm-viewport" id="mmViewport">
+      <div class="mm-bg-image" id="mmBgImage"></div>
+      <div class="mm-bg-shade" id="mmBgShade"></div>
+      <div class="mm-watermark"></div>
       <div class="mm-canvas" id="mmCanvas">
         <svg id="mmLines" style="position:absolute;top:0;left:0;overflow:visible;"></svg>
       </div>
@@ -473,8 +695,6 @@ const FIREBASE_CONFIG = {
 };
 const CHAPTERS_COLLECTION = "mindmapChapters";
 const FIREBASE_IS_CONFIGURED = FIREBASE_CONFIG.apiKey !== "YOUR_API_KEY";
-// Fallback used only if Firestore is unreachable or unconfigured — kept as an
-// empty array so the app never throws a ReferenceError in that path.
 const DEMO_CHAPTERS = [];
 
 let db = null;
@@ -515,6 +735,52 @@ const mmViewport = document.getElementById("mmViewport");
 const mmCanvas = document.getElementById("mmCanvas");
 const mmLines = document.getElementById("mmLines");
 const mmLoading = document.getElementById("mmLoading");
+const modalIcon = document.getElementById("modalIcon");
+const mmBgImage = document.getElementById("mmBgImage");
+const shareBtn = document.getElementById("shareBtn");
+const toastEl = document.getElementById("toast");
+let currentShareChapter = null;
+let toastTimer = null;
+function showToast(msg) {
+  toastEl.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>${msg}`;
+  toastEl.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2400);
+}
+function slugifyTitle(title) {
+  return (title || "")
+    .toString()
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+async function shareCurrentChapter() {
+  if (!currentShareChapter) return;
+  const url = new URL(window.location.href);
+  url.searchParams.set("chapter", slugifyTitle(currentShareChapter.chapterName));
+  const shareUrl = url.toString();
+  const shareData = {
+    title: `${currentShareChapter.chapterName} — Mindmap`,
+    text: `Check out the "${currentShareChapter.chapterName}" mindmap on NEELAXMI`,
+    url: shareUrl
+  };
+  if (navigator.share) {
+    try {
+      await navigator.share(shareData);
+      return;
+    } catch (e) {
+      if (e && e.name === "AbortError") return;
+    }
+  }
+  try {
+    await navigator.clipboard.writeText(shareUrl);
+    showToast("Link copied — share it anywhere");
+  } catch (e) {
+    showToast(shareUrl);
+  }
+}
+shareBtn.addEventListener("click", shareCurrentChapter);
 const fitBtn = document.getElementById("fitBtn");
 const zoomInBtn = document.getElementById("zoomInBtn");
 const zoomOutBtn = document.getElementById("zoomOutBtn");
@@ -524,9 +790,6 @@ const collapseAllBtn = document.getElementById("collapseAllBtn");
 const expandAllBtnTop = document.getElementById("expandAllBtnTop");
 const collapseAllBtnTop = document.getElementById("collapseAllBtnTop");
 
-/* =========================================================================
-   LOAD CHAPTERS (Firestore, falling back to demo data)
-   ========================================================================= */
 async function loadChapters() {
   await setupFirebase();
   if (db) {
@@ -577,10 +840,18 @@ function renderGrid() {
   filtered.forEach(chapter => {
     const card = document.createElement("button");
     card.className = "chapter-card";
+    const iconHtml = chapter.icon
+      ? (/^https?:\/\//.test(chapter.icon)
+          ? `<img src="${chapter.icon}" alt="" loading="lazy" />`
+          : chapter.icon)
+      : `<img src="/pictures/neelaxmi.png" alt="NEELAXMI" loading="lazy" />`;
     card.innerHTML = `
-      <div class="badge-row">
-        <span class="badge class">Class ${chapter.className}</span>
-        <span class="badge unit">${chapter.unit}</span>
+      <div class="card-top-row">
+        <div class="badge-row">
+          <span class="badge class">Class ${chapter.className}</span>
+          <span class="badge unit">${chapter.unit}</span>
+        </div>
+        <div class="card-icon">${iconHtml}</div>
       </div>
       <h3>${chapter.chapterName}</h3>
       <div class="open-hint">
@@ -593,35 +864,17 @@ function renderGrid() {
   });
 }
 
-/* =========================================================================
-   MINDMAP RENDERER
-   =========================================================================
-   Design notes:
-   - Every non-root node starts collapsed, so a tap on any branch reveals only
-     its direct children — never the whole subtree at once ("one by one").
-   - Each depth-1 branch is given its own hue from BRANCH_PALETTE; every node
-     under that branch inherits the same hue, just lighter as depth increases.
-     That's what lets you trace a sub-branch back to its parent branch by
-     color alone.
-   - Expanding a node smoothly pans/zooms ("focuses") the camera onto that
-     node and its newly revealed children, and nodes that stay on screen
-     glide to their new position (a FLIP animation) instead of snapping.
-   ========================================================================= */
 const NODE_WIDTH = 232;
 const H_GAP = 74;
 const V_GAP = 14;
 const MIN_ZOOM = 0.15;
 const MAX_ZOOM = 2.5;
-
-// One base hue (in degrees) per top-level branch. Two of these intentionally
-// echo the site's own teal/amber brand colors; the rest extend the family
-// with hues that stay legible with both white and dark text.
 const BRANCH_PALETTE = [168, 35, 222, 340, 100, 265, 200, 18];
 
 let zoom = 1, panX = 0, panY = 0;
 let currentRoot = null;
 let cameraAnim = null;
-let lastPositions = new Map();  // node._id -> {x, y} from the previous render, for FLIP
+let lastPositions = new Map();
 let lastVisibleIds = new Set();
 
 function colorFor(node, depth) {
@@ -670,8 +923,6 @@ function countAll(node) {
 }
 
 function measureHeights(node) {
-  // Render a hidden probe (with the same chrome as a real card) to measure
-  // wrapped text height at NODE_WIDTH.
   const hasChildren = node.children && node.children.length > 0;
   const probe = document.createElement("div");
   probe.className = "mm-node depth-" + Math.min(node._depth, 3) + (hasChildren ? " has-children" : " leaf");
@@ -746,7 +997,6 @@ function buildCanvas() {
   mmLines.setAttribute("width", maxX + 40);
   mmLines.setAttribute("height", maxY + 40);
 
-  // Connector paths, colored to match the child branch they lead into.
   let pathsHTML = "";
   visible.forEach(({ node, depth }) => {
     const collapsed = node._collapsed || !node.children || node.children.length === 0;
@@ -761,7 +1011,6 @@ function buildCanvas() {
       });
     }
   });
-  // Crossfade the lines instead of snapping them straight to the new layout.
   mmLines.style.transition = "opacity .18s ease";
   mmLines.style.opacity = "0";
   setTimeout(() => {
@@ -769,7 +1018,6 @@ function buildCanvas() {
     requestAnimationFrame(() => { mmLines.style.opacity = "1"; });
   }, 140);
 
-  // Drop anything that's no longer visible.
   mmCanvas.querySelectorAll(".mm-node, .mm-toggle").forEach(elx => {
     if (!newVisibleIds.has(elx.dataset.id)) elx.remove();
   });
@@ -846,10 +1094,6 @@ function buildCanvas() {
     }
   });
 
-  // Flush the "before" styles set above in a single reflow, then animate
-  // every moved/new card to its resting state — new cards pop in with a
-  // light stagger, cards that were already open glide (FLIP) to their new
-  // spot instead of jumping.
   void mmCanvas.offsetHeight;
   let enterIndex = 0;
   pendingAnim.forEach(({ el, kind }) => {
@@ -925,8 +1169,6 @@ function fitToScreenAnimated() {
   animateCamera(targetPanX, targetPanY, targetZoom, 420);
 }
 
-// Smoothly pans/zooms so the given node and its (now visible) children are
-// nicely framed — the "zoom into the branch you just opened" behavior.
 function focusOnNode(node) {
   const kids = (!node._collapsed && node.children) ? node.children : [];
   let minX = node._x, maxX = node._x + NODE_WIDTH;
@@ -944,9 +1186,6 @@ function focusOnNode(node) {
   const vpRect = mmViewport.getBoundingClientRect();
   const fitScale = Math.min(vpRect.width / boxW, vpRect.height / boxH);
   const targetZoom = Math.max(0.3, Math.min(fitScale, MAX_ZOOM));
-
-  // Bias the framed region toward the left third of the viewport so there's
-  // room on screen for the branch to keep growing to the right.
   const targetScreenX = vpRect.width * 0.38;
   const targetScreenY = vpRect.height * 0.5;
   const worldCenterX = (minX + maxX) / 2;
@@ -995,15 +1234,11 @@ function collapseAll() {
   setTimeout(fitToScreenAnimated, 40);
 }
 
-/* ---- pan (mouse + touch via Pointer Events) ---- */
 let isPanning = false, lastPX = 0, lastPY = 0;
 const activePointers = new Map();
 let pinchStartDist = 0, pinchStartZoom = 1;
 
 mmViewport.addEventListener("pointerdown", (e) => {
-  // Let toggle buttons, the toolbar, and node cards themselves handle their
-  // own clicks — only empty canvas starts a pan, so a tap on a card is never
-  // mistaken for the start of a drag.
   if (e.target.closest(".mm-toggle, .mm-toolbar, .mm-node")) return;
   stopCameraAnim();
   activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
@@ -1081,14 +1316,32 @@ collapseAllBtn.addEventListener("click", collapseAll);
 expandAllBtnTop.addEventListener("click", expandAll);
 collapseAllBtnTop.addEventListener("click", collapseAll);
 
-/* =========================================================================
-   MODAL open / close
-   ========================================================================= */
 function openMindmap(chapter) {
   modalTitle.textContent = chapter.chapterName;
   modalSub.textContent = `Class ${chapter.className} · ${chapter.unit}`;
+
+  if (chapter.icon) {
+    modalIcon.innerHTML = /^https?:\/\//.test(chapter.icon)
+      ? `<img src="${chapter.icon}" alt="" />`
+      : chapter.icon;
+  } else {
+    modalIcon.innerHTML = `<img src="/pictures/neelaxmi.png" alt="NEELAXMI" />`;
+  }
+
+  if (chapter.bgImage) {
+    mmBgImage.style.backgroundImage = `url("${chapter.bgImage}")`;
+    mmBgImage.style.display = "block";
+  } else {
+    mmBgImage.style.backgroundImage = "";
+    mmBgImage.style.display = "none";
+  }
+
   overlay.classList.add("open");
   document.body.style.overflow = "hidden";
+  currentShareChapter = chapter;
+  const url = new URL(window.location.href);
+  url.searchParams.set("chapter", slugifyTitle(chapter.chapterName));
+  window.history.replaceState({}, "", url);
 
   mmLoading.style.display = "flex";
   mmCanvas.querySelectorAll(".mm-node, .mm-toggle").forEach(n => n.remove());
@@ -1110,29 +1363,80 @@ function openMindmap(chapter) {
 function closeMindmap() {
   overlay.classList.remove("open");
   document.body.style.overflow = "";
+  currentShareChapter = null;
+  const url = new URL(window.location.href);
+  url.searchParams.delete("chapter");
+  window.history.replaceState({}, "", url);
 }
 closeModalBtn.addEventListener("click", closeMindmap);
 overlay.addEventListener("click", (e) => { if (e.target === overlay) closeMindmap(); });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape" && overlay.classList.contains("open")) closeMindmap(); });
 window.addEventListener("resize", () => { if (overlay.classList.contains("open")) fitToScreen(); });
 
-/* =========================================================================
-   INIT
-   ========================================================================= */
 classFilter.addEventListener("change", renderGrid);
 unitFilter.addEventListener("change", renderGrid);
 searchFilter.addEventListener("input", renderGrid);
 
 (async function init() {
+  const yearEl = document.getElementById("footerYear");
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
   allChapters = await loadChapters();
   gridState.remove();
   if (allChapters.length === 0) {
     grid.innerHTML = `<div class="state-msg">No chapters have been added yet. Check back soon.</div>`;
-    return;
+  } else {
+    populateFilterOptions(allChapters);
+    renderGrid();
+
+    const sharedSlug = new URLSearchParams(window.location.search).get("chapter");
+    if (sharedSlug) {
+      const shared = allChapters.find(c => slugifyTitle(c.chapterName) === sharedSlug);
+      if (shared) openMindmap(shared);
+    }
   }
-  populateFilterOptions(allChapters);
-  renderGrid();
+
+  initTelegramPromo();
 })();
+
+function initTelegramPromo() {
+  const STORAGE_KEY = "neelaxmi_tg_last_shown";
+  const FOUR_DAYS_MS = 4 * 24 * 60 * 60 * 1000;
+  const tgOverlay = document.getElementById("tgOverlay");
+  const tgClose = document.getElementById("tgClose");
+  const tgLater = document.getElementById("tgLater");
+  const tgJoinBtn = document.getElementById("tgJoinBtn");
+
+  function markShown() {
+    try { localStorage.setItem(STORAGE_KEY, String(Date.now())); } catch (e) {}
+  }
+  function closeTgModal() {
+    tgOverlay.classList.remove("open");
+  }
+  function shouldShow() {
+    let last = null;
+    try { last = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+    if (!last) return true; 
+    const elapsed = Date.now() - parseInt(last, 10);
+    return isFinite(elapsed) && elapsed >= FOUR_DAYS_MS;
+  }
+
+  if (shouldShow()) {
+    setTimeout(() => {
+      if (overlay.classList.contains("open")) return;
+      tgOverlay.classList.add("open");
+      markShown();
+    }, 900);
+  }
+
+  tgClose.addEventListener("click", closeTgModal);
+  tgLater.addEventListener("click", closeTgModal);
+  tgJoinBtn.addEventListener("click", closeTgModal);
+  tgOverlay.addEventListener("click", (e) => { if (e.target === tgOverlay) closeTgModal(); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && tgOverlay.classList.contains("open")) closeTgModal();
+  });
+}
 </script>
 </body>
 </html>
