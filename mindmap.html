@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+<title>Mindmaps — NEELAXMI </title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <meta name="description" content="Neelaxmi The Helper: Official website for free NEET UG & JEE Main study materials, Unacademy DPP, modules, and powerful quiz centers. Join Neelaxmi The Union for daily updates and practice papers.">
+    <link rel="canonical" href="https://classupdates.netlify.app/">
+
+    <!-- Open Graph (Social Sharing for WhatsApp/Telegram) -->
+    <meta property="og:title" content="Neelaxmi The Helper | NEET & JEE Study Hub">
+    <meta property="og:description" content="Access free study materials, modules, and practice quizzes for NEET & JEE. Join Neelaxmi today!">
+    <meta property="og:image" content="/pictures/neelaxmi.png">
+    <meta property="og:url" content="https://classupdates.netlify.app/">
+    <meta property="og:type" content="website">
+
+    <!-- Browser, PWA & App Meta -->
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Neelaxmi">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/pictures/neelaxmi.png">
+    <link rel="icon" type="image/jpeg" href="/pictures/neelaxmi.png">
+    <meta name="google-site-verification" content="iatylsdA3ilcUEyKshZLLZmpDIh6TMUdj7qjgoLTWxw">
+
+<style>
+  :root{
+    --navy:#14213D;
+    --navy-deep:#0B1730;
+    --amber:#E3A737;
+    --amber-deep:#C68A1F;
+    --teal:#12786F;
+    --teal-light:#8FCFC7;
+    --bg:#F2F4F8;
+    --surface:#FFFFFF;
+    --ink:#152238;
+    --muted:#5B6A85;
+    --line:#DCE2ED;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans',sans-serif;
+    min-height:100vh;
+  }
+  h1,h2,h3,.brand,.node-text{font-family:'Space Grotesk',sans-serif;}
+
+  /* ---------- Header ---------- */
+  header.site{
+    background:var(--navy);
+    color:#fff;
+    padding:18px 22px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    position:sticky;
+    top:0;
+    z-index:20;
+    box-shadow:0 2px 10px rgba(11,23,48,0.18);
+  }
+  .brand{
+    font-size:20px;
+    font-weight:700;
+    letter-spacing:0.2px;
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+  }
+  .brand span{
+    font-family:'IBM Plex Sans',sans-serif;
+    font-size:12.5px;
+    font-weight:500;
+    color:var(--teal-light);
+  }
+  .page-kicker{
+    font-size:13px;
+    color:#B9C2D4;
+  }
+
+  main{max-width:1120px;margin:0 auto;padding:28px 20px 60px;}
+
+  .intro{margin-bottom:22px;}
+  .intro h1{font-size:26px;margin:0 0 6px;color:var(--navy-deep);}
+  .intro p{margin:0;color:var(--muted);font-size:14.5px;max-width:62ch;}
+
+  /* ---------- Filters ---------- */
+  .filters{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:22px;
+  }
+  .filters select, .filters input[type="text"]{
+    font-family:'IBM Plex Sans',sans-serif;
+    font-size:14px;
+    border:1px solid var(--line);
+    background:var(--surface);
+    color:var(--ink);
+    padding:10px 14px;
+    border-radius:9px;
+    outline:none;
+    min-width:150px;
+  }
+  .filters input[type="text"]{flex:1;min-width:200px;}
+  .filters select:focus, .filters input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(18,120,111,0.12);}
+
+  /* ---------- Chapter grid ---------- */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:14px;
+  }
+  .chapter-card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:16px 16px 14px;
+    text-align:left;
+    cursor:pointer;
+    transition:border-color .15s ease, transform .15s ease, box-shadow .15s ease;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .chapter-card:hover{border-color:var(--teal);transform:translateY(-2px);box-shadow:0 8px 20px rgba(20,33,61,0.08);}
+  .chapter-card:focus-visible{outline:2px solid var(--teal);outline-offset:2px;}
+  .badge-row{display:flex;gap:6px;flex-wrap:wrap;}
+  .badge{
+    font-size:11.5px;
+    font-weight:600;
+    padding:3px 9px;
+    border-radius:999px;
+  }
+  .badge.class{background:rgba(20,33,61,0.08);color:var(--navy);}
+  .badge.unit{background:rgba(18,120,111,0.1);color:var(--teal);}
+  .chapter-card h3{margin:0;font-size:16.5px;color:var(--navy-deep);line-height:1.3;}
+  .chapter-card .open-hint{
+    font-size:13px;
+    color:var(--muted);
+    display:flex;
+    align-items:center;
+    gap:6px;
+    margin-top:auto;
+  }
+  .chapter-card .open-hint svg{width:14px;height:14px;stroke:var(--teal);}
+
+  .state-msg{
+    grid-column:1/-1;
+    text-align:center;
+    padding:50px 20px;
+    color:var(--muted);
+    font-size:14.5px;
+  }
+  .state-msg.error{color:#A5391F;}
+
+  /* ---------- Modal ---------- */
+  .modal-overlay{
+    position:fixed;inset:0;
+    background:rgba(11,23,48,0.55);
+    backdrop-filter:blur(2px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    padding:16px;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal-box{
+    background:var(--surface);
+    width:100%;
+    max-width:1080px;
+    height:min(720px,92vh);
+    border-radius:16px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    box-shadow:0 30px 60px rgba(0,0,0,0.35);
+  }
+  .modal-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 18px;
+    border-bottom:1px solid var(--line);
+    gap:10px;
+  }
+  .modal-top-titles{display:flex;flex-direction:column;gap:2px;min-width:0;}
+  .modal-top-titles h2{
+    font-size:16.5px;margin:0;color:var(--navy-deep);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .modal-top-titles .sub{font-size:12.5px;color:var(--muted);}
+  .modal-top-actions{display:flex;align-items:center;gap:8px;flex:none;}
+  .text-btn{
+    font-family:'IBM Plex Sans',sans-serif;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--teal);
+    background:rgba(18,120,111,0.08);
+    border:1px solid rgba(18,120,111,0.18);
+    padding:7px 12px;
+    border-radius:8px;
+    cursor:pointer;
+    white-space:nowrap;
+    user-select:none;
+    transition:background .15s ease;
+  }
+  .text-btn:hover{background:rgba(18,120,111,0.16);}
+  .icon-btn{
+    border:1px solid var(--line);
+    background:var(--surface);
+    width:34px;height:34px;
+    border-radius:9px;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    flex:none;
+    color:var(--navy);
+    transition:background .15s ease, border-color .15s ease;
+  }
+  .icon-btn:hover{background:#F0F3F8;border-color:var(--teal);}
+  .icon-btn svg{width:17px;height:17px;stroke:currentColor;}
+
+  .modal-status{
+    padding:7px 18px;
+    font-size:12px;
+    color:var(--muted);
+    border-bottom:1px solid var(--line);
+    background:#FAFBFD;
+    flex:none;
+  }
+
+  .mm-viewport{
+    position:relative;
+    flex:1;
+    overflow:hidden;
+    background:
+      radial-gradient(circle at 1px 1px, #E4E9F1 1.4px, transparent 1.4px) 0 0/22px 22px,
+      var(--bg);
+    touch-action:none;
+    cursor:grab;
+  }
+  .mm-viewport.panning{cursor:grabbing;}
+  .mm-canvas{
+    position:absolute;
+    top:0;left:0;
+    transform-origin:0 0;
+    will-change:transform;
+  }
+
+  /* ---------- Node cards ---------- */
+  .mm-node{
+    position:absolute;
+    box-sizing:border-box;
+    padding:10px 14px 10px 12px;
+    border-radius:12px;
+    font-size:13px;
+    line-height:1.36;
+    font-weight:500;
+    box-shadow:0 2px 6px rgba(11,23,48,0.10), 0 1px 2px rgba(11,23,48,0.08);
+    border:1px solid rgba(11,23,48,0.06);
+    display:flex;
+    align-items:center;
+    gap:9px;
+    color:var(--navy-deep);
+    z-index:1;
+    cursor:default;
+    user-select:none;
+    transition:transform .32s cubic-bezier(.22,1,.36,1), opacity .28s ease, box-shadow .15s ease;
+  }
+  .mm-node .node-accent{width:5px;align-self:stretch;border-radius:4px;flex:none;}
+  .mm-node .node-text{font-family:'IBM Plex Sans',sans-serif;font-weight:inherit;flex:1;min-width:0;}
+  .mm-node .count-badge{
+    flex:none;
+    font-size:10.5px;
+    font-weight:700;
+    padding:2px 7px;
+    border-radius:999px;
+    background:rgba(11,23,48,0.08);
+    font-variant-numeric:tabular-nums;
+  }
+  .mm-node.depth-0{font-size:15.5px;font-weight:700;padding:14px 18px 14px 14px;box-shadow:0 10px 24px rgba(11,23,48,0.30);}
+  .mm-node.depth-0 .count-badge{background:rgba(255,255,255,0.22);color:#fff;}
+  .mm-node.depth-1{font-size:13.5px;font-weight:600;}
+  .mm-node.depth-1 .count-badge{background:rgba(255,255,255,0.28);color:inherit;}
+  .mm-node.leaf{font-weight:400;box-shadow:0 1px 3px rgba(11,23,48,0.08);}
+  .mm-node.has-children{cursor:pointer;}
+  .mm-node.has-children:hover{box-shadow:0 8px 18px rgba(11,23,48,0.18);transform:translateY(-1px);}
+  .mm-node:focus-visible{outline:2px solid var(--teal);outline-offset:2px;}
+  .mm-node.pulse{animation:nodePulse .7s ease;}
+  @keyframes nodePulse{
+    0%{box-shadow:0 0 0 0 rgba(18,120,111,0.45);}
+    70%{box-shadow:0 0 0 14px rgba(18,120,111,0);}
+    100%{box-shadow:0 0 0 0 rgba(18,120,111,0);}
+  }
+
+  .mm-toggle{
+    position:absolute;
+    width:23px;height:23px;
+    border-radius:50%;
+    background:var(--surface);
+    border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    font-size:12px;
+    color:var(--navy);
+    box-shadow:0 1px 3px rgba(11,23,48,0.2);
+    user-select:none;
+    z-index:2;
+    transition:transform .18s ease, border-color .15s ease, color .15s ease;
+  }
+  .mm-toggle:hover{border-color:var(--teal);color:var(--teal);}
+  .mm-toggle svg{width:11px;height:11px;stroke:currentColor;transition:transform .18s ease;}
+  .mm-toggle.expanded svg{transform:rotate(90deg);}
+
+  /* ---------- Floating toolbar ---------- */
+  .mm-toolbar{
+    position:absolute;
+    right:16px;bottom:16px;
+    display:flex;
+    gap:10px;
+    z-index:5;
+  }
+  .mm-btn-group{
+    display:flex;
+    align-items:center;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 6px 18px rgba(11,23,48,0.16);
+  }
+  .mm-btn-group button{
+    width:38px;height:38px;
+    border:none;background:none;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    color:var(--navy);
+    flex:none;
+  }
+  .mm-btn-group button+button{border-left:1px solid var(--line);}
+  .mm-btn-group button:hover{background:#F0F3F8;color:var(--teal);}
+  .mm-btn-group svg{width:16px;height:16px;stroke:currentColor;}
+  .zoom-readout{
+    font-size:11px;font-weight:700;color:var(--muted);
+    padding:0 8px;min-width:38px;text-align:center;
+    font-variant-numeric:tabular-nums;
+    border-left:1px solid var(--line);
+    border-right:1px solid var(--line);
+    height:38px;display:flex;align-items:center;justify-content:center;
+  }
+
+  .mm-loading, .mm-empty{
+    position:absolute;inset:0;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--muted);font-size:14px;
+    flex-direction:column;gap:10px;
+  }
+  .spinner{
+    width:26px;height:26px;border-radius:50%;
+    border:3px solid var(--line);border-top-color:var(--teal);
+    animation:spin .8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  @media (max-width:640px){
+    .modal-box{height:100vh;border-radius:0;max-width:100%;}
+    .filters select, .filters input[type="text"]{min-width:0;flex:1 1 45%;}
+    .modal-top-actions .text-btn{display:none;}
+  }
+  @media (max-width:420px){
+    .mm-btn-group button{width:34px;height:34px;}
+    .zoom-readout{height:34px;min-width:32px;font-size:10px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="brand">NEELAXMI <span>mindmaps</span></div>
+  <div class="page-kicker">NEET UG · JEE Main</div>
+</header>
+
+<main>
+  <div class="intro">
+    <h1>Chapter mindmaps</h1>
+    <p>Pick a chapter to open its mindmap. Drag empty space to move around, pinch or use the corner controls to zoom, and tap a branch to reveal what's inside — one layer at a time.</p>
+  </div>
+
+  <div class="filters">
+    <select id="classFilter" aria-label="Filter by class">
+      <option value="">All classes</option>
+    </select>
+    <select id="unitFilter" aria-label="Filter by unit">
+      <option value="">All units</option>
+    </select>
+    <input id="searchFilter" type="text" placeholder="Search chapter name…" aria-label="Search chapter" />
+  </div>
+
+  <div class="grid" id="chapterGrid">
+    <div class="state-msg" id="gridState">Loading chapters…</div>
+  </div>
+</main>
+
+<!-- Mindmap popup -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-top">
+      <div class="modal-top-titles">
+        <h2 id="modalTitle">Chapter</h2>
+        <div class="sub" id="modalSub"></div>
+      </div>
+      <div class="modal-top-actions">
+        <button class="text-btn" id="expandAllBtnTop">Expand all</button>
+        <button class="text-btn" id="collapseAllBtnTop">Collapse all</button>
+        <button class="icon-btn" id="closeModalBtn" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="modal-status" id="modalStatus">Showing 0 of 0 topics</div>
+    <div class="mm-viewport" id="mmViewport">
+      <div class="mm-canvas" id="mmCanvas">
+        <svg id="mmLines" style="position:absolute;top:0;left:0;overflow:visible;"></svg>
+      </div>
+      <div class="mm-toolbar">
+        <div class="mm-btn-group">
+          <button id="expandAllBtn" title="Expand all branches" aria-label="Expand all branches">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+          </button>
+          <button id="collapseAllBtn" title="Collapse all branches" aria-label="Collapse all branches">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>
+          </button>
+        </div>
+        <div class="mm-btn-group">
+          <button id="zoomOutBtn" title="Zoom out" aria-label="Zoom out">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg>
+          </button>
+          <div class="zoom-readout" id="zoomReadout">100%</div>
+          <button id="zoomInBtn" title="Zoom in" aria-label="Zoom in">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+          <button id="fitBtn" title="Fit to screen" aria-label="Fit to screen">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="mm-loading" id="mmLoading" style="display:none;">
+        <div class="spinner"></div>
+        <div>Loading mindmap…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyC7lbEg1353VSgtFOYmYLPmRTO99Gpunxo",
+    authDomain: "minds-f52bb.firebaseapp.com",
+    projectId: "minds-f52bb",
+    storageBucket: "minds-f52bb.firebasestorage.app",
+    messagingSenderId: "259672020982",
+    appId: "1:259672020982:web:3656f1faac11bd3b74d9d7",
+    measurementId: "G-NY1HGTNJ4K"
+
+};
+const CHAPTERS_COLLECTION = "mindmapChapters";
+const FIREBASE_IS_CONFIGURED = FIREBASE_CONFIG.apiKey !== "YOUR_API_KEY";
+// Fallback used only if Firestore is unreachable or unconfigured — kept as an
+// empty array so the app never throws a ReferenceError in that path.
+const DEMO_CHAPTERS = [];
+
+let db = null;
+let getDocsFn = null;
+let collectionFn = null;
+
+async function setupFirebase() {
+  if (!FIREBASE_IS_CONFIGURED) return; 
+  try {
+    const [{ initializeApp }, { getFirestore, collection, getDocs }] = await Promise.all([
+      import("https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js"),
+      import("https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js")
+    ]);
+    const app = initializeApp(FIREBASE_CONFIG);
+    db = getFirestore(app);
+    collectionFn = collection;
+    getDocsFn = getDocs;
+  } catch (e) {
+    console.warn("Firebase failed to load — using demo data.", e);
+    db = null;
+  }
+}
+
+
+let allChapters = [];
+const grid = document.getElementById("chapterGrid");
+const gridState = document.getElementById("gridState");
+const classFilter = document.getElementById("classFilter");
+const unitFilter = document.getElementById("unitFilter");
+const searchFilter = document.getElementById("searchFilter");
+
+const overlay = document.getElementById("modalOverlay");
+const modalTitle = document.getElementById("modalTitle");
+const modalSub = document.getElementById("modalSub");
+const modalStatus = document.getElementById("modalStatus");
+const closeModalBtn = document.getElementById("closeModalBtn");
+const mmViewport = document.getElementById("mmViewport");
+const mmCanvas = document.getElementById("mmCanvas");
+const mmLines = document.getElementById("mmLines");
+const mmLoading = document.getElementById("mmLoading");
+const fitBtn = document.getElementById("fitBtn");
+const zoomInBtn = document.getElementById("zoomInBtn");
+const zoomOutBtn = document.getElementById("zoomOutBtn");
+const zoomReadout = document.getElementById("zoomReadout");
+const expandAllBtn = document.getElementById("expandAllBtn");
+const collapseAllBtn = document.getElementById("collapseAllBtn");
+const expandAllBtnTop = document.getElementById("expandAllBtnTop");
+const collapseAllBtnTop = document.getElementById("collapseAllBtnTop");
+
+/* =========================================================================
+   LOAD CHAPTERS (Firestore, falling back to demo data)
+   ========================================================================= */
+async function loadChapters() {
+  await setupFirebase();
+  if (db) {
+    try {
+      const snap = await getDocsFn(collectionFn(db, CHAPTERS_COLLECTION));
+      if (!snap.empty) {
+        return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      }
+    } catch (e) {
+      console.warn("Firestore fetch failed, falling back to demo data.", e);
+    }
+  }
+  return DEMO_CHAPTERS;
+}
+
+function populateFilterOptions(chapters) {
+  const classes = [...new Set(chapters.map(c => c.className))].sort();
+  const units = [...new Set(chapters.map(c => c.unit))].sort();
+  classes.forEach(c => {
+    const opt = document.createElement("option");
+    opt.value = c; opt.textContent = "Class " + c;
+    classFilter.appendChild(opt);
+  });
+  units.forEach(u => {
+    const opt = document.createElement("option");
+    opt.value = u; opt.textContent = u;
+    unitFilter.appendChild(opt);
+  });
+}
+
+function renderGrid() {
+  const cls = classFilter.value;
+  const unit = unitFilter.value;
+  const q = searchFilter.value.trim().toLowerCase();
+
+  const filtered = allChapters.filter(c =>
+    (!cls || c.className === cls) &&
+    (!unit || c.unit === unit) &&
+    (!q || c.chapterName.toLowerCase().includes(q))
+  );
+
+  grid.innerHTML = "";
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="state-msg">No chapters match those filters. Try clearing one.</div>`;
+    return;
+  }
+
+  filtered.forEach(chapter => {
+    const card = document.createElement("button");
+    card.className = "chapter-card";
+    card.innerHTML = `
+      <div class="badge-row">
+        <span class="badge class">Class ${chapter.className}</span>
+        <span class="badge unit">${chapter.unit}</span>
+      </div>
+      <h3>${chapter.chapterName}</h3>
+      <div class="open-hint">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        View mindmap
+      </div>
+    `;
+    card.addEventListener("click", () => openMindmap(chapter));
+    grid.appendChild(card);
+  });
+}
+
+/* =========================================================================
+   MINDMAP RENDERER
+   =========================================================================
+   Design notes:
+   - Every non-root node starts collapsed, so a tap on any branch reveals only
+     its direct children — never the whole subtree at once ("one by one").
+   - Each depth-1 branch is given its own hue from BRANCH_PALETTE; every node
+     under that branch inherits the same hue, just lighter as depth increases.
+     That's what lets you trace a sub-branch back to its parent branch by
+     color alone.
+   - Expanding a node smoothly pans/zooms ("focuses") the camera onto that
+     node and its newly revealed children, and nodes that stay on screen
+     glide to their new position (a FLIP animation) instead of snapping.
+   ========================================================================= */
+const NODE_WIDTH = 232;
+const H_GAP = 74;
+const V_GAP = 14;
+const MIN_ZOOM = 0.15;
+const MAX_ZOOM = 2.5;
+
+// One base hue (in degrees) per top-level branch. Two of these intentionally
+// echo the site's own teal/amber brand colors; the rest extend the family
+// with hues that stay legible with both white and dark text.
+const BRANCH_PALETTE = [168, 35, 222, 340, 100, 265, 200, 18];
+
+let zoom = 1, panX = 0, panY = 0;
+let currentRoot = null;
+let cameraAnim = null;
+let lastPositions = new Map();  // node._id -> {x, y} from the previous render, for FLIP
+let lastVisibleIds = new Set();
+
+function colorFor(node, depth) {
+  if (depth === 0) {
+    return { bg: "#14213D", fg: "#FFFFFF", accent: "#E3A737" };
+  }
+  const hue = node._hue ?? 210;
+  if (depth === 1) {
+    return { bg: `hsl(${hue} 58% 30%)`, fg: "#FFFFFF", accent: `hsl(${hue} 75% 74%)` };
+  }
+  if (depth === 2) {
+    return { bg: `hsl(${hue} 46% 90%)`, fg: `hsl(${hue} 55% 24%)`, accent: `hsl(${hue} 55% 42%)` };
+  }
+  return { bg: `hsl(${hue} 32% 95%)`, fg: `hsl(${hue} 38% 30%)`, accent: `hsl(${hue} 45% 48%)` };
+}
+
+function cloneTree(node, path, depth) {
+  path = path || "n0";
+  depth = depth || 0;
+  return {
+    title: node.title,
+    children: (node.children || []).map((c, i) => cloneTree(c, path + "_" + i, depth + 1)),
+    _collapsed: depth > 0,
+    _id: path,
+    _depth: depth
+  };
+}
+
+function assignHues(node, hue) {
+  node._hue = hue === undefined ? null : hue;
+  (node.children || []).forEach((c, i) => {
+    const childHue = node._depth === 0 ? BRANCH_PALETTE[i % BRANCH_PALETTE.length] : hue;
+    assignHues(c, childHue);
+  });
+}
+
+function computeMeta(node) {
+  let total = 0;
+  (node.children || []).forEach(c => { total += 1 + computeMeta(c); });
+  node._descendants = total;
+  return total;
+}
+
+function countAll(node) {
+  return 1 + (node.children || []).reduce((s, c) => s + countAll(c), 0);
+}
+
+function measureHeights(node) {
+  // Render a hidden probe (with the same chrome as a real card) to measure
+  // wrapped text height at NODE_WIDTH.
+  const hasChildren = node.children && node.children.length > 0;
+  const probe = document.createElement("div");
+  probe.className = "mm-node depth-" + Math.min(node._depth, 3) + (hasChildren ? " has-children" : " leaf");
+  probe.style.position = "absolute";
+  probe.style.visibility = "hidden";
+  probe.style.width = NODE_WIDTH + "px";
+  const badge = hasChildren ? `<span class="count-badge">99</span>` : "";
+  probe.innerHTML = `<span class="node-accent"></span><span class="node-text">${node.title}</span>${badge}`;
+  document.body.appendChild(probe);
+  node._h = Math.max(probe.offsetHeight, 44);
+  document.body.removeChild(probe);
+  if (node.children) node.children.forEach(measureHeights);
+}
+
+function computeSubtreeHeight(node) {
+  const collapsed = node._collapsed || !node.children || node.children.length === 0;
+  if (collapsed) {
+    node._subtreeH = node._h + V_GAP;
+  } else {
+    node._subtreeH = Math.max(
+      node.children.reduce((sum, c) => sum + computeSubtreeHeight(c), 0),
+      node._h + V_GAP
+    );
+  }
+  return node._subtreeH;
+}
+
+function assignPositions(node, depth, yTop) {
+  node._x = depth * (NODE_WIDTH + H_GAP);
+  const collapsed = node._collapsed || !node.children || node.children.length === 0;
+  if (collapsed) {
+    node._y = yTop + node._subtreeH / 2;
+  } else {
+    let cursor = yTop;
+    node.children.forEach(c => {
+      assignPositions(c, depth + 1, cursor);
+      cursor += c._subtreeH;
+    });
+    const first = node.children[0], last = node.children[node.children.length - 1];
+    node._y = (first._y + last._y) / 2;
+  }
+}
+
+function flattenVisible(node, depth, out) {
+  out.push({ node, depth });
+  const collapsed = node._collapsed || !node.children || node.children.length === 0;
+  if (!collapsed) node.children.forEach(c => flattenVisible(c, depth + 1, out));
+  return out;
+}
+
+function updateStatusLine() {
+  const visible = flattenVisible(currentRoot, 0, []).length;
+  const total = countAll(currentRoot);
+  modalStatus.textContent = `Showing ${visible} of ${total} topics`;
+}
+
+function buildCanvas() {
+  measureHeights(currentRoot);
+  computeSubtreeHeight(currentRoot);
+  assignPositions(currentRoot, 0, 0);
+
+  const visible = flattenVisible(currentRoot, 0, []);
+  const newVisibleIds = new Set(visible.map(v => v.node._id));
+
+  let maxX = 0, maxY = 0;
+  visible.forEach(({ node }) => {
+    maxX = Math.max(maxX, node._x + NODE_WIDTH);
+    maxY = Math.max(maxY, node._y + node._h / 2);
+  });
+  mmCanvas.style.width = maxX + 40 + "px";
+  mmCanvas.style.height = maxY + 40 + "px";
+  mmLines.setAttribute("width", maxX + 40);
+  mmLines.setAttribute("height", maxY + 40);
+
+  // Connector paths, colored to match the child branch they lead into.
+  let pathsHTML = "";
+  visible.forEach(({ node, depth }) => {
+    const collapsed = node._collapsed || !node.children || node.children.length === 0;
+    if (!collapsed) {
+      node.children.forEach(child => {
+        const x1 = node._x + NODE_WIDTH, y1 = node._y;
+        const x2 = child._x, y2 = child._y;
+        const cx = (x1 + x2) / 2;
+        const stroke = colorFor(child, depth + 1).accent;
+        pathsHTML += `<path d="M ${x1} ${y1} C ${cx} ${y1}, ${cx} ${y2}, ${x2} ${y2}"
+          fill="none" stroke="${stroke}" stroke-opacity="0.6" stroke-width="1.7" />`;
+      });
+    }
+  });
+  // Crossfade the lines instead of snapping them straight to the new layout.
+  mmLines.style.transition = "opacity .18s ease";
+  mmLines.style.opacity = "0";
+  setTimeout(() => {
+    mmLines.innerHTML = pathsHTML;
+    requestAnimationFrame(() => { mmLines.style.opacity = "1"; });
+  }, 140);
+
+  // Drop anything that's no longer visible.
+  mmCanvas.querySelectorAll(".mm-node, .mm-toggle").forEach(elx => {
+    if (!newVisibleIds.has(elx.dataset.id)) elx.remove();
+  });
+
+  const pendingAnim = [];
+
+  visible.forEach(({ node, depth }) => {
+    let el = mmCanvas.querySelector('.mm-node[data-id="' + node._id + '"]');
+    const isNew = !el;
+    const colors = colorFor(node, depth);
+    const hasChildren = node.children && node.children.length > 0;
+
+    if (isNew) {
+      el = document.createElement("div");
+      el.dataset.id = node._id;
+      mmCanvas.appendChild(el);
+    }
+
+    el.className = "mm-node depth-" + Math.min(depth, 3) + (hasChildren ? " has-children" : " leaf");
+    el.style.background = colors.bg;
+    el.style.color = colors.fg;
+    el.style.left = node._x + "px";
+    el.style.top = (node._y - node._h / 2) + "px";
+    el.style.width = NODE_WIDTH + "px";
+    el.style.minHeight = node._h + "px";
+
+    const badge = hasChildren && node._collapsed ? `<span class="count-badge">${node._descendants}</span>` : "";
+    el.innerHTML = `<span class="node-accent" style="background:${colors.accent}"></span><span class="node-text">${node.title}</span>${badge}`;
+
+    if (hasChildren) {
+      el.tabIndex = 0;
+      el.setAttribute("role", "treeitem");
+      el.setAttribute("aria-expanded", String(!node._collapsed));
+    } else {
+      el.removeAttribute("tabindex");
+      el.removeAttribute("role");
+      el.removeAttribute("aria-expanded");
+    }
+
+    if (isNew) {
+      el.style.transition = "none";
+      el.style.opacity = "0";
+      el.style.transform = "scale(.82)";
+      pendingAnim.push({ el, kind: "enter" });
+    } else {
+      const prev = lastPositions.get(node._id);
+      if (prev && (prev.x !== node._x || prev.y !== node._y)) {
+        el.style.transition = "none";
+        el.style.transform = `translate(${prev.x - node._x}px, ${prev.y - node._y}px)`;
+        pendingAnim.push({ el, kind: "flip" });
+      } else {
+        el.style.transition = "";
+        el.style.transform = "";
+      }
+    }
+
+    if (hasChildren) {
+      let toggle = mmCanvas.querySelector('.mm-toggle[data-id="' + node._id + '"]');
+      if (!toggle) {
+        toggle = document.createElement("div");
+        toggle.dataset.id = node._id;
+        toggle.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>`;
+        mmCanvas.appendChild(toggle);
+        const onToggle = (e) => { e.stopPropagation(); toggleNode(node); };
+        toggle.addEventListener("click", onToggle);
+        el.addEventListener("click", onToggle);
+        el.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleNode(node); }
+        });
+      }
+      toggle.className = "mm-toggle" + (node._collapsed ? "" : " expanded");
+      toggle.style.left = (node._x + NODE_WIDTH - 11) + "px";
+      toggle.style.top = (node._y - 11) + "px";
+    }
+  });
+
+  // Flush the "before" styles set above in a single reflow, then animate
+  // every moved/new card to its resting state — new cards pop in with a
+  // light stagger, cards that were already open glide (FLIP) to their new
+  // spot instead of jumping.
+  void mmCanvas.offsetHeight;
+  let enterIndex = 0;
+  pendingAnim.forEach(({ el, kind }) => {
+    if (kind === "enter") {
+      const delay = Math.min(enterIndex * 18, 220);
+      enterIndex++;
+      el.style.transition = `transform .32s cubic-bezier(.22,1,.36,1) ${delay}ms, opacity .28s ease ${delay}ms`;
+      el.style.opacity = "1";
+      el.style.transform = "scale(1)";
+      setTimeout(() => { el.style.transition = ""; }, delay + 360);
+    } else {
+      el.style.transition = "";
+      el.style.transform = "translate(0,0)";
+    }
+  });
+
+  lastPositions = new Map(visible.map(({ node }) => [node._id, { x: node._x, y: node._y }]));
+  lastVisibleIds = newVisibleIds;
+  updateStatusLine();
+}
+
+function applyTransform() {
+  mmCanvas.style.transform = `translate(${panX}px, ${panY}px) scale(${zoom})`;
+  zoomReadout.textContent = Math.round(zoom * 100) + "%";
+}
+
+function stopCameraAnim() {
+  if (cameraAnim) { cancelAnimationFrame(cameraAnim); cameraAnim = null; }
+}
+
+function animateCamera(targetPanX, targetPanY, targetZoom, duration) {
+  duration = duration || 450;
+  stopCameraAnim();
+  const startPanX = panX, startPanY = panY, startZoom = zoom;
+  const t0 = performance.now();
+  const dPanX = targetPanX - startPanX, dPanY = targetPanY - startPanY, dZoom = targetZoom - startZoom;
+  function ease(t) { return 1 - Math.pow(1 - t, 3); }
+  function step(now) {
+    const t = Math.min(1, (now - t0) / duration);
+    const e = ease(t);
+    panX = startPanX + dPanX * e;
+    panY = startPanY + dPanY * e;
+    zoom = startZoom + dZoom * e;
+    applyTransform();
+    if (t < 1) {
+      cameraAnim = requestAnimationFrame(step);
+    } else {
+      cameraAnim = null;
+    }
+  }
+  cameraAnim = requestAnimationFrame(step);
+}
+
+function fitToScreen() {
+  const vpRect = mmViewport.getBoundingClientRect();
+  const canvasW = parseFloat(mmCanvas.style.width) || 1;
+  const canvasH = parseFloat(mmCanvas.style.height) || 1;
+  const scale = Math.min(vpRect.width / canvasW, vpRect.height / canvasH, 1) * 0.92;
+  zoom = Math.max(scale, MIN_ZOOM);
+  panX = (vpRect.width - canvasW * zoom) / 2;
+  panY = (vpRect.height - canvasH * zoom) / 2;
+  applyTransform();
+}
+
+function fitToScreenAnimated() {
+  const vpRect = mmViewport.getBoundingClientRect();
+  const canvasW = parseFloat(mmCanvas.style.width) || 1;
+  const canvasH = parseFloat(mmCanvas.style.height) || 1;
+  const scale = Math.min(vpRect.width / canvasW, vpRect.height / canvasH, 1) * 0.92;
+  const targetZoom = Math.max(scale, MIN_ZOOM);
+  const targetPanX = (vpRect.width - canvasW * targetZoom) / 2;
+  const targetPanY = (vpRect.height - canvasH * targetZoom) / 2;
+  animateCamera(targetPanX, targetPanY, targetZoom, 420);
+}
+
+// Smoothly pans/zooms so the given node and its (now visible) children are
+// nicely framed — the "zoom into the branch you just opened" behavior.
+function focusOnNode(node) {
+  const kids = (!node._collapsed && node.children) ? node.children : [];
+  let minX = node._x, maxX = node._x + NODE_WIDTH;
+  let minY = node._y - node._h / 2, maxY = node._y + node._h / 2;
+  kids.forEach(c => {
+    minX = Math.min(minX, c._x);
+    maxX = Math.max(maxX, c._x + NODE_WIDTH);
+    minY = Math.min(minY, c._y - c._h / 2);
+    maxY = Math.max(maxY, c._y + c._h / 2);
+  });
+  const padX = 60, padY = 46;
+  minX -= padX; maxX += padX; minY -= padY; maxY += padY;
+  const boxW = Math.max(maxX - minX, 1), boxH = Math.max(maxY - minY, 1);
+
+  const vpRect = mmViewport.getBoundingClientRect();
+  const fitScale = Math.min(vpRect.width / boxW, vpRect.height / boxH);
+  const targetZoom = Math.max(0.3, Math.min(fitScale, MAX_ZOOM));
+
+  // Bias the framed region toward the left third of the viewport so there's
+  // room on screen for the branch to keep growing to the right.
+  const targetScreenX = vpRect.width * 0.38;
+  const targetScreenY = vpRect.height * 0.5;
+  const worldCenterX = (minX + maxX) / 2;
+  const worldCenterY = (minY + maxY) / 2;
+
+  animateCamera(
+    targetScreenX - worldCenterX * targetZoom,
+    targetScreenY - worldCenterY * targetZoom,
+    targetZoom,
+    480
+  );
+}
+
+function toggleNode(node) {
+  const wasCollapsed = node._collapsed;
+  node._collapsed = !node._collapsed;
+  buildCanvas();
+  if (wasCollapsed) {
+    focusOnNode(node);
+    requestAnimationFrame(() => {
+      const el = mmCanvas.querySelector('.mm-node[data-id="' + node._id + '"]');
+      if (el) {
+        el.classList.add("pulse");
+        setTimeout(() => el.classList.remove("pulse"), 700);
+      }
+    });
+  }
+}
+
+function setAllCollapsed(node, val, isRoot) {
+  if (!isRoot) node._collapsed = val;
+  (node.children || []).forEach(c => setAllCollapsed(c, val, false));
+}
+
+function expandAll() {
+  if (!currentRoot) return;
+  setAllCollapsed(currentRoot, false, true);
+  buildCanvas();
+  setTimeout(fitToScreenAnimated, 40);
+}
+
+function collapseAll() {
+  if (!currentRoot) return;
+  setAllCollapsed(currentRoot, true, true);
+  buildCanvas();
+  setTimeout(fitToScreenAnimated, 40);
+}
+
+/* ---- pan (mouse + touch via Pointer Events) ---- */
+let isPanning = false, lastPX = 0, lastPY = 0;
+const activePointers = new Map();
+let pinchStartDist = 0, pinchStartZoom = 1;
+
+mmViewport.addEventListener("pointerdown", (e) => {
+  // Let toggle buttons, the toolbar, and node cards themselves handle their
+  // own clicks — only empty canvas starts a pan, so a tap on a card is never
+  // mistaken for the start of a drag.
+  if (e.target.closest(".mm-toggle, .mm-toolbar, .mm-node")) return;
+  stopCameraAnim();
+  activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (activePointers.size === 1) {
+    isPanning = true;
+    lastPX = e.clientX; lastPY = e.clientY;
+    mmViewport.classList.add("panning");
+    mmViewport.setPointerCapture(e.pointerId);
+  } else if (activePointers.size === 2) {
+    isPanning = false;
+    const pts = [...activePointers.values()];
+    pinchStartDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+    pinchStartZoom = zoom;
+  }
+});
+mmViewport.addEventListener("pointermove", (e) => {
+  if (!activePointers.has(e.pointerId)) return;
+  activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+  if (activePointers.size === 2) {
+    const pts = [...activePointers.values()];
+    const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+    if (pinchStartDist > 0) {
+      const vpRect = mmViewport.getBoundingClientRect();
+      const midX = (pts[0].x + pts[1].x) / 2 - vpRect.left;
+      const midY = (pts[0].y + pts[1].y) / 2 - vpRect.top;
+      const targetZoom = Math.min(Math.max(pinchStartZoom * (dist / pinchStartDist), MIN_ZOOM), MAX_ZOOM);
+      zoomBy(targetZoom / zoom, midX, midY);
+    }
+  } else if (isPanning) {
+    panX += e.clientX - lastPX;
+    panY += e.clientY - lastPY;
+    lastPX = e.clientX; lastPY = e.clientY;
+    applyTransform();
+  }
+});
+function endPointer(e) {
+  activePointers.delete(e.pointerId);
+  if (activePointers.size < 2) pinchStartDist = 0;
+  if (activePointers.size === 0) {
+    isPanning = false;
+    mmViewport.classList.remove("panning");
+  }
+}
+mmViewport.addEventListener("pointerup", endPointer);
+mmViewport.addEventListener("pointercancel", endPointer);
+mmViewport.addEventListener("pointerleave", endPointer);
+
+function zoomBy(factor, centerX, centerY) {
+  const vpRect = mmViewport.getBoundingClientRect();
+  const cx = centerX ?? vpRect.width / 2;
+  const cy = centerY ?? vpRect.height / 2;
+  const newZoom = Math.min(Math.max(zoom * factor, MIN_ZOOM), MAX_ZOOM);
+  const worldX = (cx - panX) / zoom;
+  const worldY = (cy - panY) / zoom;
+  panX = cx - worldX * newZoom;
+  panY = cy - worldY * newZoom;
+  zoom = newZoom;
+  applyTransform();
+}
+
+mmViewport.addEventListener("wheel", (e) => {
+  e.preventDefault();
+  stopCameraAnim();
+  const vpRect = mmViewport.getBoundingClientRect();
+  const cx = e.clientX - vpRect.left, cy = e.clientY - vpRect.top;
+  zoomBy(e.deltaY < 0 ? 1.12 : 1 / 1.12, cx, cy);
+}, { passive: false });
+
+fitBtn.addEventListener("click", fitToScreenAnimated);
+zoomInBtn.addEventListener("click", () => { stopCameraAnim(); zoomBy(1.2); });
+zoomOutBtn.addEventListener("click", () => { stopCameraAnim(); zoomBy(1 / 1.2); });
+expandAllBtn.addEventListener("click", expandAll);
+collapseAllBtn.addEventListener("click", collapseAll);
+expandAllBtnTop.addEventListener("click", expandAll);
+collapseAllBtnTop.addEventListener("click", collapseAll);
+
+/* =========================================================================
+   MODAL open / close
+   ========================================================================= */
+function openMindmap(chapter) {
+  modalTitle.textContent = chapter.chapterName;
+  modalSub.textContent = `Class ${chapter.className} · ${chapter.unit}`;
+  overlay.classList.add("open");
+  document.body.style.overflow = "hidden";
+
+  mmLoading.style.display = "flex";
+  mmCanvas.querySelectorAll(".mm-node, .mm-toggle").forEach(n => n.remove());
+  mmLines.innerHTML = "";
+  lastPositions = new Map();
+  lastVisibleIds = new Set();
+  stopCameraAnim();
+
+  setTimeout(() => {
+    currentRoot = cloneTree(chapter.tree);
+    assignHues(currentRoot);
+    computeMeta(currentRoot);
+    buildCanvas();
+    fitToScreen();
+    mmLoading.style.display = "none";
+  }, 30);
+}
+
+function closeMindmap() {
+  overlay.classList.remove("open");
+  document.body.style.overflow = "";
+}
+closeModalBtn.addEventListener("click", closeMindmap);
+overlay.addEventListener("click", (e) => { if (e.target === overlay) closeMindmap(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && overlay.classList.contains("open")) closeMindmap(); });
+window.addEventListener("resize", () => { if (overlay.classList.contains("open")) fitToScreen(); });
+
+/* =========================================================================
+   INIT
+   ========================================================================= */
+classFilter.addEventListener("change", renderGrid);
+unitFilter.addEventListener("change", renderGrid);
+searchFilter.addEventListener("input", renderGrid);
+
+(async function init() {
+  allChapters = await loadChapters();
+  gridState.remove();
+  if (allChapters.length === 0) {
+    grid.innerHTML = `<div class="state-msg">No chapters have been added yet. Check back soon.</div>`;
+    return;
+  }
+  populateFilterOptions(allChapters);
+  renderGrid();
+})();
+</script>
+</body>
+</html>
