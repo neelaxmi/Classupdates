@@ -1,31 +1,32 @@
 <!DOCTYPE html>
 <html lang="en" class="transition-colors duration-300">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <!-- SEO & Metadata -->
     <title>Student Dashboard | Neelaxmi Quiz Center</title>
     <meta name="description" content="Access your personalized Student Dashboard at Neelaxmi Quiz Center. Track your NEET UG & JEE Main progress, analyze performance, and master your subjects with detailed analytics.">
     <link rel="canonical" href="https://classupdates.netlify.app/dashboard">
-    
+
     <!-- Open Graph (Social Sharing) -->
     <meta property="og:title" content="Student Dashboard | Neelaxmi Quiz Center">
     <meta property="og:description" content="Your personal hub for NEET/JEE preparation. View analytics, track quizzes, and improve your score.">
     <meta property="og:image" content="/pictures/neelaxmi.png">
     <meta property="og:url" content="https://classupdates.netlify.app/dashboard">
     <meta property="og:type" content="website">
-    
+
     <!-- Icons & Manifest -->
     <link rel="icon" type="image/jpeg" href="/pictures/neelaxmi.png">
     <link rel="apple-touch-icon" href="/pictures/neelaxmi.png">
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#0b1120">
-    
+
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <!-- Scripts: Tailwind & Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -126,9 +127,9 @@
     </nav>
 
     <main class="pt-8 md:pt-24 pb-12 px-4 max-w-7xl mx-auto space-y-8">
-        
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
+
             <div class="glass-panel rounded-2xl p-6 relative overflow-hidden flex flex-col justify-between">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-bl-full -mr-8 -mt-8"></div>
                 <div class="flex items-start justify-between relative z-10 mb-4">
@@ -138,7 +139,7 @@
                     </div>
                     <button onclick="toggleEditProfile()" class="text-slate-400 hover:text-primary transition"><i class="fa-solid fa-pen-to-square"></i></button>
                 </div>
-                
+
                 <div class="space-y-4">
                     <div class="flex gap-2 items-center">
                         <span id="disp-badge" class="px-3 py-1 bg-indigo-100 dark:bg-indigo-900/40 text-primary text-xs font-bold rounded-lg uppercase tracking-wider border border-indigo-200 dark:border-indigo-800">Class --</span>
@@ -148,7 +149,7 @@
                             <span id="streak-label-text">0 Day Streak</span>
                         </span>
                     </div>
-                    
+
                     <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700">
                         <div class="flex justify-between text-sm items-center">
                             <span class="text-slate-500 font-medium">Gemini AI Engine:</span>
@@ -218,7 +219,7 @@
                     <canvas id="scoreChart"></canvas>
                 </div>
             </div>
-            
+
             <div class="glass-panel p-6 rounded-2xl">
                 <h3 class="font-bold text-lg mb-4 flex items-center"><i class="fa-solid fa-spider mr-2 text-primary"></i> Weakness Radar</h3>
                 <p class="text-xs text-slate-500 mb-2">Mastery across recent sub-topics</p>
@@ -229,7 +230,35 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
+            <div class="glass-panel p-6 rounded-2xl lg:col-span-2">
+                <h3 class="font-bold text-lg mb-1 flex items-center"><i class="fa-solid fa-layer-group mr-2 text-primary"></i> Difficulty Breakdown</h3>
+                <p class="text-xs text-slate-500 mb-4">Your accuracy on Easy, Medium, and Hard questions — tagged by AI when each question's solution was generated.</p>
+                <div class="h-56 w-full">
+                    <canvas id="difficultyChart"></canvas>
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 rounded-2xl">
+                <h3 class="font-bold text-lg mb-1 flex items-center"><i class="fa-solid fa-flask mr-2 text-primary"></i> Subject Mastery</h3>
+                <p class="text-xs text-slate-500 mb-4">Accuracy by subject</p>
+                <div id="subject-mastery-cards" class="space-y-3">
+                    <p class="text-xs text-slate-400">Loading...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-panel rounded-2xl overflow-hidden">
+            <div class="p-6 border-b border-slate-200 dark:border-slate-700/50">
+                <h3 class="font-bold text-lg flex items-center"><i class="fa-solid fa-crosshairs mr-2 text-red-500"></i> Weak Topics — Focus Here</h3>
+                <p class="text-xs text-slate-500 mt-1">Topics where your accuracy is below 60% (needs at least 2 questions attempted in that topic).</p>
+            </div>
+            <div id="weak-topics-list" class="p-6 space-y-3">
+                <p class="text-xs text-slate-400">Loading...</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
             <div class="glass-panel p-6 rounded-2xl relative overflow-hidden group">
                 <div class="absolute inset-0 bg-gradient-to-br from-indigo-900 to-slate-900 opacity-95 z-0"></div>
                 <div class="relative z-10 text-white flex flex-col h-full justify-between">
@@ -240,7 +269,7 @@
                         </div>
                         <p class="text-xs text-indigo-200 mb-6">Deep focus ambient tracks powered by Suno AI.</p>
                     </div>
-                    
+
                     <div class="bg-black/40 rounded-xl p-4 flex items-center gap-4 backdrop-blur-md border border-white/10">
                         <button class="w-12 h-12 bg-primary rounded-full flex items-center justify-center hover:scale-105 transition shadow-[0_0_15px_rgba(99,102,241,0.5)] shrink-0">
                             <i class="fa-solid fa-play ml-1"></i>
@@ -264,15 +293,15 @@
                     </div>
                     <button class="text-xs text-primary font-bold hover:underline hidden sm:block">View Channel</button>
                 </div>
-                
+
                 <div class="flex gap-4 overflow-x-auto custom-scroll pb-4 snap-x">
                     <div class="min-w-[240px] bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm group cursor-pointer relative border border-slate-100 dark:border-slate-700 snap-start">
                         <div class="h-32 bg-slate-800 relative flex items-center justify-center">
-                             <img src="/pictures/neelaxmi.png" class="h-16 w-16 opacity-50 grayscale" alt="Thumbnail">
-                             <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition backdrop-blur-sm">
-                                 <i class="fa-solid fa-play text-white text-3xl drop-shadow-lg"></i>
-                             </div>
-                             <span class="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] px-1.5 py-0.5 rounded font-mono">12:45</span>
+                            <img src="/pictures/neelaxmi.png" class="h-16 w-16 opacity-50 grayscale" alt="Thumbnail">
+                            <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition backdrop-blur-sm">
+                                <i class="fa-solid fa-play text-white text-3xl drop-shadow-lg"></i>
+                            </div>
+                            <span class="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] px-1.5 py-0.5 rounded font-mono">12:45</span>
                         </div>
                         <div class="p-4">
                             <p class="text-sm font-bold truncate">Physics Espresso: Kinematics Simulator</p>
@@ -282,10 +311,10 @@
                     <div class="min-w-[240px] bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm group cursor-pointer relative border border-slate-100 dark:border-slate-700 snap-start">
                         <div class="h-32 bg-slate-800 relative flex items-center justify-center">
                             <i class="fa-solid fa-music text-slate-600 text-4xl"></i>
-                             <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition backdrop-blur-sm">
-                                 <i class="fa-solid fa-play text-white text-3xl drop-shadow-lg"></i>
-                             </div>
-                             <span class="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] px-1.5 py-0.5 rounded font-mono">3:20</span>
+                            <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition backdrop-blur-sm">
+                                <i class="fa-solid fa-play text-white text-3xl drop-shadow-lg"></i>
+                            </div>
+                            <span class="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] px-1.5 py-0.5 rounded font-mono">3:20</span>
                         </div>
                         <div class="p-4">
                             <p class="text-sm font-bold truncate">New Study Track - Chorus / Verse Focus</p>
@@ -315,7 +344,7 @@
                         </tr>
                     </thead>
                     <tbody id="history-table-body" class="divide-y divide-slate-100 dark:divide-slate-700/50">
-                        </tbody>
+                    </tbody>
                 </table>
                 <div id="no-history-msg" class="p-12 text-center text-slate-400 hidden flex-col items-center">
                     <i class="fa-solid fa-ghost text-4xl mb-3 opacity-20"></i>
@@ -366,6 +395,21 @@
                     </table>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div id="weak-topic-modal" class="fixed inset-0 z-[85] bg-slate-900/95 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden border border-slate-200 dark:border-slate-700">
+            <div class="bg-slate-50 dark:bg-slate-900 p-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center shrink-0">
+                <div>
+                    <h3 class="text-lg font-bold text-red-500" id="wt-modal-title">Topic</h3>
+                    <p class="text-xs text-slate-500" id="wt-modal-subtitle">Your mistakes in this topic</p>
+                </div>
+                <button onclick="closeWeakTopicModal()" class="text-slate-400 hover:text-slate-700 dark:hover:text-white transition bg-slate-200 dark:bg-slate-700 rounded-full w-8 h-8 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div id="wt-modal-list" class="p-6 overflow-y-auto custom-scroll flex-grow space-y-4"></div>
         </div>
     </div>
 
@@ -423,9 +467,9 @@
             <div class="space-y-3">
                 <input type="text" id="edit-name" placeholder="Full Name" class="w-full p-3 border rounded-lg dark:bg-slate-700 dark:border-slate-600 focus:ring-2 focus:ring-primary outline-none transition">
                 <select id="edit-class" class="w-full p-3 border rounded-lg dark:bg-slate-700 dark:border-slate-600 focus:ring-2 focus:ring-primary outline-none transition">
-                     <option value="11">Class 11</option>
-                     <option value="12">Class 12</option>
-                     <option value="12+">Class 12+ (Dropper)</option>
+                    <option value="11">Class 11</option>
+                    <option value="12">Class 12</option>
+                    <option value="12+">Class 12+ (Dropper)</option>
                 </select>
             </div>
             <div class="flex justify-end gap-3 mt-6">
@@ -472,22 +516,20 @@
     <div id="certificate-container" style="display: none; position: absolute; left: -9999px; top: -9999px; width: 1123px; height: 794px; background: white;">
         <div class="w-full h-full border-[20px] border-double border-indigo-900 p-12 relative flex flex-col items-center justify-center bg-slate-50" style="font-family: serif;">
             <img src="/pictures/neelaxmi.png" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; opacity: 0.04; filter: grayscale(100%); pointer-events: none;">
-            
+
             <div style="text-align: center; margin-bottom: 2rem; position: relative; z-index: 10;">
                 <img src="/pictures/neelaxmi.png" style="width: 100px; height: 100px; border-radius: 50%; border: 2px solid #312e81; margin: 0 auto 1rem auto; display: block;">
                 <h1 style="font-size: 3.5rem; color: #312e81; font-weight: bold; margin-bottom: 0.5rem; letter-spacing: 2px;">CERTIFICATE</h1>
                 <h2 style="font-family: sans-serif; font-size: 1.5rem; color: #d97706; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Of Achievement</h2>
             </div>
-            
+
             <p style="font-size: 1.25rem; color: #475569; margin-bottom: 0.5rem; font-style: italic;">This is to certify that</p>
             <h3 id="cert-name" style="font-size: 2.5rem; font-weight: bold; color: #1e293b; border-bottom: 2px solid #cbd5e1; padding: 0 40px 10px 40px; margin-bottom: 2rem; display: inline-block;">Student Name</h3>
-            
+
             <p style="font-family: sans-serif; font-size: 1.1rem; line-height: 1.8; color: #334155; max-width: 800px; text-align: center; margin-bottom: 3rem;">
-                Has demonstrated exceptional dedication and consistency at <strong style="color: #312e81;">NEELAXMI & SAKSEN</strong>.
-                They have successfully attempted <strong id="cert-questions">0</strong> questions across <strong id="cert-tests">0</strong> assessment sessions,
-                achieving a cumulative accuracy of <strong id="cert-accuracy">0%</strong>.
+                Has demonstrated exceptional dedication and consistency at <strong style="color: #312e81;">NEELAXMI & SAKSEN</strong>. They have successfully attempted <strong id="cert-questions">0</strong> questions across <strong id="cert-tests">0</strong>                assessment sessions, achieving a cumulative accuracy of <strong id="cert-accuracy">0%</strong>.
             </p>
-            
+
             <div style="display: flex; justify-content: space-between; width: 100%; padding: 0 80px; margin-top: 2rem;">
                 <div style="text-align: center;">
                     <p id="cert-date" style="font-family: sans-serif; font-weight: bold; color: #475569; border-top: 1px solid #94a3b8; padding-top: 10px; min-width: 150px;">Date</p>
@@ -497,7 +539,7 @@
                     <p style="font-family: sans-serif; font-weight: bold; color: #475569; border-top: 1px solid #94a3b8; padding-top: 10px; min-width: 150px;">Signature</p>
                 </div>
             </div>
-            
+
             <div style="position: absolute; bottom: 20px; left: 0; width: 100%; text-align: center; font-size: 0.8rem; color: #94a3b8; font-family: sans-serif;">
                 Verified ID: <span id="cert-id">UNKNOWN</span> • Generated via Neelaxmi Quiz Center
             </div>
@@ -507,7 +549,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    
+
     <script>
         // --- FIREBASE INIT ---
         const firebaseConfig = {
@@ -530,7 +572,12 @@
         let rawHistoryData = {}; 
         let chapterChartInstance = null; 
 
-        // Theme Toggle Logic
+        let topicStats = {};  
+        let difficultyStats = {}; 
+        let subjectStats = {}; 
+        let topicMistakes = {};
+        let difficultyChartInstance = null;
+
         const updateTheme = () => {
             if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
@@ -542,9 +589,7 @@
             document.documentElement.classList.toggle('dark');
             localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
             
-            // Re-render charts for color contrast if needed
             if (currentUser) {
-                // Minor delay to let theme class apply
                 setTimeout(() => renderGlobalChartsFromCache(), 100); 
             }
         };
@@ -553,15 +598,12 @@
         document.getElementById('theme-toggle-mobile').addEventListener('click', toggleTheme);
         updateTheme();
 
-        // Auth Logic
         auth.onAuthStateChanged(async (user) => {
             if (user) {
                 currentUser = user;
                 await loadUserProfile(user.uid);
                 await loadUserHistory(user.uid);
-                attachUserStatsListener(user.uid); // safe no-op until you add a user_stats doc
-                
-                // Remove loading screen & skeleton classes
+                attachUserStatsListener(user.uid); 
                 document.getElementById('loading-screen').classList.add('opacity-0');
                 setTimeout(() => {
                     document.getElementById('loading-screen').classList.add('hidden');
@@ -578,7 +620,6 @@
         document.getElementById('logout-btn-desktop').addEventListener('click', logoutHandler);
         document.getElementById('logout-btn-mobile').addEventListener('click', logoutHandler);
 
-        // --- PROFILE LOGIC ---
         async function loadUserProfile(uid) {
             const doc = await db.collection('users').doc(uid).get();
             if (!doc.exists) {
@@ -598,7 +639,6 @@
         }
 
         function updateProfileUI(data) {
-            // Using logic to prioritize a personalized greeting if applicable, else fallback
             let displayName = data.name || 'User';
             document.getElementById('disp-name').textContent = displayName;
             document.getElementById('disp-email').textContent = data.email;
@@ -645,7 +685,6 @@
             } catch(e) { alert("Update failed"); }
         }
 
-        // --- MODULE 3: GEMINI KEY VALIDATION ---
         const GEMINI_KEY_REGEX = /^AIza[0-9A-Za-z-_]{35}$/;
 
         async function updateGeminiKey() {
@@ -656,18 +695,15 @@
 
             if (!key) return alert("Please enter a key.");
 
-            // 1. Regex validation (fast, no network call)
             if (!GEMINI_KEY_REGEX.test(key)) {
                 alert("That doesn't look like a valid Gemini API key. Keys start with 'AIza' and are 39 characters long.");
                 return;
             }
 
-            // 2. Loading state
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
 
             try {
-                // 3. Connectivity test — lightweight ListModels call, cheap/free and validates the key
                 const testUrl = `https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(key)}`;
                 const res = await fetch(testUrl);
 
@@ -676,11 +712,11 @@
                     try {
                         const errBody = await res.json();
                         if (errBody?.error?.message) message = errBody.error.message;
-                    } catch (parseErr) { /* ignore, fall back to generic message */ }
+                    } catch (parseErr) { 
                     throw new Error(message);
                 }
 
-                // 4. Only save to Firestore once the key is confirmed to work
+
                 await db.collection('users').doc(currentUser.uid).update({ geminiApiKey: key });
                 document.getElementById('gemini-modal').classList.add('hidden');
                 keyInput.value = '';
@@ -695,17 +731,9 @@
             }
         }
 
-        // --- DATA & STATS LOGIC ---
-        // Note: For large scale, shift the userStats calculation to a Cloud Function triggered on submission,
-        // and just read the pre-calculated stats from a `user_stats` document here. 
-        // Keeping client-side aggregation for now to ensure compatibility with your current DB structure.
-        
+
         let cachedLabels = [], cachedScores = [];
 
-        // --- MODULE 4: ADVANCED STATISTICS ---
-        // Total Questions Attempted = sum of `total` across all attempts
-        // Total Incorrect          = sum of (total - score) across all attempts
-        // Accuracy %               = (Total Correct / Total Attempted) * 100
         function renderStatCards(stats) {
             document.getElementById('stat-total-tests').textContent = stats.totalTests;
             document.getElementById('stat-questions').textContent = stats.totalQuestions;
@@ -718,13 +746,10 @@
             document.getElementById('stat-time').textContent = avgTime + 's';
         }
 
-        // Optional: if/when you move aggregation to a Cloud Function that maintains a
-        // `user_stats/{uid}` document on each write to `user_results`, this listener will
-        // pick up live updates and override the client-computed numbers above.
-        // Expected doc shape: { totalTests, totalQuestions, totalCorrect, totalIncorrect, totalTime }
+
         function attachUserStatsListener(uid) {
             db.collection('user_stats').doc(uid).onSnapshot((doc) => {
-                if (!doc.exists) return; // fall back to client-side aggregation silently
+                if (!doc.exists) return;
                 const remoteStats = doc.data();
                 userStats = { ...userStats, ...remoteStats };
                 renderStatCards(userStats);
@@ -763,14 +788,10 @@
                 allScores.push(d);
             });
 
-            // Update DOM Stats
             renderStatCards(userStats);
 
-            // Module 5: streak + badge, computed from the same attempts we just loaded
             const streak = calculateStreak(Object.values(rawHistoryData));
             updateStreakBadge(streak);
-
-            // Populate Table
             const tbody = document.getElementById('history-table-body');
             tbody.innerHTML = '';
             
@@ -781,7 +802,7 @@
                 
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 dark:hover:bg-slate-800/80 transition cursor-pointer";
-                tr.onclick = () => openChapterModal(title); // Make whole row clickable
+                tr.onclick = () => openChapterModal(title);
                 tr.innerHTML = `
                     <td class="p-4 font-bold text-slate-700 dark:text-slate-200">${title}</td>
                     <td class="p-4"><span class="bg-slate-200 dark:bg-slate-700 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">${attempts.length} Attempts</span></td>
@@ -801,21 +822,82 @@
                 tbody.appendChild(tr);
             });
 
-            // Prepare Global Chart Data
             const chronological = [...allScores].reverse();
             cachedLabels = chronological.map((_, i) => `T${i+1}`);
             cachedScores = chronological.map(a => Math.round((a.score / a.total) * 100));
-            
             renderGlobalChartsFromCache();
+            await loadTopicAnalytics(rawHistoryData);
             prepareRadarData();
+            renderDifficultyChart();
+            renderSubjectMasteryCards();
+            renderWeakTopicsList();
         }
 
-        // --- MODULE 5: STREAK & BADGE SYSTEM ---
+        async function loadTopicAnalytics(historyMap) {
+            topicStats = {};
+            difficultyStats = {};
+            subjectStats = {};
+            topicMistakes = {};
 
-        // Counts consecutive calendar days with at least one attempt, walking backwards
-        // from today. If there's no attempt today yet, it starts counting from yesterday
-        // so an active streak isn't reset to 0 just because today hasn't happened yet.
-        function calculateStreak(attempts) {
+            // Flatten every (attempt, answer) pair with a quizId + qId we can
+            // actually look up, most recent attempts first.
+            const attempts = Object.values(historyMap)
+                .filter(a => a.quizId && Array.isArray(a.answers))
+                .sort((a, b) => (b.timestamp?.toMillis?.() || 0) - (a.timestamp?.toMillis?.() || 0));
+
+            const lookups = [];
+            outer:
+            for (const attempt of attempts) {
+                for (const ans of attempt.answers) {
+                    if (!ans.qId) continue;
+                    lookups.push({ quizId: attempt.quizId, quizTitle: attempt.quizTitle, qId: ans.qId, qText: ans.qText, isCorrect: !!ans.isCorrect });
+                    if (lookups.length >= ANSWER_LOOKUP_CAP) break outer;
+                }
+            }
+
+            if (!lookups.length) return;
+
+        const uniqueDocIds = [...new Set(lookups.map(l => `${l.quizId}_${l.qId}`))];
+            const explanationCache = {};
+            await Promise.all(uniqueDocIds.map(async (docId) => {
+                try {
+                    const doc = await db.collection('quiz_explanations').doc(docId).get();
+                    if (doc.exists) explanationCache[docId] = doc.data();
+                } catch (e) { /* leave uncached — treated as Unclassified below */ }
+            }));
+
+            lookups.forEach(l => {
+                const docId = `${l.quizId}_${l.qId}`;
+                const tag = explanationCache[docId];
+                const subject = tag?.subject || 'Unclassified';
+                const difficulty = tag?.difficulty || 'Unrated';
+                const topic = tag?.topic || null;
+
+                subjectStats[subject] = subjectStats[subject] || { correct: 0, total: 0 };
+                subjectStats[subject].total++;
+                if (l.isCorrect) subjectStats[subject].correct++;
+
+                difficultyStats[difficulty] = difficultyStats[difficulty] || { correct: 0, total: 0 };
+                difficultyStats[difficulty].total++;
+                if (l.isCorrect) difficultyStats[difficulty].correct++;
+
+                if (topic) {
+                    topicStats[topic] = topicStats[topic] || { subject, correct: 0, total: 0 };
+                    topicStats[topic].total++;
+                    if (l.isCorrect) topicStats[topic].correct++;
+
+                    if (!l.isCorrect) {
+                        topicMistakes[topic] = topicMistakes[topic] || [];
+                        // Keep this list reasonably short per topic in the UI.
+                        if (topicMistakes[topic].length < 25) {
+                            topicMistakes[topic].push({ quizId: l.quizId, quizTitle: l.quizTitle, qId: l.qId, qText: l.qText });
+                        }
+                    }
+                }
+            });
+        }
+
+     function calculateStreak(attempts) {
             if (!attempts || attempts.length === 0) return 0;
 
             const dayKey = (date) => `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
@@ -858,7 +940,6 @@
             img.classList.remove('hidden');
         }
 
-        // --- CHARTS LOGIC ---
         let scoreChartInstance = null;
         let radarChartInstance = null;
 
@@ -907,24 +988,19 @@
         }
 
         function prepareRadarData() {
-            // Get top 6 most attempted chapters
-            const chapterNames = Object.keys(groupedHistory);
-            const topChapters = chapterNames.sort((a,b) => groupedHistory[b].length - groupedHistory[a].length).slice(0, 6);
-            
+            // Top 6 topics by how many questions were answered in them —
+            // real AI-tagged topics now, not quiz titles like before.
+            const topics = Object.keys(topicStats);
+            const topTopics = topics.sort((a, b) => topicStats[b].total - topicStats[a].total).slice(0, 6);
+
             const radarLabels = [];
             const radarData = [];
 
-            topChapters.forEach(ch => {
-                // Shorten name for radar chart
-                const shortName = ch.length > 15 ? ch.substring(0, 15) + '...' : ch;
+            topTopics.forEach(topic => {
+                const shortName = topic.length > 15 ? topic.substring(0, 15) + '...' : topic;
                 radarLabels.push(shortName);
-                
-                // Calc avg score for this chapter
-                const attempts = groupedHistory[ch];
-                let totalScore = 0;
-                let totalQ = 0;
-                attempts.forEach(a => { totalScore += a.score; totalQ += a.total; });
-                radarData.push(Math.round((totalScore / totalQ) * 100));
+                const s = topicStats[topic];
+                radarData.push(s.total > 0 ? Math.round((s.correct / s.total) * 100) : 0);
             });
 
             if (radarChartInstance) radarChartInstance.destroy();
@@ -936,10 +1012,10 @@
             radarChartInstance = new Chart(document.getElementById('weaknessRadar'), {
                 type: 'radar',
                 data: {
-                    labels: radarLabels.length ? radarLabels : ['Data 1', 'Data 2', 'Data 3'],
+                    labels: radarLabels.length ? radarLabels : ['No tagged topics yet'],
                     datasets: [{
                         label: 'Mastery Level (%)',
-                        data: radarData.length ? radarData : [0, 0, 0],
+                        data: radarData.length ? radarData : [0],
                         backgroundColor: 'rgba(99, 102, 241, 0.2)', 
                         borderColor: '#6366f1',
                         borderWidth: 2,
@@ -963,6 +1039,164 @@
                     plugins: { legend: { display: false } }
                 }
             });
+        }
+
+        // --- Difficulty breakdown bar chart (added) ---
+        function renderDifficultyChart() {
+            const order = ['Easy', 'Medium', 'Hard', 'Unrated'];
+            const colors = { Easy: '#22c55e', Medium: '#f59e0b', Hard: '#ef4444', Unrated: '#94a3b8' };
+            const present = order.filter(d => difficultyStats[d] && difficultyStats[d].total > 0);
+
+            if (difficultyChartInstance) difficultyChartInstance.destroy();
+            const isDark = document.documentElement.classList.contains('dark');
+            const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+            const textColor = isDark ? '#94a3b8' : '#64748b';
+
+            difficultyChartInstance = new Chart(document.getElementById('difficultyChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: present.length ? present : ['No data yet'],
+                    datasets: [{
+                        label: 'Accuracy %',
+                        data: present.length ? present.map(d => Math.round((difficultyStats[d].correct / difficultyStats[d].total) * 100)) : [0],
+                        backgroundColor: present.length ? present.map(d => colors[d]) : ['#94a3b8'],
+                        borderRadius: 8,
+                        maxBarThickness: 60,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, max: 100, grid: { color: gridColor }, ticks: { color: textColor } },
+                        x: { grid: { display: false }, ticks: { color: textColor } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        // --- Subject mastery cards (added) ---
+        function renderSubjectMasteryCards() {
+            const wrap = document.getElementById('subject-mastery-cards');
+            const subjects = Object.keys(subjectStats).filter(s => s !== 'Unclassified');
+
+            if (!subjects.length) {
+                wrap.innerHTML = `<p class="text-xs text-slate-400">No AI-tagged questions yet — subject mastery will appear here once your quizzes have AI solutions generated.</p>`;
+                return;
+            }
+
+            const icons = { Physics: 'fa-atom', Chemistry: 'fa-flask-vial', Biology: 'fa-dna', Other: 'fa-book' };
+            wrap.innerHTML = subjects
+                .sort((a, b) => subjectStats[b].total - subjectStats[a].total)
+                .map(subject => {
+                    const s = subjectStats[subject];
+                    const pct = s.total > 0 ? Math.round((s.correct / s.total) * 100) : 0;
+                    const color = pct >= 75 ? '#22c55e' : pct >= 50 ? '#f59e0b' : '#ef4444';
+                    return `
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid ${icons[subject] || 'fa-book'} text-slate-400 w-5 text-center"></i>
+                            <div class="flex-1">
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="font-semibold">${subject}</span>
+                                    <span class="font-bold" style="color:${color}">${pct}%</span>
+                                </div>
+                                <div class="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                                    <div class="h-full rounded-full" style="width:${pct}%; background:${color};"></div>
+                                </div>
+                            </div>
+                        </div>`;
+                }).join('');
+        }
+
+        // --- Weak topics list + detail modal (added) ---
+        const WEAK_TOPIC_THRESHOLD = 60; // accuracy % below which a topic is flagged
+        const WEAK_TOPIC_MIN_QUESTIONS = 2; // ignore topics with too few data points to be meaningful
+
+        function renderWeakTopicsList() {
+            const wrap = document.getElementById('weak-topics-list');
+            const weak = Object.keys(topicStats)
+                .map(topic => ({ topic, ...topicStats[topic], pct: Math.round((topicStats[topic].correct / topicStats[topic].total) * 100) }))
+                .filter(t => t.total >= WEAK_TOPIC_MIN_QUESTIONS && t.pct < WEAK_TOPIC_THRESHOLD)
+                .sort((a, b) => a.pct - b.pct);
+
+            if (!weak.length) {
+                wrap.innerHTML = `<p class="text-sm text-slate-400 text-center py-4"><i class="fa-solid fa-face-smile mr-1.5"></i>No weak topics detected yet — keep it up, or take more quizzes to build up topic data!</p>`;
+                return;
+            }
+
+            wrap.innerHTML = weak.map(t => `
+                <div class="flex items-center justify-between gap-3 p-3 rounded-xl bg-red-500/5 border border-red-500/20">
+                    <div class="min-w-0">
+                        <p class="font-semibold text-sm truncate">${escapeHtmlDash(t.topic)}</p>
+                        <p class="text-xs text-slate-500">${t.subject} • ${t.correct}/${t.total} correct (${t.pct}%)</p>
+                    </div>
+                    <button onclick="openWeakTopicModal('${escapeHtmlDash(t.topic).replace(/'/g, "\\'")}')" class="shrink-0 text-xs font-bold bg-red-500/10 hover:bg-red-500 text-red-600 hover:text-white px-3 py-2 rounded-lg transition whitespace-nowrap">
+                        <i class="fa-solid fa-magnifying-glass mr-1"></i> Review
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function openWeakTopicModal(topic) {
+            const mistakes = topicMistakes[topic] || [];
+            document.getElementById('wt-modal-title').textContent = topic;
+            document.getElementById('wt-modal-subtitle').textContent = `${mistakes.length} mistake(s) in this topic`;
+
+            const listEl = document.getElementById('wt-modal-list');
+            if (!mistakes.length) {
+                listEl.innerHTML = `<p class="text-sm text-slate-400 text-center py-4">No individual mistakes on record for this topic.</p>`;
+            } else {
+                // Group by source quiz so "Practice" reuses the existing
+                // per-quiz retry-incorrect mechanism (quiz.js filters by
+                // question IDs within ONE quiz — there's no cross-quiz
+                // practice session yet).
+                const byQuiz = {};
+                mistakes.forEach(m => {
+                    byQuiz[m.quizId] = byQuiz[m.quizId] || { quizTitle: m.quizTitle, questions: [] };
+                    byQuiz[m.quizId].questions.push(m);
+                });
+
+                listEl.innerHTML = Object.entries(byQuiz).map(([quizId, group]) => `
+                    <div class="border border-slate-200 dark:border-slate-700 rounded-xl p-4">
+                        <div class="flex justify-between items-center mb-3">
+                            <p class="font-bold text-sm">${escapeHtmlDash(group.quizTitle)}</p>
+                            <button onclick='practiceTopicMistakes(${JSON.stringify(quizId)}, ${JSON.stringify(group.quizTitle)}, ${JSON.stringify(group.questions.map(q => q.qId))})' class="text-xs font-bold bg-primary/10 hover:bg-primary text-primary hover:text-white px-3 py-1.5 rounded-lg transition whitespace-nowrap">
+                                <i class="fa-solid fa-repeat mr-1"></i> Practice these ${group.questions.length}
+                            </button>
+                        </div>
+                        <ul class="space-y-1.5 text-xs text-slate-500 dark:text-slate-400 list-disc list-inside">
+                            ${group.questions.map(q => `<li class="truncate">${escapeHtmlDash(q.qText || q.qId)}</li>`).join('')}
+                        </ul>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('weak-topic-modal').classList.remove('hidden');
+        }
+
+        function closeWeakTopicModal() {
+            document.getElementById('weak-topic-modal').classList.add('hidden');
+        }
+
+        // Same sessionStorage + URL-param handoff practiceIncorrect() already
+        // uses — just pre-filtered to this specific topic's wrong questions
+        // within one quiz, instead of every wrong question from one attempt.
+        function practiceTopicMistakes(quizId, quizTitle, questionIds) {
+            if (!questionIds.length) return;
+            sessionStorage.setItem('retryQuizConfig', JSON.stringify({
+                mode: 'retry-incorrect',
+                quizId: quizId || null,
+                quizTitle: quizTitle || '',
+                questionIds
+            }));
+            const params = new URLSearchParams({ mode: 'retry-incorrect' });
+            if (quizId) params.set('uid', quizId);
+            window.location.href = `/quiz/quizzes.html?${params.toString()}`;
+        }
+
+        function escapeHtmlDash(s) {
+            return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
         }
 
         // --- CHAPTER MODAL LOGIC ---
@@ -1087,10 +1321,6 @@
             currentModalAttemptId = null;
         }
 
-        // --- MODULE 2: PRACTICE INCORRECT ---
-
-        // Derives wrong question IDs from the per-question `answers` array saved by result.js
-        // (there is no separate `wrongAnswers` field in the current schema, so we compute it here).
         function getWrongQuestionIds(attemptData) {
             if (!attemptData || !Array.isArray(attemptData.answers)) return [];
             return attemptData.answers.filter(a => !a.isCorrect).map(a => a.qId);
@@ -1105,8 +1335,6 @@
                 alert("No incorrect answers in this attempt — nothing to practice!");
                 return;
             }
-
-            // Session state consumed by quizzes.html/quiz.js to filter questions on load
             sessionStorage.setItem('retryQuizConfig', JSON.stringify({
                 mode: 'retry-incorrect',
                 quizId: data.quizId || null,
@@ -1119,14 +1347,11 @@
             window.location.href = `/quiz/quizzes.html?${params.toString()}`;
         }
 
-        // --- COUNTDOWN LOGIC ---
         function initCountdown(userClass) {
-            // Target set to 2027 by default to handle post-2026 scenarios
             let targetDateStr = "May 3, 2027 00:00:00"; 
             let label = "NEET 2027 Target";
             
             if (userClass === "12" || userClass === "12+") {
-                // If they are a dropper, maybe they meant 2026, but since that has passed, default to next year
                 targetDateStr = "May 3, 2027 00:00:00"; 
                 label = "NEET Target"; 
             }
@@ -1218,4 +1443,5 @@
     </script>
     <script src="/js/head-loader.js"></script>
 </body>
+
 </html>
