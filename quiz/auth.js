@@ -16,7 +16,7 @@ let CURRENT_USER_ID = null;
 let currentQuizId = null;
 let isLoginMode = true;
 let userGeminiApiKey = null;
-let userGrokApiKey = null; // xAI Grok — alternate AI explanation provider, see result.js
+let userGrokApiKey = null; 
 let userData = null;
 
 
@@ -112,7 +112,6 @@ authEls.authBtn.onclick = async () => {
     }
 };
 
-// Google Login Logic
 document.getElementById('google-login-btn').onclick = async () => {
     const provider = new firebase.auth.GoogleAuthProvider();
     
@@ -120,7 +119,6 @@ document.getElementById('google-login-btn').onclick = async () => {
         const result = await auth.signInWithPopup(provider);
         const user = result.user;
         
-        // Check if user document exists in Firestore, if not, create it
         const userDoc = await db.collection('users').doc(user.uid).get();
         
         if (!userDoc.exists) {
@@ -142,7 +140,6 @@ document.getElementById('google-login-btn').onclick = async () => {
 };
 
 
-// Auth State Change
 auth.onAuthStateChanged(user => {
     if (user) {
         
@@ -218,11 +215,9 @@ window.toggleBookmark = async (questionId) => {
 
 
 
-// Telegram se login hone ke baad ye function chalega
 function onTelegramAuth(user) {
     console.log("Telegram se login hua:", user);
     
-    // Google wale logic ki tarah Firestore mein data save kar rahe hain
     const userRef = db.collection('users').doc('tg_' + user.id);
     
     userRef.set({
@@ -231,9 +226,8 @@ function onTelegramAuth(user) {
             username: user.username || 'N/A',
             auth_provider: 'telegram',
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        }, { merge: true }) // merge: true taaki purana data delete na ho
+        }, { merge: true }) 
         .then(() => {
-            // Data save hone ke baad user ko quizzes page par bhej do
             window.location.href = "quizzes.html";
         })
         .catch((error) => {
