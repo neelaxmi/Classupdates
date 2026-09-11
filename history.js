@@ -1,31 +1,2001 @@
-function goBack() {
-  window.history.back();
-}
-document.addEventListener('DOMContentLoaded', () => {
-  const backButton = document.getElementById('backButton');
-  
-  if (backButton && window.history.length <= 1) {
-    backButton.disabled = true;
-    backButton.textContent = '🏠 Home Page';
-  }
-});
+<!DOCTYPE html>
+<html lang="en">
 
-
-
-const sidebar = document.getElementById('sidebar');
-const mainContent = document.getElementById('mainContent');
-
-function toggleSidebar() {
-    sidebar.classList.toggle('active');
-    if (mainContent) {
-        mainContent.classList.toggle('shifted');
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Essential SEO -->
+    <title>Neelaxmi: The Helper | NEET Coaching & Study Notifications</title>
+    <meta name="description" content="Neelaxmi – The Helper: Find top NEET educators for Physics, Chemistry & Biology. Get exclusive study updates, DPP analysis, quiz corner, and real-time notifications from NEELAXMI coaching.">
+    <link rel="canonical" href="https://classupdates.netlify.app/">
+    <meta name="keywords" content="NEET coaching, NEET 2026, Neelaxmi, SAKSEN, Ajay Sir Chemistry, Prateek Jain Physics, SEEP MAM Biology, study notifications, NEET preparation">
+    <meta name="author" content="Team SAKSEN">
+    <meta name="robots" content="index, follow">
+    <!-- Open Graph (Social Sharing) -->
+    <meta property="og:title" content="Neelaxmi: The Helper | Premium NEET Coaching Notifications">
+    <meta property="og:description" content="Your one-stop hub for top NEET educators, study updates, DPP analysis, and real-time coaching notifications.">
+    <meta property="og:image" content="/pictures/neelaxmi.png">
+    <meta property="og:url" content="https://classupdates.netlify.app/">
+    <meta property="og:type" content="website">
+    <!-- PWA & App Icons -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Neelaxmi">
+    <link rel="apple-touch-icon" href="/pictures/neelaxmi.png">
+    <link rel="icon" type="image/png" href="/pictures/neelaxmi.png">
+    <meta name="google-site-verification" content="iatylsdA3ilcUEyKshZLLZmpDIh6TMUdj7qjgoLTWxw">
+    <!-- Performance: Preconnect Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- OneSignal Integration -->
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+          OneSignalDeferred.push(function(OneSignal) {
+            OneSignal.init({
+              appId: "4837b92b-ecaa-4bf4-9a3d-7ed740c82dd9",
+              safari_web_id: "web.onesignal.auto.xxxxx",
+              notifyButton: {
+                enable: true
+              },
+              allowLocalhostAsSecureOrigin: true,
+            });
+          });
+    </script>
+</head>
+<style>
+    /* ============================================================
+   DESIGN TOKENS — Premium EdTech Light Mode
+   ============================================================ */
+    :root {
+      /* Layout */
+      --sidebar-width: min(280px, 85vw);
+      --card-padding: clamp(1.25rem, 3vw, 2rem);
+      --section-gap: clamp(2.5rem, 6vw, 5rem);
+      /* Palette */
+      --bg-page: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-subtle: #f1f5f9;
+      --bg-sidebar: #0f172a;
+      --blue-600: #2563eb;
+      --blue-500: #3b82f6;
+      --blue-400: #60a5fa;
+      --blue-50: #eff6ff;
+      --navy: #0f172a;
+      --slate-700: #334155;
+      --slate-500: #64748b;
+      --slate-400: #94a3b8;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      /* Typography */
+      --font-display: 'Poppins', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --title-size: clamp(1.8rem, 5vw, 2.8rem);
+      /* Effects */
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.06);
+      --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.10), 0 2px 6px rgba(15, 23, 42, 0.06);
+      --shadow-lg: 0 10px 32px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(15, 23, 42, 0.08);
+      --shadow-blue: 0 8px 24px rgba(37, 99, 235, 0.20);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+      --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+      --transition: all 0.35s var(--ease-smooth);
     }
-}
 
-document.addEventListener('click', (e) => {
-    if (sidebar.classList.contains('active') && 
-        !sidebar.contains(e.target) && 
-        !e.target.closest('.menu-toggle')) {
-        toggleSidebar();
+    /* ============================================================
+   RESET & BASE
+   ============================================================ */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-});
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-page);
+      color: var(--navy);
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    /* ============================================================
+   SCROLLBAR
+   ============================================================ */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--slate-100);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--slate-400);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--blue-500);
+    }
+
+    /* ============================================================
+   PWA SPLASH — PRESERVED EXACTLY, styling only
+   ============================================================ */
+    #pwaSplash {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: var(--navy);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    #pwaSplash video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: cover;
+      z-index: 1;
+    }
+
+    #pwaSplash h2 {
+      position: absolute;
+      bottom: 50px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      color: #fff;
+      z-index: 2;
+      font-family: var(--font-display);
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+      animation: pulseIcon 2s infinite;
+    }
+
+    /* ============================================================
+   FLOATING BUTTONS — Menu & Install
+   ============================================================ */
+    .menu-toggle {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 1100;
+      background: var(--blue-600);
+      border: none;
+      color: white;
+      width: 46px;
+      height: 46px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: var(--shadow-blue);
+      transition: var(--transition);
+    }
+
+    .menu-toggle:hover {
+      background: var(--blue-500);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(37, 99, 235, 0.30);
+    }
+
+    .menu-toggle:focus-visible {
+      outline: 3px solid var(--blue-400);
+      outline-offset: 2px;
+    }
+
+    .install-float {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 1102;
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #059669 0%, var(--accent-green) 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+      cursor: pointer;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      animation: bounceIn 0.8s var(--ease-smooth), glowPulse 2.5s 1s infinite;
+      transition: transform 0.25s var(--ease-smooth), box-shadow 0.25s var(--ease-smooth);
+    }
+
+    .install-float:hover {
+      transform: translateY(-5px) scale(1.08);
+      box-shadow: 0 12px 28px rgba(16, 185, 129, 0.45);
+    }
+
+    .install-float i {
+      animation: slideDownArrow 2s infinite;
+    }
+
+    #sidebarInstallBtn {
+      display: flex !important;
+    }
+
+    /* ============================================================
+   NOTIFICATION BELL
+   ============================================================ */
+    .notification-nav {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 1101;
+    }
+
+    .bell-container {
+      width: 46px;
+      height: 46px;
+      border-radius: var(--radius-md);
+      background: var(--bg-card);
+      border: 1px solid var(--slate-200);
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      position: relative;
+      color: var(--slate-700);
+      font-size: 1.1rem;
+    }
+
+    .bell-container:hover {
+      background: var(--blue-50);
+      border-color: var(--blue-500);
+      color: var(--blue-600);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-blue);
+    }
+
+    .bell-container:focus-visible {
+      outline: 3px solid var(--blue-400);
+      outline-offset: 2px;
+    }
+
+    .badge {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: var(--accent-red);
+      color: white;
+      font-size: 0.65rem;
+      padding: 2px 5px;
+      border-radius: 50%;
+      font-weight: 700;
+      display: none;
+      border: 2px solid var(--bg-page);
+      animation: popIn 0.3s var(--ease-smooth);
+      font-family: var(--font-display);
+    }
+
+    .bell-container.has-new i {
+      animation: ring 2s infinite;
+      color: var(--blue-600);
+    }
+
+    /* ============================================================
+   NOTIFICATION PANEL
+   ============================================================ */
+    .notif-panel {
+      position: fixed;
+      top: 72px;
+      right: 16px;
+      width: min(340px, calc(100vw - 32px));
+      background: var(--bg-card);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      display: none;
+      flex-direction: column;
+      z-index: 1100;
+      box-shadow: var(--shadow-lg);
+      max-height: 72vh;
+      overflow-y: auto;
+      animation: slideDown 0.25s var(--ease-smooth);
+    }
+
+    .notif-header {
+      padding: 14px 20px;
+      font-weight: 700;
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--slate-200);
+      background: var(--bg-subtle);
+      color: var(--navy);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      position: sticky;
+      top: 0;
+    }
+
+    .notif-header i {
+      color: var(--slate-400);
+      font-size: 0.8rem;
+    }
+
+    .notif-item {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--slate-100);
+      transition: background 0.2s var(--ease-smooth);
+      background: var(--bg-card);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .notif-item:last-child {
+      border-bottom: none;
+    }
+
+    .notif-item:hover {
+      background: var(--blue-50);
+    }
+
+    .notif-item.new {
+      border-left: 3px solid var(--blue-500);
+      background: linear-gradient(90deg, rgba(37, 99, 235, 0.05) 0%, transparent 100%);
+    }
+
+    /* image wrapper with aspect ratio to prevent CLS */
+    .notif-banner-wrap {
+      width: 100%;
+      aspect-ratio: 16/5;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    .notif-banner {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .notif-content-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .notif-title {
+      color: var(--navy);
+      font-weight: 700;
+      font-size: 0.9rem;
+      line-height: 1.3;
+    }
+
+    .notif-msg {
+      color: var(--slate-500);
+      font-size: 0.83rem;
+      line-height: 1.55;
+    }
+
+    .notif-time {
+      font-size: 0.68rem;
+      color: var(--slate-400);
+      margin-top: 2px;
+      display: block;
+      text-align: right;
+    }
+
+    .notif-action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      padding: 9px 16px;
+      background: var(--blue-50);
+      color: var(--blue-600);
+      text-align: center;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.83rem;
+      transition: var(--transition);
+      border: 1px solid rgba(37, 99, 235, 0.2);
+    }
+
+    .notif-action-btn:hover {
+      background: var(--blue-600);
+      color: white;
+    }
+
+    /* ============================================================
+   SIDEBAR
+   ============================================================ */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--bg-sidebar);
+      height: 100vh;
+      position: fixed;
+      left: calc(-1.1 * var(--sidebar-width));
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 80px 1rem 2rem;
+      transition: left 0.35s var(--ease-smooth);
+      z-index: 1050;
+      overflow-y: auto;
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .sidebar.active {
+      left: 0;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 16px;
+      color: var(--slate-400);
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      margin-bottom: 4px;
+      transition: var(--transition);
+      font-size: 0.88rem;
+      font-weight: 500;
+    }
+
+    .nav-link i {
+      width: 18px;
+      text-align: center;
+      flex-shrink: 0;
+      font-size: 0.95rem;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: rgba(37, 99, 235, 0.15);
+      color: var(--blue-400);
+    }
+
+    .nav-link:focus-visible {
+      outline: 2px solid var(--blue-400);
+      outline-offset: 2px;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 16px;
+      font-size: 0.72rem;
+      color: var(--slate-500);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    /* ============================================================
+   MAIN CONTENT WRAPPER
+   ============================================================ */
+    .main-wrapper {
+      flex-grow: 1;
+      width: 100%;
+      padding: clamp(72px, 10vh, 96px) clamp(16px, 5vw, 60px) 4rem;
+      transition: margin-left 0.35s var(--ease-smooth);
+      min-width: 0;
+    }
+
+    @media (min-width: 1024px) {
+      .main-wrapper.shifted {
+        margin-left: var(--sidebar-width);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main-wrapper.shifted {
+        filter: blur(4px) brightness(0.9);
+        pointer-events: none;
+      }
+    }
+
+    /* ============================================================
+   HEADER / HERO
+   ============================================================ */
+    .header-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: var(--section-gap);
+      text-align: center;
+    }
+
+    @media (min-width: 768px) {
+      .header-content {
+        flex-direction: row;
+        text-align: left;
+        align-items: center;
+      }
+    }
+
+    /* Explicit width/height wrapper prevents CLS */
+    .header-logo-wrap {
+      width: clamp(88px, 20vw, 144px);
+      height: clamp(88px, 20vw, 144px);
+      flex-shrink: 0;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid var(--blue-500);
+      box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.12), var(--shadow-blue);
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .header-logo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .header-text {}
+
+    /* h1 — single on page, clear SEO signal */
+    .title {
+      font-family: var(--font-display);
+      font-size: var(--title-size);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+      color: var(--navy);
+      /* Subtle blue accent on last word via ::after trick — no background-clip needed */
+      background: linear-gradient(135deg, var(--navy) 0%, var(--blue-600) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      color: var(--slate-500);
+      margin-top: 10px;
+      font-size: clamp(0.9rem, 2vw, 1.05rem);
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    .subtitle strong {
+      color: var(--blue-600);
+      font-weight: 600;
+    }
+
+    /* Trust badges row */
+    .trust-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+      justify-content: center;
+    }
+
+    @media (min-width: 768px) {
+      .trust-row {
+        justify-content: flex-start;
+      }
+    }
+
+    .trust-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--slate-200);
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--slate-700);
+    }
+
+    .trust-chip i {
+      color: var(--blue-500);
+      font-size: 0.72rem;
+    }
+
+    /* ============================================================
+   SECTION LABELS — reusable
+   ============================================================ */
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--blue-600);
+      margin-bottom: 8px;
+    }
+
+    .section-label::before {
+      content: '';
+      display: inline-block;
+      width: 18px;
+      height: 2px;
+      background: var(--blue-600);
+      border-radius: 2px;
+    }
+
+    /* ============================================================
+   SEARCH BAR
+   ============================================================ */
+    .search-wrapper {
+      position: relative;
+      max-width: 560px;
+      width: 100%;
+      margin: 0 auto clamp(2rem, 4vw, 3.5rem);
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 14px 20px 14px 50px;
+      background: var(--bg-card);
+      border: 1.5px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      color: var(--navy);
+      outline: none;
+      font-size: 0.97rem;
+      font-family: var(--font-body);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+
+    .search-input::placeholder {
+      color: var(--slate-400);
+    }
+
+    .search-input:focus {
+      border-color: var(--blue-500);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10), var(--shadow-md);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--slate-400);
+      pointer-events: none;
+      font-size: 0.9rem;
+    }
+
+    /* ============================================================
+   FACULTY GRID
+   ============================================================ */
+    .notifications-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+      gap: 24px;
+    }
+
+    /* Premium faculty profile card */
+    .teacher-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--slate-200);
+      border-radius: var(--radius-xl);
+      padding: var(--card-padding);
+      transition: transform 0.3s var(--ease-smooth),
+        box-shadow 0.3s var(--ease-smooth),
+        border-color 0.3s var(--ease-smooth);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .teacher-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--blue-600), var(--blue-400));
+      opacity: 0;
+      transition: opacity 0.3s var(--ease-smooth);
+    }
+
+    .teacher-card:hover {
+      border-color: var(--blue-400);
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg), 0 0 0 1px rgba(37, 99, 235, 0.08);
+    }
+
+    .teacher-card:hover::before {
+      opacity: 1;
+    }
+
+    .avatar-wrap {
+      width: 72px;
+      height: 72px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 1.1rem;
+      border: 2px solid var(--slate-200);
+      flex-shrink: 0;
+      transition: border-color 0.3s var(--ease-smooth);
+      background: var(--slate-100);
+    }
+
+    .teacher-card:hover .avatar-wrap {
+      border-color: var(--blue-400);
+    }
+
+    .avatar {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .rank-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--blue-600);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      background: var(--blue-50);
+      border: 1px solid rgba(37, 99, 235, 0.2);
+      border-radius: 100px;
+      padding: 3px 10px;
+      display: inline-block;
+      margin-bottom: 12px;
+      width: fit-content;
+    }
+
+    .card-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin: 0 0 4px;
+      line-height: 1.2;
+    }
+
+    .card-subject {
+      color: var(--blue-600);
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 0;
+    }
+
+    .card-body {
+      color: var(--slate-500);
+      font-size: 0.88rem;
+      line-height: 1.65;
+      margin: 12px 0 16px;
+      flex-grow: 1;
+    }
+
+    .btn-profile {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--blue-600);
+      color: white;
+      text-decoration: none;
+      padding: 11px 20px;
+      border-radius: var(--radius-md);
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.88rem;
+      transition: var(--transition);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+      margin-top: auto;
+    }
+
+    .btn-profile:hover {
+      background: var(--blue-500);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-profile:focus-visible {
+      outline: 3px solid var(--blue-400);
+      outline-offset: 2px;
+    }
+
+    /* ============================================================
+   DOWNLOAD HUB — cleaned from sci-fi to premium
+   ============================================================ */
+    .download-hub {
+      margin-top: var(--section-gap);
+      padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 4vw, 2rem);
+      background: var(--bg-card);
+      border: 1.5px solid var(--slate-200);
+      border-radius: var(--radius-xl);
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .download-hub-header {
+      margin-bottom: 2.5rem;
+    }
+
+    .download-hub-header h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .download-hub-header h2 i {
+      color: var(--blue-600);
+    }
+
+    .download-hub-header p {
+      color: var(--slate-500);
+      font-size: 0.95rem;
+    }
+
+    .download-options {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .dl-card {
+      background: var(--bg-subtle);
+      border: 1.5px solid var(--slate-200);
+      padding: 2rem 1.5rem;
+      width: 180px;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dl-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--blue-600), var(--blue-500));
+      opacity: 0;
+      transition: opacity 0.3s var(--ease-smooth);
+      border-radius: inherit;
+    }
+
+    .dl-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-blue);
+      border-color: var(--blue-400);
+    }
+
+    .dl-card:hover::before {
+      opacity: 1;
+    }
+
+    .dl-card:hover .dl-icon,
+    .dl-card:hover span,
+    .dl-card:hover small {
+      color: white;
+      position: relative;
+      z-index: 1;
+    }
+
+    .dl-icon {
+      font-size: 2.2rem;
+      color: var(--blue-600);
+      display: block;
+      position: relative;
+      z-index: 1;
+      transition: color 0.3s;
+    }
+
+    .dl-card span {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--navy);
+      position: relative;
+      z-index: 1;
+      transition: color 0.3s;
+    }
+
+    .dl-card small {
+      font-size: 0.72rem;
+      color: var(--slate-500);
+      position: relative;
+      z-index: 1;
+      transition: color 0.3s;
+    }
+
+    /* ============================================================
+   TELEGRAM / GENERIC MODAL
+   ============================================================ */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 20px;
+    }
+
+    .modal-card {
+      background: var(--bg-card);
+      padding: clamp(1.75rem, 5vw, 2.75rem);
+      border-radius: var(--radius-xl);
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      border: 1.5px solid var(--slate-200);
+      box-shadow: var(--shadow-lg);
+      position: relative;
+    }
+
+    .modal-card::before {
+      display: none;
+    }
+
+    /* remove glow overlay from dark theme */
+    .modal-content-wrapper {
+      position: relative;
+      z-index: 1;
+    }
+
+    .modal-icon {
+      font-size: 3.5rem;
+      color: var(--blue-600);
+      margin-bottom: 1.25rem;
+      display: inline-block;
+      animation: pulseIcon 2s infinite;
+    }
+
+    /* Telegram icon keeps its brand colour */
+    .modal-icon.fa-telegram {
+      color: #2CA5E0;
+    }
+
+    .modal-card h2 {
+      color: var(--navy);
+      margin-bottom: 10px;
+      font-weight: 800;
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+    }
+
+    .modal-card p {
+      color: var(--slate-500);
+      line-height: 1.65;
+      font-size: 0.92rem;
+    }
+
+    .modal-card p b {
+      color: var(--navy);
+      font-weight: 700;
+    }
+
+    .btn-join {
+      background: linear-gradient(135deg, var(--blue-600), var(--blue-500));
+      color: white;
+      text-decoration: none;
+      padding: 14px 28px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: var(--transition);
+      box-shadow: var(--shadow-blue);
+      margin-top: 1.5rem;
+    }
+
+    .btn-join:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-close {
+      background: var(--bg-subtle);
+      border: 1.5px solid var(--slate-200);
+      color: var(--slate-500);
+      margin-top: 14px;
+      padding: 9px 18px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: var(--transition);
+      font-family: var(--font-body);
+    }
+
+    .btn-close:hover {
+      background: var(--slate-200);
+      color: var(--navy);
+    }
+
+    .btn-close:focus-visible {
+      outline: 2px solid var(--blue-400);
+      outline-offset: 2px;
+    }
+
+    /* ============================================================
+   DOWNLOAD / JARVIS MODAL
+   ============================================================ */
+    .jarvis-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.75);
+      z-index: 3000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(12px);
+      padding: 20px;
+    }
+
+    .jarvis-container {
+      background: var(--bg-card);
+      border: 1.5px solid var(--slate-200);
+      border-radius: var(--radius-xl);
+      max-width: 860px;
+      width: 100%;
+      padding: 2rem;
+      position: relative;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .jarvis-grid {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .jarvis-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .jarvis-visual {
+        order: -1;
+      }
+    }
+
+    .jarvis-info {
+      text-align: left;
+    }
+
+    .system-tag {
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      font-weight: 700;
+      color: var(--blue-600);
+      background: var(--blue-50);
+      border: 1px solid rgba(37, 99, 235, 0.2);
+      border-radius: 100px;
+      padding: 4px 12px;
+      display: inline-block;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+
+    .jarvis-info h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .app-desc {
+      color: var(--slate-500);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .video-frame {
+      margin: 20px 0;
+      border: 1.5px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: var(--navy);
+    }
+
+    .video-frame iframe {
+      width: 100%;
+      aspect-ratio: 16/9;
+      border: none;
+      display: block;
+    }
+
+    .frame-label {
+      font-size: 0.65rem;
+      color: var(--slate-400);
+      padding: 6px 10px;
+      background: var(--bg-subtle);
+      font-family: monospace;
+    }
+
+    .jarvis-dl-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, var(--blue-600), var(--blue-500));
+      color: white;
+      padding: 14px 24px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.92rem;
+      border-radius: var(--radius-md);
+      transition: var(--transition);
+      box-shadow: var(--shadow-blue);
+      clip-path: polygon(0 0, 90% 0, 100% 30%, 100% 100%, 10% 100%, 0 70%);
+    }
+
+    .jarvis-dl-btn:hover {
+      filter: brightness(1.1);
+      transform: scale(1.02);
+    }
+
+    .btn-glitch {
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    /* Orbit visual */
+    .jarvis-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .logo-orbit {
+      position: relative;
+      width: 180px;
+      height: 180px;
+    }
+
+    .jarvis-logo {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 2px solid var(--blue-500);
+      box-shadow: var(--shadow-blue);
+    }
+
+    .orbit-ring {
+      position: absolute;
+      inset: 0;
+      border: 1px dashed rgba(37, 99, 235, 0.35);
+      border-radius: 50%;
+      animation: rotate 10s linear infinite;
+    }
+
+    .orbit-ring:nth-child(2) {
+      inset: 20px;
+      animation-direction: reverse;
+      border-style: solid;
+      border-color: rgba(37, 99, 235, 0.15);
+    }
+
+    .status-bars {
+      display: flex;
+      gap: 6px;
+      align-items: flex-end;
+    }
+
+    .bar {
+      width: 8px;
+      background: var(--blue-500);
+      border-radius: 2px;
+      animation: barPulse 1.2s ease infinite alternate;
+    }
+
+    .bar:nth-child(1) {
+      height: 16px;
+      animation-delay: 0s;
+    }
+
+    .bar:nth-child(2) {
+      height: 28px;
+      animation-delay: 0.2s;
+    }
+
+    .bar:nth-child(3) {
+      height: 20px;
+      animation-delay: 0.4s;
+    }
+
+    .modal-exit {
+      position: absolute;
+      top: -14px;
+      right: -14px;
+      background: var(--accent-red);
+      border: none;
+      color: white;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+      transition: var(--transition);
+    }
+
+    .modal-exit:hover {
+      transform: scale(1.1);
+    }
+
+    /* Footer Base Layout */
+    .app-footer {
+      background-color: #ffffff;
+      border-top: 1px solid #e2e8f0;
+      padding: 40px 20px 20px 20px;
+      margin-top: 60px;
+      /* Ensures breathing room from content above */
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    /* Mega Brand Text with Shadow */
+    .footer-brand-wrap {
+      margin-bottom: 25px;
+    }
+
+    .footer-logo-text {
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      /* Responsive scaling */
+      font-weight: 900;
+      letter-spacing: 4px;
+      color: #1e3a8a;
+      /* Deep Navy Blue */
+      text-transform: uppercase;
+      margin: 0;
+      line-height: 1;
+      /* Clean, premium 3D text shadow */
+      text-shadow:
+        1px 1px 0px #93c5fd,
+        2px 2px 0px #93c5fd,
+        3px 3px 0px #3b82f6,
+        4px 4px 8px rgba(30, 58, 138, 0.2);
+    }
+
+    /* Decorative Divider */
+    .footer-divider {
+      border: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, #cbd5e1, transparent);
+      margin: 20px 0;
+    }
+
+    /* Copyright Bar */
+    .footer-bottom {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .copyright-text {
+      color: #64748b;
+      /* Slate grey */
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin: 0;
+    }
+
+    /* ============================================================
+   KEYFRAME ANIMATIONS
+   ============================================================ */
+    @keyframes shine {
+      to {
+        background-position: 200% center;
+      }
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @keyframes pulseIcon {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.07);
+        opacity: 0.85;
+      }
+    }
+
+    @keyframes popIn {
+      0% {
+        transform: scale(0);
+      }
+
+      80% {
+        transform: scale(1.15);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes ring {
+      0% {
+        transform: rotate(0);
+      }
+
+      10% {
+        transform: rotate(14deg);
+      }
+
+      20% {
+        transform: rotate(-14deg);
+      }
+
+      30% {
+        transform: rotate(8deg);
+      }
+
+      40% {
+        transform: rotate(-8deg);
+      }
+
+      50%,
+      100% {
+        transform: rotate(0);
+      }
+    }
+
+    @keyframes bounceIn {
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+
+      60% {
+        transform: scale(1.15);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes glowPulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
+      }
+
+      70% {
+        box-shadow: 0 0 0 14px rgba(16, 185, 129, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+      }
+    }
+
+    @keyframes slideDownArrow {
+
+      0%,
+      100% {
+        transform: translateY(-2px);
+      }
+
+      50% {
+        transform: translateY(3px);
+      }
+    }
+
+    @keyframes rotate {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes barPulse {
+      from {
+        opacity: 0.4;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* ============================================================
+   UTILITY / REDUCED MOTION
+   ============================================================ */
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+</style>
+</head>
+
+<body>
+    <!-- PWA Splash Screen — PRESERVED EXACTLY -->
+    <div id="pwaSplash">
+        <video id="splashVideo" autoplay playsinline>
+            <source src="/logo.mp4" type="video/mp4">
+        </video>
+        <h2>Starting Neelaxmi…</h2>
+    </div>
+    <!-- Floating Menu Toggle -->
+    <button class="menu-toggle" onclick="toggleSidebar()" aria-label="Open navigation menu" aria-expanded="false">
+        <i class="fas fa-bars" aria-hidden="true"></i>
+    </button>
+    <!-- Floating Install Button -->
+    <div id="installFloatBtn" class="install-float" onclick="installPWA()" role="button" tabindex="0" aria-label="Install Neelaxmi app">
+        <i class="fas fa-download" aria-hidden="true"></i>
+    </div>
+    <!-- Notification Bell -->
+    <div class="notification-nav">
+        <div class="bell-container" onclick="toggleNotifPanel()" role="button" tabindex="0" aria-label="View notifications" aria-haspopup="true">
+            <i class="fas fa-bell" aria-hidden="true"></i>
+            <span class="badge" id="notifCount" aria-live="polite">0</span>
+        </div>
+    </div>
+    <!-- Notification Panel -->
+    <div class="notif-panel" id="notifPanel" role="dialog" aria-label="Notifications panel">
+        <div class="notif-header">
+            <span>Latest Updates</span>
+            <i class="fas fa-sync-alt" aria-hidden="true"></i>
+        </div>
+        <div id="notifList">
+            <p style="padding: 30px; color: var(--slate-400); font-size: 0.85rem; text-align: center;"> No new notifications yet. </p>
+        </div>
+    </div>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar" aria-label="Primary navigation">
+        <a href="/index.html" class="nav-link active">
+            <i class="fas fa-home" aria-hidden="true"></i> Home </a>
+        <a href="/quiz/DASHBOARD.HTML" class="nav-link">
+            <i class="fas fa-th-large" aria-hidden="true"></i> Dashboard </a>
+        <a href="#" class="nav-link" id="sidebarInstallBtn" onclick="installPWA(); return false;" style="display: none;">
+            <i class="fas fa-mobile-alt" aria-hidden="true"></i> Install App </a>
+        <a href="https://akmsirdiscussion.netlify.app/" target="_blank" rel="noopener" class="nav-link">
+            <i class="fas fa-comments" aria-hidden="true"></i> AKM Sir Discussion </a>
+        <a href="https://neetcountdown2026.netlify.app/" target="_blank" rel="noopener" class="nav-link">
+            <i class="fas fa-clock" aria-hidden="true"></i> NEET Countdown </a>
+        <a href="https://quiz.netlify.app/" target="_blank" rel="noopener" class="nav-link">
+            <i class="fas fa-lightbulb" aria-hidden="true"></i> Quiz Corner </a>
+        <a href="https://NEETTESTANALYSIS.netlify.app/" target="_blank" rel="noopener" class="nav-link">
+            <i class="fas fa-chart-line" aria-hidden="true"></i> Test Analysis </a>
+        <a href="https://dppanalysis.netlify.app/" target="_blank" rel="noopener" class="nav-link">
+            <i class="fas fa-chart-bar" aria-hidden="true"></i> DPP Analysis </a>
+        <a href="#" class="nav-link">
+            <i class="fas fa-calendar-check" aria-hidden="true"></i> Schedule Tracker </a>
+        <a href="updates.html" target="_blank" rel="noopener" class="nav-link">
+            <i class="fas fa-newspaper" aria-hidden="true"></i> Updates &amp; Info </a>
+        <a href="http://diwalisak.netlify.app/" target="_blank" rel="noopener" class="nav-link">
+            <i class="fas fa-star" aria-hidden="true"></i> Diwali VFX </a>
+        <a href="https://telegram.me/saksen_main_bot" target="_blank" rel="noopener" class="nav-link">
+            <i class="fab fa-telegram" aria-hidden="true"></i> Main Bot </a>
+        <a href="/privacy.html" target="_blank" rel="noopener" class="nav-link">
+            <i class="fas fa-shield-alt" aria-hidden="true"></i> Our Privacy </a>
+        <a href="http://classupdates.netlify.app/" target="_blank" rel="noopener" class="nav-link">
+            <i class="fas fa-info-circle" aria-hidden="true"></i> About Us </a>
+        <div class="sidebar-footer"> &copy; <span id="year"></span> Team NEELAXMI </div>
+    </nav>
+    <!-- Main Content -->
+    <main class="main-wrapper" id="mainContent">
+        <!-- Hero Header -->
+        <header class="header-content">
+            <div class="header-logo-wrap">
+                <img src="/pictures/neelaxmi.png" alt="Neelaxmi coaching platform logo" class="header-logo" width="144" height="144" loading="eager">
+            </div>
+            <div class="header-text">
+                <p class="section-label">
+                    <i class="fas fa-graduation-cap" aria-hidden="true"></i> NEET Coaching Hub
+                </p>
+                <!-- Single h1 on the page — strong SEO signal -->
+                <h1 class="title">Neelaxmi: The Helper</h1>
+                <p class="subtitle">Top educators &amp; real-time study updates — curated by <strong>Neelaxmi &amp; SAKSEN</strong>. </p>
+                <div class="trust-row" aria-label="Platform highlights">
+                    <span class="trust-chip">
+              <i class="fas fa-bolt" aria-hidden="true"></i> Live Notifications </span>
+                    <span class="trust-chip">
+              <i class="fas fa-users" aria-hidden="true"></i> 6+ Expert Faculty </span>
+                    <span class="trust-chip">
+              <i class="fas fa-mobile-alt" aria-hidden="true"></i> Install as App </span>
+                </div>
+            </div>
+        </header>
+        <!-- Search Bar -->
+        <div class="search-wrapper" role="search">
+            <i class="fas fa-search search-icon" aria-hidden="true"></i>
+            <label for="searchBar" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Search educators or subjects</label>
+            <input type="search" id="searchBar" class="search-input" placeholder="Search educator or subject…" aria-label="Search educators or subjects" autocomplete="off">
+        </div>
+        <!-- Faculty Cards Grid — h2 sets hierarchy under h1 -->
+        <section aria-labelledby="faculty-heading">
+            <h2 id="faculty-heading" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Our Faculty</h2>
+            <div class="notifications-grid" id="notificationsContainer"></div>
+        </section>
+        <!-- Download Hub -->
+        <section class="download-hub" aria-labelledby="download-heading">
+            <div class="download-hub-header">
+                <!-- h2 in correct hierarchy -->
+                <h2 id="download-heading">
+            <i class="fas fa-download" aria-hidden="true"></i> Download Our App
+          </h2>
+                <p>Access the Neelaxmi interface across your devices.</p>
+            </div>
+            <div class="download-options">
+                <div class="dl-card" onclick="openDownloadModal('apk')" role="button" tabindex="0" aria-label="Download Android APK">
+                    <i class="fab fa-android dl-icon" aria-hidden="true"></i>
+                    <span>Download APK</span>
+                    <small>v2.4.0 — Android OS</small>
+                </div>
+                <div class="dl-card" onclick="openDownloadModal('exe')" role="button" tabindex="0" aria-label="Download Windows EXE">
+                    <i class="fab fa-windows dl-icon" aria-hidden="true"></i>
+                    <span>Download EXE</span>
+                    <small>v1.0.2 — Windows x64</small>
+                </div>
+            </div>
+        </section>
+        <!-- Download / Jarvis Modal -->
+        <div id="downloadModal" class="jarvis-modal" role="dialog" aria-modal="true" aria-labelledby="modalAppName">
+            <div class="jarvis-container">
+                <button class="modal-exit" onclick="closeDownloadModal()" aria-label="Close download modal">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+                <div class="jarvis-grid">
+                    <div class="jarvis-info">
+                        <div class="system-tag">Download Our App</div>
+                        <h2 id="modalAppName">Neelaxmi Mobile</h2>
+                        <p class="app-desc">Synchronizing educator databases with real-time notification protocols. Experience the full power of NEELAXMI tools with zero latency.</p>
+                        <div class="video-frame">
+                            <div class="frame-label">SYSTEM_TUTORIAL.mp4</div>
+                            <iframe src="https://www.youtube.com/embed/0emvAqFTlaE" title="Neelaxmi app tutorial video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+                        </div>
+                        <a href="#" class="jarvis-dl-btn">
+                            <span class="btn-glitch">Initialize Download</span>
+                            <i class="fas fa-download" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                    <div class="jarvis-visual">
+                        <div class="logo-orbit">
+                            <div class="orbit-ring" aria-hidden="true"></div>
+                            <div class="orbit-ring" aria-hidden="true"></div>
+                            <img src="/pictures/neelaxmi.png" alt="Neelaxmi app logo" class="jarvis-logo" width="90" height="90" loading="lazy">
+                        </div>
+                        <div class="status-bars" aria-hidden="true">
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="app-footer">
+            <div class="footer-container">
+                <div class="footer-brand-wrap">
+                    <h1 class="footer-logo-text">NEELAXMI </h1>
+                </div>
+                <hr class="footer-divider">
+                <div class="footer-bottom">
+                    <p class="copyright-text">&copy; 2024 NEELAXMI. All Rights Reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </main>
+    <div id="telegramModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="tgModalTitle">
+        <div class="modal-card">
+            <div class="modal-content-wrapper">
+                <i class="fab fa-telegram modal-icon" aria-hidden="true"></i>
+                <h2 id="tgModalTitle">Join the NEELAXMI Squad!</h2>
+                <p> Don't miss exclusive notes and direct updates from <b>Neelaxmi &amp; Saksham</b>. </p>
+                <a href="https://telegram.me/saksen_main_bot" target="_blank" rel="noopener" class="btn-join" onclick="closeModal()">
+                    <span>Join Channel Now</span>
+                    <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+                </a>
+                <button onclick="closeModal()" class="btn-close"> Maybe later, I'll browse first </button>
+            </div>
+        </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script>
+        // ==========================================
+          // PWA LOGIC — PRESERVED EXACTLY
+          // ==========================================
+          // 1. Service Worker Registration
+          if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+              navigator.serviceWorker.register('/sw.js').then(registration => console.log('SW Registered')).catch(err => console.log('SW Fail:', err));
+            });
+          }
+          // 2. Custom PWA Splash Screen Logic
+          if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+            const splash = document.getElementById('pwaSplash');
+            const video = document.getElementById('splashVideo');
+            splash.style.display = 'flex';
+            var playPromise = video.play();
+            if (playPromise !== undefined) {
+              playPromise.then(_ => {}).catch(error => {
+                video.muted = true;
+                video.play();
+              });
+            }
+            setTimeout(() => {
+              splash.style.transition = 'opacity 0.8s ease';
+              splash.style.opacity = '0';
+              setTimeout(() => splash.style.display = 'none', 800);
+            }, 4500);
+          }
+          // ==========================================
+          // FIREBASE — PRESERVED EXACTLY
+          // ==========================================
+          const firebaseConfig = {
+            apiKey: "AIzaSyDAZ_xwRd_uJcf-Gzv58HA9f_HZ7BCCJ8g",
+            authDomain: "gallery-83144.firebaseapp.com",
+            projectId: "gallery-83144",
+            storageBucket: "gallery-83144.firebasestorage.app",
+            messagingSenderId: "1005577519231",
+            appId: "1:1005577519231:web:638899904126ae78cdff4a"
+          };
+          firebase.initializeApp(firebaseConfig);
+          const db = firebase.firestore();
+          // UI Variables
+          let unreadCount = 0;
+          let isPanelOpen = false;
+          // ==========================================
+          // DATA SOURCE (TEACHERS) — PRESERVED EXACTLY
+          // ==========================================
+          const TEACHERS_DATA = [{
+            name: "Ajay Sir",
+            subject: "Chemistry",
+            rank: "Super Six",
+            description: "Specializes in Physical Chemistry. Known for high-yield concepts and zero-trick mastery.",
+            imgUrl: "/pictures/akmsir.jpg"
+          }, {
+            name: "Prateek Jain",
+            subject: "Physics",
+            rank: "BRUTAL",
+            description: "Zero tricks, 100% concepts. The ultimate guide for mastering Physics fundamentals.",
+            imgUrl: "/pictures/pj.jpg"
+          }, {
+            name: "SEEP MAM",
+            subject: "Biology",
+            rank: "QUEEN",
+            description: "Beauty is not the only reason for fame — sometimes it's just a free version of the brain.",
+            imgUrl: "/pictures/seep.jpg"
+          }, {
+            name: "Ramesh Sharda",
+            subject: "Chemistry",
+            rank: "SMART DADU",
+            description: "Age with experience — never gonna fail.",
+            imgUrl: "/pictures/rssir2.jpeg"
+          }, {
+            name: "Amit Gupta Sir",
+            subject: "Biology",
+            rank: "PG IN UG",
+            description: "The master of Zoology with years of legacy.",
+            imgUrl: "/pictures/AGsir2.jpeg"
+          }, {
+            name: "Pranav pundarik",
+            subject: "Biology",
+            rank: "Darwin chacha ",
+            description: "Explore deeply. Learn sharply. Execute precisely",
+            imgUrl: "/pictures/ppsir2.jpeg"
+          }, {
+            name: "Test Series",
+            subject: "Test Series",
+            rank: "CHECK YOUR CAPACITY",
+            description: "If you are flying, it has the power to bring you back to earth.",
+            imgUrl: "/pictures/neelaxmi.png"
+          }, {
+            name: "ABOUT OWNER",
+            subject: "OWNER ",
+            rank: "Noise level: Zero. Impact level: Maximum.",
+            description: "I'm not here to talk. I'm here to execute.",
+            imgUrl: "/pictures/owner.jpg",
+            isTop: true
+          }, ];
+          // CORE UI LOGIC — PRESERVED EXACTLY
+          const container = document.getElementById('notificationsContainer');
+          const sidebar = document.getElementById('sidebar');
+          const mainContent = document.getElementById('mainContent');
+    
+          function toggleSidebar() {
+            sidebar.classList.toggle('active');
+            mainContent.classList.toggle('shifted');
+          }
+    
+          function renderCards(data) {
+            container.innerHTML = data.map((teacher, index) => {
+              const profileSlug = 'teachers/' + teacher.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.html';
+              return `
+                    
+    																															<article class="teacher-card" style="animation: slideDown 0.45s var(--ease-smooth) forwards; animation-delay: ${index * 0.08}s; opacity: 0;">
+    																																<span class="rank-badge">${teacher.rank}</span>
+    																																<div class="avatar-wrap">
+    																																	<img
+                                class="avatar"
+                                src="${teacher.imgUrl}"
+                                alt="Photo of ${teacher.name}"
+                                width="72" height="72"
+                                loading="lazy"
+                                onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(teacher.name)}&background=2563eb&color=fff&size=72'"
+                            >
+    																																	</div>
+    																																	<h3 class="card-name">${teacher.name}</h3>
+    																																	<p class="card-subject">${teacher.subject}</p>
+    																																	<div class="card-body">${teacher.description}</div>
+    																																	<a href="${profileSlug}" class="btn-profile">
+                            View Profile 
+    																																		<i class="fas fa-arrow-right" aria-hidden="true"></i>
+    																																	</a>
+    																																</article>
+                `;
+            }).join('');
+          }
+          document.getElementById('searchBar').addEventListener('keyup', (e) => {
+            const term = e.target.value.toLowerCase().trim();
+            const filtered = TEACHERS_DATA.filter(t => t.name.toLowerCase().includes(term) || t.subject.toLowerCase().includes(term));
+            renderCards(filtered);
+          });
+          // ==========================================
+          // NOTIFICATION LOGIC — PRESERVED EXACTLY
+          // ==========================================
+          let lastOpenedTime = localStorage.getItem('saksen_notif_last_viewed');
+          lastOpenedTime = lastOpenedTime ? parseInt(lastOpenedTime) : 0;
+    
+          function toggleNotifPanel() {
+            const panel = document.getElementById('notifPanel');
+            const badge = document.getElementById('notifCount');
+            isPanelOpen = !isPanelOpen;
+            if (isPanelOpen) {
+              panel.style.display = 'flex';
+              unreadCount = 0;
+              badge.style.display = 'none';
+              lastOpenedTime = Date.now();
+              localStorage.setItem('saksen_notif_last_viewed', lastOpenedTime);
+              setTimeout(() => {
+                document.querySelectorAll('.notif-item.new').forEach(el => {
+                  el.classList.remove('new');
+                  el.style.borderLeft = 'none';
+                });
+              }, 2000);
+            } else {
+              panel.style.display = 'none';
+            }
+          }
+          db.collection("notifications").orderBy("timestamp", "desc").limit(20).onSnapshot((snapshot) => {
+            const list = document.getElementById('notifList');
+            const badge = document.getElementById('notifCount');
+            list.innerHTML = '';
+            if (snapshot.empty) {
+              list.innerHTML = `
+    																																<p style="padding: 30px; color: var(--slate-400); font-size: 0.85rem; text-align: center;">No new notifications.</p>`;
+              return;
+            }
+            let currentUnread = 0;
+            snapshot.forEach((doc) => {
+              const data = doc.data();
+              let notifTimeMs = 0;
+              let timeString = 'Just now';
+              if (data.timestamp) {
+                notifTimeMs = data.timestamp.seconds * 1000;
+                timeString = new Date(notifTimeMs).toLocaleDateString([], {
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                });
+              }
+              const isNew = notifTimeMs > lastOpenedTime;
+              if (isNew) currentUnread++;
+              const div = document.createElement('div');
+              div.className = `notif-item ${isNew ? 'new' : ''}`;
+              const imgHtml = data.img ? `
+    																																<div class="notif-banner-wrap">
+    																																	<img src="${data.img}" class="notif-banner" alt="Notification update" width="320" height="100" loading="lazy">
+    																																	</div>` : '';
+              const btnHtml = data.link ? `
+    																																	<a href="${data.link}" target="_blank" rel="noopener" class="notif-action-btn">
+                        ${data.btnText || 'Check it out'} 
+    																																		<i class="fas fa-arrow-right" aria-hidden="true"></i>
+    																																	</a>` : '';
+              div.innerHTML = `
+                    ${imgHtml}
+                    
+    																																	<div class="notif-content-top">
+    																																		<div class="notif-title">${data.title}</div>
+    																																	</div>
+    																																	<div class="notif-msg">${data.message}</div>
+                    ${btnHtml}
+                    
+    																																	<small class="notif-time">${timeString}</small>
+                `;
+              list.appendChild(div);
+            });
+            if (currentUnread > 0) {
+              badge.innerText = currentUnread;
+              badge.style.display = 'block';
+            } else {
+              badge.style.display = 'none';
+            }
+            unreadCount = currentUnread;
+          });
+          // PWA INSTALL LOGIC — PRESERVED EXACTLY
+          // ==========================================
+          let deferredPrompt = null;
+          const installFloatBtn = document.getElementById('installFloatBtn');
+          const sidebarInstallBtn = document.getElementById('sidebarInstallBtn');
+          window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log("PWA Install prompt captured.");
+          });
+          async function installPWA() {
+            if (deferredPrompt) {
+              deferredPrompt.prompt();
+              const {
+                outcome
+              } = await deferredPrompt.userChoice;
+              if (outcome === 'accepted') {
+                deferredPrompt = null;
+              }
+            } else {
+              showManualInstallInstructions();
+            }
+          }
+    
+          function showManualInstallInstructions() {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            if (isIOS) {
+              alert("Neelaxmi App Install Karein:\n\n1. Browser ke 'Share' button par click karein (Bottom bar).\n2. Thoda niche scroll karein aur 'Add to Home Screen' select karein.");
+            } else {
+              alert("Install Guide:\n\n1. Browser ke menu (3 dots ⋮) par click karein.\n2. 'Install App' ya 'Add to Home Screen' par tap karein.");
+            }
+          }
+          // MODAL LOGIC — PRESERVED EXACTLY
+          function closeModal() {
+            document.getElementById('telegramModal').style.display = 'none';
+            localStorage.setItem('telegram_modal_timestamp', Date.now());
+          }
+          document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('year').textContent = new Date().getFullYear();
+            renderCards(TEACHERS_DATA);
+            const lastInteraction = localStorage.getItem('telegram_modal_timestamp');
+            const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
+            const now = Date.now();
+            if (!lastInteraction || (now - lastInteraction) > oneWeekInMs) {
+              setTimeout(() => {
+                document.getElementById('telegramModal').style.display = 'flex';
+              }, 3000);
+            }
+          });
+          // DOWNLOAD MODAL — PRESERVED EXACTLY
+          function openDownloadModal(type) {
+            const modal = document.getElementById('downloadModal');
+            const nameText = document.getElementById('modalAppName');
+            const dlBtn = document.querySelector('.jarvis-dl-btn');
+            modal.style.display = 'flex';
+            if (type === 'apk') {
+              nameText.innerText = "Neelaxmi Android Interface";
+              dlBtn.href = "https://neelaxmi.vercel.app/neelaxmi.apk";
+            } else {
+              nameText.innerText = "Neelaxmi Desktop Core";
+              dlBtn.href = "https://neelaxmi.vercel.app/neelaxmi.exe";
+            }
+          }
+    
+          function closeDownloadModal() {
+            document.getElementById('downloadModal').style.display = 'none';
+          }
+          window.onclick = function(event) {
+            const modal = document.getElementById('downloadModal');
+            if (event.target == modal) {
+              closeDownloadModal();
+            }
+          };
+    </script>
+    <script src="/js/head-loader.js"></script>
+</body>
+
+</html>
