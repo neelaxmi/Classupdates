@@ -119,8 +119,6 @@ document.getElementById('google-login-btn').onclick = async () => {
     try {
         const result = await auth.signInWithPopup(provider);
         const user = result.user;
-        
-        // Check if user document exists in Firestore, if not, create it
         const userDoc = await db.collection('users').doc(user.uid).get();
 
         if (!userDoc.exists) {
@@ -142,7 +140,6 @@ document.getElementById('google-login-btn').onclick = async () => {
 };
 
 
-// Auth State Change
 auth.onAuthStateChanged(user => {
     if (user) {
 
