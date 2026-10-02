@@ -174,7 +174,6 @@ img { display: block; max-width: 100%; }
 }
 .menu-toggle:focus-visible { outline: 3px solid var(--blue-400); outline-offset: 2px; }
 
-/* Floating install button — green brand, preserved size */
 .install-float {
     position: fixed; bottom: 20px; left: 20px; z-index: 1102;
     width: 50px; height: 50px;
@@ -517,7 +516,6 @@ img { display: block; max-width: 100%; }
 }
 .teacher-card:hover::before { opacity: 1; }
 
-/* Avatar with explicit dimensions for CLS prevention */
 .avatar-wrap {
     width: 72px; height: 72px;
     border-radius: var(--radius-md);
@@ -1155,14 +1153,12 @@ img { display: block; max-width: 100%; }
     
     <footer class="app-footer">
     <div class="footer-container">
-        <!-- Big Bold Brand Section -->
         <div class="footer-brand-wrap">
             <h1 class="footer-logo-text">NEELAXMI  </h1>
         </div>
         
         <hr class="footer-divider">
         
-        <!-- Copyright Section -->
         <div class="footer-bottom">
             <p class="copyright-text">&copy; 2024 NEELAXMI. All Rights Reserved.</p>
         </div>
@@ -1170,9 +1166,8 @@ img { display: block; max-width: 100%; }
 </footer>
 
 
-</main><!-- /main -->
+</main>
 
-<!-- Telegram Modal -->
 <div id="telegramModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="tgModalTitle">
     <div class="modal-card">
         <div class="modal-content-wrapper">
@@ -1196,7 +1191,6 @@ img { display: block; max-width: 100%; }
 
 
 
-<!-- Firebase SDKs — PRESERVED EXACTLY -->
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
@@ -1266,6 +1260,7 @@ img { display: block; max-width: 100%; }
         { name: "Amit Gupta Sir", subject: "Biology", rank: "PG IN UG", description: "The master of Zoology with years of legacy.", imgUrl: "/pictures/AGsir2.jpeg" },
         { name: "Pranav pundarik", subject: "Biology", rank: "Darwin chacha ", description: "Explore deeply. Learn sharply. Execute precisely", imgUrl: "/pictures/ppsir2.jpeg" },
         { name: "Test Series", subject: "Test Series", rank: "CHECK YOUR CAPACITY", description: "If you are flying, it has the power to bring you back to earth.", imgUrl: "/pictures/neelaxmi.png" },
+
                 {
                 name: "ABOUT OWNER",
                 subject: "OWNER ",
@@ -1274,12 +1269,13 @@ img { display: block; max-width: 100%; }
                 imgUrl: "/pictures/owner.jpg",
                 isTop: true
             },
+            
+            { name: "PDF TO CBT", subject: "TOOL", rank: "CHECK YOUR CAPACITY", description: "If you any  PDF and want to genrate QUESTION then u can try thus .", imgUrl: "/pictures/neelaxmi.png" },
+
 
     ];
 
-    // ==========================================
     // CORE UI LOGIC — PRESERVED EXACTLY
-    // ==========================================
     const container = document.getElementById('notificationsContainer');
     const sidebar = document.getElementById('sidebar');
     const mainContent = document.getElementById('mainContent');
@@ -1416,7 +1412,6 @@ img { display: block; max-width: 100%; }
         unreadCount = currentUnread;
     });
 
-    // ==========================================
     // PWA INSTALL LOGIC — PRESERVED EXACTLY
     // ==========================================
     let deferredPrompt = null;
@@ -1450,9 +1445,7 @@ img { display: block; max-width: 100%; }
         }
     }
 
-    // ==========================================
     // MODAL LOGIC — PRESERVED EXACTLY
-    // ==========================================
     function closeModal() {
         document.getElementById('telegramModal').style.display = 'none';
         localStorage.setItem('telegram_modal_timestamp', Date.now());
@@ -1473,9 +1466,7 @@ img { display: block; max-width: 100%; }
         }
     });
 
-    // ==========================================
     // DOWNLOAD MODAL — PRESERVED EXACTLY
-    // ==========================================
     function openDownloadModal(type) {
         const modal = document.getElementById('downloadModal');
         const nameText = document.getElementById('modalAppName');
