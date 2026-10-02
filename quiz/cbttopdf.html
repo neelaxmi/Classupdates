@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Neelaxmi CBT: turn a question PDF into a practice test</title>
+<meta name="description" content="Free tool that turns a question PDF and its answer key into a computer-based practice test.">
+<link rel="icon" href="/pictures/neelamxi.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script>
+  if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.documentElement.classList.add('dark');
+  }
+</script>
+<style>:root {
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --ink: #0f172a;
+  --mute: #64748b;
+  --line: #e2e8f0;
+  --primary: #6366f1;
+  --primary-h: #4f46e5;
+  --primary-rgb: 99, 102, 241;
+  --ok: #15803d;
+  --warn: #b45309;
+  --err: #b91c1c;
+  --field: #ffffff;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+  --shadow-glow: 0 0 0 3px color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+.dark {
+  --bg: #090d16;
+  --card: #111827;
+  --ink: #f8fafc;
+  --mute: #94a3b8;
+  --line: #1f2937;
+  --ok: #4ade80;
+  --warn: #fbbf24;
+  --err: #f87171;
+  --field: #0b0f19;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 20px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--ink);
+  font: 16px/1.6 Inter, system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.wrap {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  margin: 0 0 6px;
+}
+
+.sub {
+  color: var(--mute);
+  font-size: 15px;
+  margin: 0 0 32px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-md);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: color-mix(in srgb, var(--primary) 30%, var(--line));
+}
+
+.card.locked {
+  opacity: 0.5;
+  pointer-events: none;
+  box-shadow: none;
+}
+
+h2 {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0 0 16px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.n {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 2px 4px color-mix(in srgb, var(--primary) 40%, transparent);
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 8px;
+  color: var(--ink);
+}
+
+input[type=text],
+input[type=password],
+input[type=number],
+textarea,
+select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--field);
+  color: var(--ink);
+  font: inherit;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+input[type=file] {
+  width: 100%;
+  padding: 14px;
+  border: 2px dashed var(--line);
+  border-radius: var(--radius-md);
+  background: var(--field);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+input[type=file]:hover {
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 3%, var(--field));
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+a:focus-visible {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: var(--shadow-glow);
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+}
+.row > * {
+  flex: 1;
+}
+
+button, .btn {
+  font: inherit;
+  font-weight: 700;
+  border: 0;
+  border-radius: var(--radius-md);
+  padding: 12px 20px;
+  cursor: pointer;
+  background: var(--primary);
+  color: #fff;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 4px color-mix(in srgb, var(--primary) 30%, transparent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+button:hover, .btn:hover {
+  background: var(--primary-h);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 40%, transparent);
+}
+
+button:active, .btn:active {
+  transform: translateY(0);
+}
+
+button.ghost, .btn.ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  box-shadow: none;
+}
+
+button.ghost:hover, .btn.ghost:hover {
+  background: var(--bg);
+  border-color: var(--mute);
+  transform: none;
+  box-shadow: none;
+}
+
+button:disabled, .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.btn.big {
+  padding: 14px 24px;
+  font-size: 16px;
+}
+
+.help {
+  font-size: 13px;
+  color: var(--mute);
+  margin: 6px 0 0;
+}
+
+.bar {
+  height: 8px;
+  background: var(--line);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-top: 14px;
+}
+
+.bar > i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--primary), color-mix(in srgb, var(--primary) 70%, #fff));
+  border-radius: 99px;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+ul.log {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  font-size: 14px;
+}
+
+ul.log li {
+  padding: 4px 0 4px 24px;
+  position: relative;
+}
+
+ul.log li::before {
+  position: absolute;
+  left: 0;
+  font-weight: 700;
+}
+
+li.ok { color: var(--ok); }
+li.ok::before { content: "✓"; }
+li.err { color: var(--err); }
+li.err::before { content: "✕"; }
+li.warn { color: var(--warn); }
+li.warn::before { content: "!"; }
+li.busy { color: var(--mute); }
+li.busy::before { content: "…"; }
+
+details {
+  margin-top: 14px;
+  font-size: 14px;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+
+summary {
+  cursor: pointer;
+  color: var(--mute);
+  font-weight: 600;
+  user-select: none;
+}
+
+summary:hover {
+  color: var(--ink);
+}
+
+details .row {
+  margin: 12px 0;
+}
+
+.ready {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
+}
+
+.ready h2 {
+  font-size: 20px;
+}
+
+.start {
+  width: 100%;
+  padding: 16px;
+  font-size: 17px;
+  margin-top: 16px;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+.review {
+  margin-top: 16px;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+}
+
+.rrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  flex-wrap: wrap;
+}
+
+.rrow b {
+  min-width: 72px;
+}
+
+.rrow button {
+  padding: 6px 14px;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  box-shadow: none;
+}
+
+.rrow button.cand {
+  border-color: var(--warn);
+  color: var(--warn);
+}
+
+.rrow button.sel {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.keypages img {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  margin-top: 10px;
+  box-shadow: var(--shadow-sm);
+}
+
+.keyinfo {
+  font-size: 14px;
+  color: var(--mute);
+  margin: 0 0 12px;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 84px;
+}
+
+@media(prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* Header & Navigation */
+header.top {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--card) 85%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+
+.in {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 800;
+  font-size: 18px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  box-shadow: var(--shadow-sm);
+}
+
+nav.links {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+nav.links a {
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--mute);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+nav.links a:hover {
+  color: var(--ink);
+  background: var(--bg);
+}
+
+@media(max-width: 860px) {
+  .in { flex-wrap: wrap; }
+  nav.links { order: 3; width: 100%; overflow-x: auto; margin: 0; padding-bottom: 4px; }
+  .in .tg { margin-left: auto; }
+}
+
+.hero {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 60px 20px 20px;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.hero h1 {
+  font-size: clamp(32px, 5vw, 52px);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  margin: 0 0 16px;
+}
+
+.hero .sub {
+  font-size: 18px;
+  max-width: 46ch;
+}
+
+.cta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.hero .card {
+  margin: 0;
+}
+
+@media(max-width: 800px) {
+  .hero { grid-template-columns: 1fr; }
+}
+
+ol.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: s;
+}
+
+ol.steps li {
+  counter-increment: s;
+  position: relative;
+  padding: 10px 0 10px 44px;
+}
+
+ol.steps li::before {
+  content: counter(s);
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 2px 4px color-mix(in srgb, var(--primary) 40%, transparent);
+}
+
+ol.steps b {
+  display: block;
+  font-size: 15px;
+}
+
+ol.steps span {
+  color: var(--mute);
+  font-size: 14px;
+}
+
+.tool-h {
+  font-size: 24px;
+  margin: 0 0 6px;
+  letter-spacing: -0.02em;
+}
+
+.sec {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 64px 20px 0;
+}
+
+.sec > h2 {
+  display: block;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+}
+
+.sec > p.lead {
+  color: var(--mute);
+  margin: 0 0 24px;
+  max-width: 65ch;
+  font-size: 17px;
+}
+
+.two {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media(max-width: 860px) {
+  .two { grid-template-columns: 1fr; }
+}
+
+.two .card {
+  margin: 0;
+}
+
+.vid {
+  aspect-ratio: 16/9;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: #090d16;
+  display: grid;
+  place-items: center;
+  color: #cbd5e1;
+  text-align: center;
+  padding: 20px;
+  box-shadow: var(--shadow-md);
+}
+
+.vid iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.tip {
+  font-size: 14px;
+  color: var(--mute);
+  margin: 14px 0 0;
+}
+
+.team {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.team .card {
+  margin: 0;
+  text-align: center;
+}
+
+.av {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  margin: 0 auto 12px;
+  background: var(--primary);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 32px;
+  font-weight: 800;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.av img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.team b {
+  display: block;
+  font-size: 16px;
+}
+.team span {
+  color: var(--mute);
+  font-size: 14px;
+}
+
+.qr {
+  width: 180px;
+  background: #fff;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  flex: 0 0 auto;
+  color: #0f172a;
+  font-size: 13px;
+  box-shadow: var(--shadow-sm);
+}
+
+.qr svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.don {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.upi {
+  font: 700 18px/1.3 ui-monospace, Menlo, monospace;
+  word-break: break-all;
+  margin: 6px 0 14px;
+  padding: 8px 12px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  display: inline-block;
+  border: 1px solid var(--line);
+}
+
+.fld {
+  margin-bottom: 12px;
+}
+
+.rv {
+  border-top: 1px solid var(--line);
+  padding: 12px 0;
+}
+.rv:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.rv .st {
+  color: #f59e0b;
+  letter-spacing: 2px;
+}
+.rv small {
+  color: var(--mute);
+}
+.rv p {
+  margin: 6px 0 0;
+}
+
+footer.foot {
+  margin-top: 80px;
+  border-top: 1px solid var(--line);
+  background: var(--card);
+}
+
+.foot .in {
+  align-items: flex-start;
+  gap: 36px;
+  padding: 40px 20px;
+  flex-wrap: wrap;
+}
+
+.foot .col {
+  flex: 1 1 200px;
+  font-size: 14px;
+  color: var(--mute);
+}
+
+.foot h3 {
+  font-size: 15px;
+  margin: 0 0 12px;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.foot a, .foot .lnk {
+  display: block;
+  color: var(--mute);
+  text-decoration: none;
+  padding: 4px 0;
+  background: none;
+  border: 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  width: auto;
+  transition: color 0.15s ease;
+}
+
+.foot a:hover, .foot .lnk:hover {
+  color: var(--primary);
+}
+
+.foot .fine {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 16px 20px 32px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--mute);
+}
+
+dialog {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--card);
+  color: var(--ink);
+  padding: 28px;
+  width: min(560px, 92vw);
+  box-shadow: var(--shadow-lg);
+}
+
+dialog::backdrop {
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+dialog h2 {
+  font-size: 22px;
+  margin: 0 0 10px;
+}
+
+.pol {
+  max-height: 50vh;
+  overflow: auto;
+  font-size: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 8px 16px;
+  margin: 16px 0;
+  background: var(--field);
+}
+
+.pol h3 {
+  font-size: 14px;
+  margin: 14px 0 4px;
+  color: var(--ink);
+}
+.pol p {
+  margin: 0;
+  color: var(--mute);
+}
+
+.acts {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.pbar {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  z-index: 40;
+  max-width: 820px;
+  margin: 0 auto;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 14px 18px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pbar p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}</style>
+<body>
+
+  <header class="top" id="top">
+    <div class="in">
+      <a class="brand" href="#top">
+        <img src="/pictures/neelaxmi.png" alt="" width="40" height="40" onerror="this.style.display='none'">
+        <span>Neelaxmi</span>
+      </a>
+      <nav class="links" aria-label="Main Navigation">
+        <a href="#tool">Quiz tool</a>
+        <a href="#howto">How to use</a>
+        <a href="#apikey">Gemini key</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#team">Team</a>
+        <a href="#about">About</a>
+        <a href="#donate">Donate</a>
+      </nav>
+      <a class="btn tg ghost" data-tg target="_blank" rel="noopener" aria-label="Join our Telegram Community">Join Telegram</a>
+      <button class="btn ghost" id="themeBtn" aria-label="Switch light or dark mode" style="padding: 10px 12px; font-size: 16px;">◐</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div>
+      <h1>Turn a question PDF into a practice test</h1>
+      <p class="sub">Upload your question paper and its answer key. Neelaxmi cuts out each question, checks every answer, and opens a timed quiz right inside your browser.</p>
+      <div class="cta">
+        <a class="btn big" href="#tool">Start a quiz</a>
+        <a class="btn big ghost" href="#howto">Watch how it works</a>
+      </div>
+      <p class="tip">✨ 100% Free to use. Question images stay secure in your browser.</p>
+    </div>
+    <div class="card" aria-label="Quick Steps Overview">
+      <ol class="steps">
+        <li><b>Upload the question PDF</b><span>Questions are cut out automatically.</span></li>
+        <li><b>Upload the answer key</b><span>Each answer is read three ways and compared.</span></li>
+        <li><b>Start the quiz</b><span>Check the title, then begin testing.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <main class="wrap" id="tool">
+    <div style="margin-bottom: 24px;">
+      <h2 class="tool-h">Quiz setup dashboard</h2>
+      <p class="sub" style="margin: 0;">Turn a question PDF and its answer key into an interactive browser quiz instantly.</p>
+    </div>
+
+    <section class="card" id="gate">
+      <h2>🔒 Sign in required</h2>
+      <p class="help" style="margin: 0;">Your Gemini key and imported quizzes are securely tied to your account. <a href="auth.html" style="font-weight: 600;">Go to sign in</a>, then refresh or reopen this page.</p>
+    </section>
+
+    <section class="card" id="policyGate" hidden>
+      <h2>📄 Accept policy to continue</h2>
+      <p class="help" style="margin: 0 0 16px;">Please read and accept our <a href="#" data-open="policyDlg" style="font-weight: 600;">terms & policy</a> before you create your first quiz.</p>
+      <button data-accept class="btn">Accept policy & unlock tool</button>
+    </section>
+    <div id="app" hidden>
+      <section class="card" id="keyCard">
+        <h2>🔑 Gemini API Key Configuration</h2>
+        <p class="keyinfo" id="keyInfo">No key saved yet. Add your Google Gemini API key to run AI answer validation.</p>
+        <div class="fld">
+          <label for="keyInput">Gemini API Key</label>
+          <div class="row">
+            <input id="keyInput" type="password" autocomplete="off" placeholder="AIzaSy..." spellcheck="false" aria-label="Gemini API key input">
+            <button id="keySave" style="flex: 0 0 auto;">Save key</button>
+          </div>
+        </div>
+        <p class="help">New to this? Follow the <a href="#apikey">step-by-step key guide</a> below, or get a free key directly from <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio</a>. Powered by <b>Gemini 2.5 Flash</b>.</p>
+        <ul class="log" id="keyLog"></ul>
+      </section>
+
+      <section class="card" id="step1">
+        <h2><span class="n">1</span>Upload question PDF</h2>
+        <div class="fld" style="margin-top: 12px;">
+          <input id="qFile" type="file" accept="application/pdf" aria-label="Question PDF file upload">
+        </div>
+        <details>
+          <summary>⚙️ Page range and advanced trimming options</summary>
+          <div class="row" style="margin-top: 12px;">
+            <div><label for="qStart">First page</label><input id="qStart" type="number" min="1" value="1"></div>
+            <div><label for="qEnd">Last page (blank = all)</label><input id="qEnd" type="number" min="1" placeholder="all"></div>
+          </div>
+          <div class="row" style="margin-top: 12px;">
+            <div><label for="qTop">Trim top %</label><input id="qTop" type="number" min="0" max="50" value="0"></div>
+            <div><label for="qBottom">Trim bottom %</label><input id="qBottom" type="number" min="0" max="50" value="0"></div>
+          </div>
+          <div style="margin-top: 14px;">
+            <button class="ghost" id="qRerun" disabled>Extract again with new settings</button>
+          </div>
+        </details>
+        <div class="bar" aria-hidden="true"><i id="bar1"></i></div>
+        <ul class="log" id="log1" aria-live="polite"></ul>
+      </section>
+
+      <section class="card locked" id="step2">
+        <h2><span class="n">2</span>Upload answer key</h2>
+        <div class="fld" style="margin-top: 12px;">
+          <input id="aFile" type="file" accept=".pdf,image/*" aria-label="Answer key PDF or image file">
+        </div>
+        <p class="help">Every answer is cross-verified three ways (PDF text extraction and two independent AI vision reads) for ultimate accuracy.</p>
+        <div class="bar" aria-hidden="true"><i id="bar2"></i></div>
+        <p class="help" id="eta2" aria-live="polite" style="font-weight: 600; color: var(--ink); margin-top: 10px;"></p>
+        <ul class="log" id="log2"></ul>
+        <div class="review" id="reviewBox" hidden>
+          <b style="font-size: 15px;">Confirm discrepancy reviews</b>
+          <p class="help" style="margin: 4px 0 12px;">The automated readers disagreed on the options below. Orange buttons show individual AI interpretations. Cross-reference with the key page and select the correct answer.</p>
+          <div id="reviewList"></div>
+          <details style="margin-top: 14px;">
+            <summary>👁️ Show answer key reference pages</summary>
+            <div class="keypages" id="keyPages"></div>
+          </details>
+          <button id="reviewDone" class="btn" style="margin-top: 16px; width: 100%;">Use these confirmed answers</button>
+        </div>
+      </section>
+
+      <section class="card locked" id="step3">
+        <h2 id="s3title"><span class="n">3</span>Check and save test</h2>
+        <div class="bar" aria-hidden="true"><i id="bar3"></i></div>
+        <ul class="log" id="log3"></ul>
+        <div id="readyBox" hidden style="margin-top: 16px;">
+          <div class="fld">
+            <label for="titleInput">Quiz title</label>
+            <input id="titleInput" type="text" maxlength="120" placeholder="e.g., Physics Midterm Practice Paper">
+          </div>
+          <button class="start btn big" id="startBtn">🚀 Launch interactive quiz session</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <section class="sec" id="howto">
+    <h2>How to use Neelaxmi</h2>
+    <p class="lead">A simple two-minute walkthrough from raw PDFs to a fully interactive practice test environment.</p>
+    <div class="two">
+      <div class="vid" id="vid">
+        <div>
+          <b style="color: #fff; font-size: 18px;">🎥 Tutorial video coming soon</b>
+          <p style="margin: 8px 0 0; font-size: 14px; color: var(--mute);">Follow the structured step-by-step checklist on the right in the meantime.</p>
+        </div>
+      </div>
+      <div class="card" style="margin: 0;">
+        <ol class="steps">
+          <li><b>Sign in</b><span>Your custom API key and saved quizzes are tied securely to your account.</span></li>
+          <li><b>Save your Gemini API key</b><span>Follow the one-time key configuration guide below.</span></li>
+          <li><b>Upload the question PDF</b><span>Adjust page ranges if your file contains multiple independent exercises.</span></li>
+          <li><b>Upload the answer key</b><span>If any answer flag raises a mismatch, pick the correct option.</span></li>
+          <li><b>Start the quiz</b><span>Customize your test title, then hit launch to begin testing.</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="apikey">
+    <h2>How to get a Gemini API key</h2>
+    <p class="lead">The API key empowers Neelaxmi to parse your answer keys accurately using Google's high-speed Gemini 2.5 Flash model. It is completely free to generate.</p>
+    <div class="card" style="max-width: 760px; margin: 0 auto;">
+      <ol class="steps">
+        <li><b>Open Google AI Studio</b><span>Visit <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> and sign in with any standard Google account.</span></li>
+        <li><b>Create your key</b><span>Click <b>Create API key</b>. Select an existing Google Cloud project or let AI Studio generate one automatically.</span></li>
+        <li><b>Copy the key token</b><span>Keys start with the prefix <code>AIza</code>. Treat this credential securely like a password.</span></li>
+        <li><b>Paste and save</b><span>Input your key into the Gemini API key configuration box at the top of this page and click Save.</span></li>
+      </ol>
+      <div class="tip" style="margin-top: 16px; padding: 12px; background: var(--bg); border-radius: var(--radius-sm); border: 1px solid var(--line);">
+        💡 <b>Note:</b> Google's free tier includes generous rate limits. Very large document batches might experience brief pauses while waiting for quotas to refresh. Never share your secret key publicly.
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="reviews">
+    <h2>Reviews and feedback</h2>
+    <p class="lead">See what fellow students are saying, or send us bug reports and feedback.</p>
+    <div class="two">
+      <div class="card" style="margin: 0;">
+        <b style="font-size: 16px;">Student reviews</b>
+        <div id="revList" style="margin-top: 12px;">
+          <p class="help">Loading student reviews…</p>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="card" style="margin: 0;">
+          <b style="font-size: 16px;">Write a review</b>
+          <div class="fld" style="margin-top: 12px;">
+            <label for="rvRate">Rating</label>
+            <select id="rvRate">
+              <option value="5">⭐⭐⭐⭐⭐ 5 stars</option>
+              <option value="4">⭐⭐⭐⭐ 4 stars</option>
+              <option value="3">⭐⭐⭐ 3 stars</option>
+              <option value="2">⭐⭐ 2 stars</option>
+              <option value="1">⭐ 1 star</option>
+            </select>
+          </div>
+          <div class="fld">
+            <label for="rvText">Your review comment</label>
+            <textarea id="rvText" maxlength="400" placeholder="Tell us how Neelaxmi helped your exam prep..."></textarea>
+          </div>
+          <button id="rvSend" class="btn">Post review</button>
+          <p class="help" id="rvMsg" aria-live="polite" style="margin-top: 8px;"></p>
+        </div>
+
+        <div class="card" id="contact" style="margin: 0;">
+          <b style="font-size: 16px;">Send a support query or complaint</b>
+          <div class="fld" style="margin-top: 12px;">
+            <label for="cTopic">Issue topic</label>
+            <select id="cTopic">
+              <option>Quiz extraction problem</option>
+              <option>Wrong answers flagged</option>
+              <option>Account or sign-in issue</option>
+              <option>General feedback or feature request</option>
+            </select>
+          </div>
+          <div class="fld">
+            <label for="cMsg">What went wrong?</label>
+            <textarea id="cMsg" placeholder="Describe the issue in detail..."></textarea>
+          </div>
+          <button id="cSend" class="btn ghost">Email Neelaxmi Support</button>
+          <p class="help" style="margin-top: 8px;">Opens your email client with your message pre-formatted.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="team">
+    <h2>About our team</h2>
+    <p class="lead">The student developers and contributors behind Neelaxmi.</p>
+    <div class="team" id="teamGrid"></div>
+  </section>
+
+<section class="sec" id="about">
+    <h2>About Neelaxmi</h2>
+    <div class="card" style="max-width: 760px; margin: 0 auto;">
+      <p style="margin: 0 0 14px;">
+        <b>Neelaxmi</b> is a resilient, student-engineered study ecosystem built to ensure that rigorous exam preparation—like NEET UG and JEE Main—never depends on financial privilege. We transform ordinary static question PDFs and answer keys into frictionless, high-speed interactive test environments matching real computer-based testing standards.
+      </p>
+      <p style="margin: 0 0 14px;">
+        Unlike black-box platforms, every single solution handled by Neelaxmi is cross-examined against raw document structures and independent AI vision passes. If any ambiguity arises, you make the final call—ensuring absolute accuracy, zero hidden automated errors, and full control over your practice material.
+      </p>
+      <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <span style="font-size: 13px; color: var(--mute);">🚀 Built by students, for students — Powered by the Neelaxmi Helper Network.</span>
+        <a href="https://www.neelaxmi.site/" target="_blank" rel="noopener" class="btn ghost" style="padding: 6px 12px; font-size: 13px;">Explore Main Hub</a>
+      </div>
+    </div>
+  </section>
+  <section class="sec" id="donate">
+    <h2>Support Neelaxmi</h2>
+    <p class="lead">Neelaxmi is completely free. If this platform helped you ace your tests, a small contribution helps keep hosting and server maintenance alive.</p>
+    <div class="card don" style="max-width: 760px; margin: 0 auto;">
+      <div class="qr" id="qr" role="img" aria-label="UPI QR code for voluntary donations"></div>
+      <div style="flex: 1 1 240px;">
+        <b style="font-size: 16px;">FamPay / Direct UPI ID</b>
+        <div class="upi" id="upiId"></div>
+        <div class="cta">
+          <button id="upiCopy" class="btn">Copy UPI ID</button>
+          <a class="btn ghost" id="upiOpen">Open UPI app</a>
+        </div>
+        <p class="help">Scan the QR code with any supported UPI payment app or transfer directly to the ID above.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div class="in">
+      <div class="col" style="flex-basis: 300px;">
+        <a class="brand" href="#top" style="padding: 0; margin-bottom: 12px;">
+          <img src="neelamxi.png" alt="" width="36" height="36" onerror="this.style.display='none'">
+          <span>Neelaxmi</span>
+        </a>
+        <p style="margin: 0; color: var(--mute);">Turning heavy question papers into streamlined interactive practice sessions. Built specifically for modern students.</p>
+      </div>
+      <div class="col">
+        <h3>Explore</h3>
+        <a href="#tool">Quiz tool</a>
+        <a href="#howto">How to use</a>
+        <a href="#apikey">Gemini key guide</a>
+        <a href="#reviews">Reviews & Feedback</a>
+      </div>
+      <div class="col">
+        <h3>Company</h3>
+        <a href="#team">Our team</a>
+        <a href="#about">About Neelaxmi</a>
+        <a href="#donate">Support & Donate</a>
+        <button class="lnk" data-open="policyDlg">Terms & Policy</button>
+      </div>
+      <div class="col">
+        <h3>Contact</h3>
+        <a href="mailto:Neelaxmi.support@gmail.com">Neelaxmi.support@gmail.com</a>
+        <a class="tg" data-tg target="_blank" rel="noopener">Join Telegram channel</a>
+      </div>
+    </div>
+    <div class="fine">
+      © <span id="yr"></span> NEELAXMI -; THE UNION .
+    </div>
+  </footer>
+
+  <div class="pbar" id="policyBar" role="region" aria-label="Policy Agreement Notice">
+    <p>By using Neelaxmi you agree to our <a href="#" data-open="policyDlg" style="font-weight: 600;">terms and privacy policy</a>.</p>
+    <button data-accept class="btn" style="padding: 8px 16px; font-size: 13px;">Accept policy</button>
+  </div>
+
+  <dialog id="policyDlg" aria-labelledby="polT">
+    <h2 id="polT">Neelaxmi Policy & Terms</h2>
+    <p class="help" style="margin: 0 0 12px;">Terms of service and privacy statement, version 1.0</p>
+    <div class="pol">
+      <h3>What the tool does</h3>
+      <p>Question PDFs are processed directly in your browser. Answer key files are securely routed to Google's Gemini API via your own saved personal API key.</p>
+      <h3>Your Gemini API key</h3>
+      <p>Your API key is saved to your account so you do not need to re-enter it. You maintain sole responsibility for token usage quotas and billing limits associated with your key.</p>
+      <h3>Browser storage</h3>
+      <p>Cropped question image slices are stored locally in your browser storage and automatically pruned after 7 months (or immediately when browser site data is cleared).</p>
+      <h3>Account security</h3>
+      <p>Authentication runs through Firebase. Quiz configurations, custom titles, and final submissions are saved against your personal user account.</p>
+      <h3>Upload copyright</h3>
+      <p>You agree to upload only study materials and documents you have authorization to use. You retain full ownership of your uploaded files.</p>
+      <h3>AI Accuracy</h3>
+      <p>Automated OCR and AI models can occasionally misread text. Please double-check any answers flagged by the discrepancy checker. Neelaxmi assumes no liability for examination scores.</p>
+      <h3>Donations</h3>
+      <p>Financial contributions are entirely voluntary and do not unlock paid features or priority quotas.</p>
+      <h3>Contact & Support</h3>
+      <p>Direct all questions, complaints, or inquiries to: <b>Neelaxmi.support@gmail.com</b></p>
+    </div>
+    <div class="acts">
+      <button class="ghost btn" data-close>Close</button>
+      <button data-accept class="btn">Accept policy</button>
+    </div>
+  </dialog>
+
+  <dialog id="tgDlg" aria-labelledby="tgT">
+    <h2 id="tgT">Join our Telegram community</h2>
+    <p style="margin: 0; color: var(--mute);">Get quick updates, connect with other students, ask for debugging help, and share question PDFs and study tricks.</p>
+    <div class="acts" style="margin-top: 20px;">
+      <button class="ghost btn" data-close>Maybe later</button>
+      <a class="btn" data-tg target="_blank" rel="noopener" id="tgJoin">Join Telegram channel</a>
+    </div>
+  </dialog>
+
+  <div id="auth-box" style="display:none!important" aria-hidden="true">
+    <h2 id="auth-title"></h2><input id="auth-email"><input id="auth-password">
+    <button id="auth-primary-btn"></button><button id="auth-toggle-mode"></button><button id="google-login-btn"></button>
+    <p id="auth-error"></p>
+  </div>
+
+  <div id="loading-screen" style="display:none!important" aria-hidden="true"></div>
+
+</body>
+</html><script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="auth.js"></script>
+<script src="question_engine.js"></script>
+<script src="/quiz/answer_engine.js"></script>
+<script>
+const QUIZ_PAGE = 'quizzes.html';
+const $ = id => document.getElementById(id);
+const S = { verified:null, rows2:[], uid:null, savedKey:null, questions:null, answers:null, matched:null, docId:null, busy:false };
+
+function log(id, rows){ $(id).innerHTML=''; rows.forEach(([cls,txt])=>{const li=document.createElement('li');li.className=cls;li.textContent=txt;$(id).appendChild(li);}); }
+function fmtEta(s){ s=Math.max(0,Math.round(s)); if(s<60) return s+' sec'; const m=Math.floor(s/60); return m+' min '+String(s%60).padStart(2,'0')+' sec'; }
+function showEta(i){
+  const el=$('eta2'); if(!i||!i.planned){ el.textContent=''; return; }
+  const p=['Request '+Math.min(i.calls+1,i.planned)+' of about '+i.planned];
+  if(i.waitSec>0) p.push('waiting '+i.waitSec+' sec for the Gemini per-minute limit');
+  p.push('about '+fmtEta(i.etaSec)+' left');
+  el.textContent=p.join(' · ');
+}
+function bar(id,done,total){ $(id).style.width = (total? Math.round(100*done/total):0)+'%'; }
+function lock(id,locked){ $(id).classList.toggle('locked',locked); }
+function setBusy(b){ S.busy=b; ['qFile','aFile','keySave','qRerun','startBtn'].forEach(i=>{ if($(i)) $(i).disabled=b; }); if(!b) $('qRerun').disabled=!$('qFile').files[0]; }
+function errText(e){
+  const c=e&&e.code||'', m=(e&&e.message)||String(e);
+  if(c==='permission-denied') return 'Firestore refused the write (permission-denied). The rules must let a signed-in user create their own quiz.';
+  if(/\(401\)/.test(m)) return 'Gemini rejected the API key. Save a valid key from Google AI Studio and try again.';
+  if(/daily quota/i.test(m)) return 'Your Gemini daily quota is used up. Try again tomorrow, or use a key with billing enabled.';
+  if(/too large|payload size/i.test(m)) return 'The answer key is too large for one Gemini request. Use fewer pages or a smaller/clearer file.';
+  if(/\(429\)/.test(m)) return 'Gemini rate limit still reached after waiting. Try again in a few minutes (or check your quota in Google AI Studio).';
+  if(/\(503\)/.test(m)) return 'Gemini is overloaded right now. Please try again in a minute.';
+  return m;
+}
+function resetFlow(){
+  S.questions=S.answers=S.matched=null;
+  ['bar1','bar2','bar3'].forEach(i=>bar(i,0,1)); ['log1','log2','log3'].forEach(i=>log(i,[])); showEta(null);
+  lock('step2',true); lock('step3',true); $('readyBox').hidden=true; $('step3').classList.remove('ready');
+  $('s3title').innerHTML='<span class="n">3</span>Check and save';
+  $('aFile').value=''; $('reviewBox').hidden=true;
+}
+
+const POLICY_KEY='neelaxmi_policy_v1';
+function policyOk(){ try{ return localStorage.getItem(POLICY_KEY)==='1'; }catch(_){ return false; } }
+function applyGate(){ const u=S.user, ok=policyOk(); $('gate').hidden=!!u; $('policyGate').hidden=!(u&&!ok); $('app').hidden=!(u&&ok); $('policyBar').hidden=ok; }
+
+auth.onAuthStateChanged(async user=>{
+  S.uid = user ? user.uid : null; S.savedKey=null; S.docId=null;
+  $('keyInput').value=''; resetFlow(); $('qFile').value='';
+  S.user=user; applyGate();
+  if(!user) return;
+  purgeExpiredImages();
+  const me=user.uid;
+  $('keyInfo').textContent='Checking for a saved key…';
+  try{
+    const snap=await db.collection('users').doc(me).get();     
+    if(S.uid!==me) return;                                     
+    const k=snap.exists && snap.data().geminiApiKey;
+    if(k){ S.savedKey=k; showKeySaved(); } else $('keyInfo').textContent='No key saved yet. Paste one below.';
+  }catch(e){ if(S.uid===me){ $('keyInfo').textContent='Could not load a saved key.'; log('keyLog',[['err',errText(e)]]); } }
+});
+function showKeySaved(){ $('keyInfo').textContent='Key saved to your account (ends …'+S.savedKey.slice(-4)+'). Paste a new one to replace it.'; }
+
+async function saveKey(){
+  const key=$('keyInput').value.trim();
+  if(!key){ log('keyLog',[['err','Enter your Gemini API key.']]); return false; }
+  const me=S.uid; if(!me) return false;
+  try{
+    await db.collection('users').doc(me).set({ geminiApiKey:key, lastUpdated:firebase.firestore.FieldValue.serverTimestamp() },{merge:true});
+    if(S.uid!==me) return false;
+    S.savedKey=key; $('keyInput').value=''; showKeySaved(); log('keyLog',[['ok','Key saved.']]); return true;
+  }catch(e){ log('keyLog',[['err',errText(e)]]); return false; }
+}
+$('keySave').onclick=saveKey;
+
+async function runStep1(){
+  const file=$('qFile').files[0]; if(!file) return;
+  setBusy(true); resetFlow(); S.docId=null; bar('bar1',0,1);
+  const base=file.name.replace(/\.pdf$/i,''); $('titleInput').value=base;
+  log('log1',[['busy','Opening PDF…']]);
+  try{
+    const r=await runQuestionExtraction(file,{
+      startPage:$('qStart').value, endPage:$('qEnd').value||0, topPct:$('qTop').value, bottomPct:$('qBottom').value
+    },(d,t,msg)=>{ bar('bar1',d,t); log('log1',[['busy',msg+'…']]); });
+    if(!r.items.length) throw new Error('No question numbers were detected. Check the page range, or that this is the question PDF.');
+    S.questions=r.items; bar('bar1',1,1);
+    log('log1',[['ok',`Questions extracted: ${r.items.length} (pages ${r.startPage}–${r.endPage})`]]);
+    lock('step2',false);
+  }catch(e){ console.error(e); log('log1',[['err','Extraction failed: '+errText(e)]]); }
+  finally{ setBusy(false); }
+}
+$('qFile').addEventListener('change',runStep1);
+$('qRerun').onclick=runStep1;
+
+async function runStep2(){
+  const file=$('aFile').files[0]; if(!file||!S.questions) return;
+  setBusy(true); bar('bar2',0,1); bar('bar3',0,1); log('log3',[]); $('readyBox').hidden=true; $('step3').classList.remove('ready'); $('reviewBox').hidden=true;
+  try{
+    if($('keyInput').value.trim()){ if(!await saveKey()) throw new Error('Fix the API key first.'); }
+    if(!S.savedKey) throw new Error('Add and save your Gemini API key first.');
+    const key=S.savedKey, me=S.uid;
+    const expected=[...new Set(S.questions.flatMap(q=>(q.qNums||[]).filter(n=>/^\d+$/.test(n)).map(Number)))];
+    log('log2',[['busy','Reading answer key…']]);
+    const r=await runVerifiedAnswerExtraction(file,key,expected,{},(d,t,msg,info)=>{ bar('bar2',d,t); log('log2',[['busy',msg+'…']]); showEta(info); });
+    if(S.uid!==me) return;
+    const st=r.stats, rows=[
+      st.text.usable ? ['ok',`Check 1, PDF text: ${st.text.count} answers read directly`] : ['warn',`Check 1, PDF text not usable (${st.text.note}); relying on the AI reads`],
+      ['ok',`Check 2, AI read of full pages: ${st.A.count}`],
+      ['ok',`Check 2, AI read of zoomed halves: ${st.B.count}`]
+    ];
+    if(st.C.ran) rows.push(['ok',`Tie-break read for ${st.C.asked} disputed answer(s)`]);
+    rows.push([st.review?'warn':'ok',`Agreement: ${st.levels.unanimous} unanimous, ${st.levels.majority} by majority, ${st.review} need your check`]);
+    S.verified=r.answers; S.rows2=rows; bar('bar2',1,1); $('eta2').textContent='Finished: '+r.stats.requests+' requests used.';
+    log('log2',rows);
+    if(r.review.length){ showReview(r); return; }       
+    await finishAnswers(me);
+  }catch(e){ console.error(e); showEta(null); log('log2',[['err',errText(e)]]); }
+  finally{ setBusy(false); }
+}
+async function finishAnswers(me){
+  if(!S.verified.length) throw new Error('No answers could be confirmed. Try a clearer answer key.');
+  S.answers=S.verified; lock('step3',false);
+  await matchAndSave(me);
+}
+function showReview(r){
+  const picks={}; $('reviewList').innerHTML='';
+  r.review.forEach(u=>{
+    const row=document.createElement('div'); row.className='rrow'; row.innerHTML=`<b>Question ${u.num}</b>`;
+    ['A','B','C','D'].forEach(L=>{ const b=document.createElement('button'); b.textContent=L; if(u.candidates.includes(L)) b.className='cand';
+      b.onclick=()=>{ picks[u.num]=L; row.querySelectorAll('button').forEach(x=>x.classList.toggle('sel',x===b)); }; row.appendChild(b); });
+    $('reviewList').appendChild(row);
+  });
+  $('keyPages').innerHTML=''; r.pageImages.forEach((u,i)=>{ const im=document.createElement('img'); im.src=u; im.alt='Answer key page '+(i+1); $('keyPages').appendChild(im); });
+  $('reviewBox').hidden=false;
+  $('reviewDone').onclick=async()=>{
+    const me=S.uid; setBusy(true); $('reviewBox').hidden=true;
+    try{
+      const chosen=Object.entries(picks).map(([n,v])=>({Questionsnumber:n,CorrectAnswer:v}));
+      const skipped=r.review.length-chosen.length;
+      S.verified=[...r.answers,...chosen];
+      if(skipped) S.rows2=[...S.rows2,['warn',`${skipped} question(s) left without an answer.`]];
+      log('log2',[...S.rows2,['ok',`${chosen.length} answer(s) confirmed by you`]]);
+      await finishAnswers(me);
+    }catch(e){ console.error(e); log('log2',[['err',errText(e)]]); }
+    finally{ setBusy(false); }
+  };
+}
+$('aFile').addEventListener('change',runStep2);
+
+function summarize(list,n=12){ return list.slice(0,n).join(', ')+(list.length>n?` … (+${list.length-n} more)`:''); }
+async function matchAndSave(me){
+  const res=matchQuestionsAndAnswers(S.questions,S.answers), I=res.issues, rows=[];
+  if(!res.ok){
+    rows.push(['err',res.error]);
+    if(I.duplicateNumbers.length) rows.push(['err',`Repeated numbers: ${summarize(I.duplicateNumbers.map(d=>`${d.num} (pages ${d.pages.join('/')})`))}. Use the page range to extract one exercise at a time.`]);
+    log('log3',rows); return;
+  }
+  if(I.notSingleNumber.length) rows.push(['warn',`${I.notSingleNumber.length} crop(s) skipped: not exactly one question number (pages ${summarize([...new Set(I.notSingleNumber.map(x=>x.page))])}).`]);
+  if(I.unmatchedQuestions.length) rows.push(['warn',`No answer found for question(s): ${summarize(I.unmatchedQuestions)} — left out.`]);
+  if(I.unsupportedAnswers.length) rows.push(['warn',`Answer is not a single A–D option for: ${summarize(I.unsupportedAnswers.map(u=>`${u.num} (${u.raw})`))} — left out.`]);
+  if(I.unusedAnswers.length) rows.push(['warn',`Answers with no question: ${summarize(I.unusedAnswers)}.`]);
+  rows.unshift(['ok',`Questions and answers matched by number: ${res.matched.length}`]);
+  S.matched=res.matched;
+  try{
+    const docRef = S.docId ? db.collection('quizzes').doc(S.docId) : db.collection('quizzes').doc();
+    S.docId=docRef.id;
+    log('log3',[...rows,['busy','Saving question images on this device…']]);
+    const urls=await saveImagesLocally(res.matched,docRef.id,(d,t)=>{ bar('bar3',d,t); log('log3',[...rows,['busy',`Saving question images on this device (${d}/${t})…`]]); });
+    if(!await ensureImageWorker()) throw new Error('The image service worker is not active. Deploy the updated sw-proctor-cache.js at the site root, then reload this page.');
+    if(S.uid!==me) return;
+    const quiz=buildQuizDoc(res.matched,urls,$('titleInput').value.trim()||'Imported quiz',me);
+    quiz.createdAt=firebase.firestore.FieldValue.serverTimestamp();
+    await docRef.set(quiz);
+    rows.push(['ok','Images are kept only in this browser and deleted after 7 months.']);
+    log('log3',rows);
+    $('s3title').innerHTML='Quiz ready'; $('step3').classList.add('ready'); $('readyBox').hidden=false;
+  }catch(e){ console.error(e); log('log3',[...rows,['err','Could not save the quiz: '+errText(e)]]); }
+}
+
+const IMG_DB='neelaxmi-local-quiz-images', IMG_STORE='images', IMG_TTL_MONTHS=7;
+function idbOpen(){ return new Promise((res,rej)=>{ const r=indexedDB.open(IMG_DB,1);
+  r.onupgradeneeded=()=>r.result.createObjectStore(IMG_STORE,{keyPath:'key'});
+  r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }); }
+function idbDone(t){ return new Promise((res,rej)=>{ t.oncomplete=()=>res(); t.onerror=t.onabort=()=>rej(t.error); }); }
+async function purgeExpiredImages(){                      // runs on every visit to this page
+  try{ const db=await idbOpen(), t=db.transaction(IMG_STORE,'readwrite'), st=t.objectStore(IMG_STORE), now=Date.now();
+    st.openCursor().onsuccess=e=>{ const c=e.target.result; if(!c) return; if(c.value.expiresAt<now) c.delete(); c.continue(); };
+    await idbDone(t); db.close(); }catch(e){ console.warn('image purge failed',e); }
+}
+async function deleteQuizImages(docId){
+  const db=await idbOpen(), t=db.transaction(IMG_STORE,'readwrite');
+  t.objectStore(IMG_STORE).delete(IDBKeyRange.bound(docId+'/',docId+'/\uffff')); await idbDone(t); db.close();
+}
+async function saveImagesLocally(matched,docId,onProgress){
+  const blobs=[]; let done=0;
+  for(const m of matched){ blobs.push(await toJpegBlob(m.question.dataUrl)); onProgress(++done,matched.length); }
+  const exp=new Date(); exp.setMonth(exp.getMonth()+IMG_TTL_MONTHS);
+  const db=await idbOpen(); await deleteQuizImages(docId);
+  const t=db.transaction(IMG_STORE,'readwrite'), st=t.objectStore(IMG_STORE), urls=new Map();
+  matched.forEach((m,i)=>{ st.put({key:`${docId}/${m.num}`,blob:blobs[i],createdAt:Date.now(),expiresAt:exp.getTime()});
+    urls.set(m.num,new URL(`local-img/${docId}/${m.num}.jpg`,location.href).pathname); });
+  await idbDone(t); db.close();
+  try{ if(navigator.storage&&navigator.storage.persist) navigator.storage.persist(); }catch(_){}
+  return urls;
+}
+async function ensureImageWorker(){                      
+  if(!('serviceWorker' in navigator)) return false;
+  try{ const reg=await navigator.serviceWorker.register('/sw-proctor-cache.js'); try{await reg.update();}catch(_){} await navigator.serviceWorker.ready; }catch(_){ return false; }
+  const probe=new URL('local-img/_ping',location.href).pathname;
+  for(let i=0;i<20;i++){ try{ if((await fetch(probe,{cache:'no-store'})).status===204) return true; }catch(_){} await new Promise(r=>setTimeout(r,300)); }
+  return false;
+}
+function toJpegBlob(dataUrl){
+  return new Promise((resolve,reject)=>{
+    const img=new Image();
+    img.onload=()=>{
+      const s=Math.min(1,1400/img.naturalWidth), c=document.createElement('canvas');
+      c.width=Math.round(img.naturalWidth*s); c.height=Math.round(img.naturalHeight*s);
+      const x=c.getContext('2d'); x.fillStyle='#fff'; x.fillRect(0,0,c.width,c.height); x.drawImage(img,0,0,c.width,c.height);
+      c.toBlob(b=>b?resolve(b):reject(new Error('Image conversion failed')),'image/jpeg',0.85);
+    };
+    img.onerror=()=>reject(new Error('Could not read an extracted image.'));
+    img.src=dataUrl;
+  });
+}
+
+$('startBtn').onclick=async()=>{
+  if(!S.docId) return;
+  $('startBtn').disabled=true;
+  try{
+    const t=$('titleInput').value.trim();
+    if(t) await db.collection('quizzes').doc(S.docId).update({title:t});
+    window.location.href=`${QUIZ_PAGE}?uid=${encodeURIComponent(S.docId)}`;
+  }catch(e){ $('startBtn').disabled=false; log('log3',[['err','Could not update the title: '+errText(e)]]); }
+};
+</script>
+<script>
+(()=>{
+const $=id=>document.getElementById(id);
+const CFG={
+  TELEGRAM_URL:'https://t.me/neelaxmi_official',  
+  VIDEO_ID:'',   
+  UPI:'neelaxmitiwari@fam', NAME:'Neelaxmi', EMAIL:'Neelaxmi.support@gmail.com',
+  TEAM:[{name:'MRIDUL',role:'Founder and developer',img:'/pictures/onwer4.jpeg'},{name:'LAXMI',role:'Owner and Guide ',img:'/pictures/teamer.jpg'}]  
+};
+$('yr').textContent=new Date().getFullYear();
+$('policyBar').hidden=policyOk();
+$('themeBtn').onclick=()=>{ const d=document.documentElement.classList.toggle('dark'); try{localStorage.theme=d?'dark':'light';}catch(_){} };
+document.querySelectorAll('[data-open]').forEach(a=>a.addEventListener('click',e=>{ e.preventDefault(); $(a.dataset.open).showModal(); }));
+document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>b.closest('dialog').close()));
+document.querySelectorAll('[data-accept]').forEach(b=>b.addEventListener('click',async()=>{
+  try{ localStorage.setItem(POLICY_KEY,'1'); }catch(_){}
+  if($('policyDlg').open) $('policyDlg').close();
+  applyGate();
+  if(S.uid){ try{ await db.collection('users').doc(S.uid).set({policyAcceptedAt:firebase.firestore.FieldValue.serverTimestamp(),policyVersion:1},{merge:true}); }catch(_){} }
+}));
+document.querySelectorAll('[data-tg]').forEach(a=>a.href=CFG.TELEGRAM_URL);
+const seen=()=>{ try{ return Date.now()-(+localStorage.tgSeen||0)<3*864e5; }catch(_){ return true; } };
+const mark=()=>{ try{ localStorage.tgSeen=Date.now(); }catch(_){} };
+$('tgDlg').addEventListener('close',mark); $('tgJoin').addEventListener('click',()=>{ mark(); $('tgDlg').close(); });
+if(!seen()) setTimeout(()=>{ if(!document.querySelector('dialog[open]')) $('tgDlg').showModal(); },8000);
+if(CFG.VIDEO_ID) $('vid').innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(CFG.VIDEO_ID)}" title="How to use Neelaxmi" loading="lazy" allowfullscreen></iframe>`;
+
+CFG.TEAM.forEach(m=>{
+  const c=document.createElement('div'); c.className='card';
+  const av=document.createElement('div'); av.className='av';
+  if(m.img){ const i=document.createElement('img'); i.src=m.img; i.alt=m.name; av.appendChild(i); } else av.textContent=m.name.charAt(0).toUpperCase();
+  const n=document.createElement('b'); n.textContent=m.name; const r=document.createElement('span'); r.textContent=m.role;
+  c.append(av,n,r); $('teamGrid').appendChild(c);
+});
+const j=document.createElement('div'); j.className='card';
+const upi=`upi://pay?pa=${CFG.UPI}&pn=${encodeURIComponent(CFG.NAME)}&cu=INR`;
+$('upiId').textContent=CFG.UPI; $('upiOpen').href=upi;
+try{ const q=qrcode(0,'M'); q.addData(upi); q.make(); $('qr').innerHTML=q.createSvgTag(4,2); }catch(_){ $('qr').textContent='QR unavailable. Use the UPI ID.'; }
+$('upiCopy').onclick=async()=>{ const b=$('upiCopy'); try{ await navigator.clipboard.writeText(CFG.UPI); b.textContent='Copied'; }catch(_){ b.textContent='Copy failed'; } setTimeout(()=>b.textContent='Copy UPI ID',1800); };
+
+async function loadReviews(){
+  const box=$('revList');
+  try{
+    const s=await db.collection('reviews').orderBy('createdAt','desc').limit(6).get();
+    box.innerHTML=''; if(s.empty){ box.innerHTML='<p class="help">No reviews yet. Be the first.</p>'; return; }
+    s.forEach(d=>{ const v=d.data(), r=document.createElement('div'); r.className='rv';
+      const st=document.createElement('div'); st.className='st'; st.textContent='★'.repeat(v.rating||0)+'☆'.repeat(5-(v.rating||0));
+      const nm=document.createElement('small'); nm.textContent=v.name||'Student';
+      const tx=document.createElement('p'); tx.textContent=v.text||''; r.append(st,nm,tx); box.appendChild(r); });
+  }catch(e){ box.innerHTML='<p class="help">Reviews could not be loaded right now.</p>'; }
+}
+loadReviews();
+$('rvSend').onclick=async()=>{
+  const msg=$('rvMsg'), text=$('rvText').value.trim();
+  if(!S.uid){ msg.textContent='Sign in first to post a review.'; return; }
+  if(text.length<5){ msg.textContent='Write at least a few words.'; return; }
+  $('rvSend').disabled=true;
+  try{
+    await db.collection('reviews').add({uid:S.uid,name:(auth.currentUser&&auth.currentUser.displayName)||'Student',rating:+$('rvRate').value,text:text.slice(0,400),createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+    $('rvText').value=''; msg.textContent='Thanks for your review.'; loadReviews();
+  }catch(e){ msg.textContent='Could not post the review. The Firestore rules must allow signed-in users to create reviews.'; }
+  $('rvSend').disabled=false;
+};
+$('cSend').onclick=()=>{
+  const m=$('cMsg').value.trim(); if(!m){ $('cMsg').focus(); return; }
+  location.href=`mailto:${CFG.EMAIL}?subject=${encodeURIComponent('Complaint: '+$('cTopic').value)}&body=${encodeURIComponent(m)}`;
+};
+})();
+</script>
+</body>
+</html>
