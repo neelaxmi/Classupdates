@@ -92,9 +92,6 @@ function getPredictedRank(score) {
 }
 
 
-// -----------------------------------------------------------------------------
-// SECTION D — Interpretation text & suggestions
-// -----------------------------------------------------------------------------
 function generatePerformanceSummary(standing) {
     switch (standing) {
         case 'Needs Improvement':
@@ -145,9 +142,6 @@ function generateImprovementSuggestions(result) {
 }
 
 
-// -----------------------------------------------------------------------------
-// SECTION E — Historical performance stats
-// -----------------------------------------------------------------------------
 function calculateHistoricalStats(history) {
     if (!Array.isArray(history) || !history.length) {
         return { averageScore: 0, bestScore: 0, lowestScore: 0, averageAccuracy: 0, totalQuizzes: 0 };
@@ -161,7 +155,7 @@ function calculateHistoricalStats(history) {
         averageScore: scores.length ? Math.round(sum(scores) / scores.length) : 0,
         bestScore: scores.length ? Math.max(...scores) : 0,
         lowestScore: scores.length ? Math.min(...scores) : 0,
-        averageAccuracy: accuracies.length ? Math.round((sum(accuracies) / accuracies.length) * 1000) / 10 : 0, // e.g. 87.4 (%)
+        averageAccuracy: accuracies.length ? Math.round((sum(accuracies) / accuracies.length) * 1000) / 10 : 0, 
         totalQuizzes: history.length,
     };
 }

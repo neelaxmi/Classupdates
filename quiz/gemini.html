@@ -371,13 +371,11 @@
     </footer>
 
     <script>
-        // Simple script to add interactivity to checkboxes
         function markComplete(checkbox) {
             const card = checkbox.closest('.card');
             const message = checkbox.parentElement.querySelector('.done-message');
             
             if (checkbox.checked) {
-                // Add a subtle border highlight
                 card.style.border = "1px solid #1e8e3e";
                 card.style.background = "#f0fdf4"; // Very light green bg
                 message.style.display = "inline";

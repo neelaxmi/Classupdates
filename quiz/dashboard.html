@@ -1,32 +1,31 @@
 <!DOCTYPE html>
 <html lang="en" class="transition-colors duration-300">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    
     <!-- SEO & Metadata -->
     <title>Student Dashboard | Neelaxmi Quiz Center</title>
     <meta name="description" content="Access your personalized Student Dashboard at Neelaxmi Quiz Center. Track your NEET UG & JEE Main progress, analyze performance, and master your subjects with detailed analytics.">
     <link rel="canonical" href="https://classupdates.netlify.app/dashboard">
-
+    
     <!-- Open Graph (Social Sharing) -->
     <meta property="og:title" content="Student Dashboard | Neelaxmi Quiz Center">
     <meta property="og:description" content="Your personal hub for NEET/JEE preparation. View analytics, track quizzes, and improve your score.">
     <meta property="og:image" content="/pictures/neelaxmi.png">
     <meta property="og:url" content="https://classupdates.netlify.app/dashboard">
     <meta property="og:type" content="website">
-
+    
     <!-- Icons & Manifest -->
     <link rel="icon" type="image/jpeg" href="/pictures/neelaxmi.png">
     <link rel="apple-touch-icon" href="/pictures/neelaxmi.png">
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#0b1120">
-
+    
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
+    
     <!-- Scripts: Tailwind & Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -127,9 +126,9 @@
     </nav>
 
     <main class="pt-8 md:pt-24 pb-12 px-4 max-w-7xl mx-auto space-y-8">
-
+        
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
+            
             <div class="glass-panel rounded-2xl p-6 relative overflow-hidden flex flex-col justify-between">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-bl-full -mr-8 -mt-8"></div>
                 <div class="flex items-start justify-between relative z-10 mb-4">
@@ -139,7 +138,7 @@
                     </div>
                     <button onclick="toggleEditProfile()" class="text-slate-400 hover:text-primary transition"><i class="fa-solid fa-pen-to-square"></i></button>
                 </div>
-
+                
                 <div class="space-y-4">
                     <div class="flex gap-2 items-center">
                         <span id="disp-badge" class="px-3 py-1 bg-indigo-100 dark:bg-indigo-900/40 text-primary text-xs font-bold rounded-lg uppercase tracking-wider border border-indigo-200 dark:border-indigo-800">Class --</span>
@@ -149,7 +148,7 @@
                             <span id="streak-label-text">0 Day Streak</span>
                         </span>
                     </div>
-
+                    
                     <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700">
                         <div class="flex justify-between text-sm items-center">
                             <span class="text-slate-500 font-medium">Gemini AI Engine:</span>
@@ -219,7 +218,7 @@
                     <canvas id="scoreChart"></canvas>
                 </div>
             </div>
-
+            
             <div class="glass-panel p-6 rounded-2xl">
                 <h3 class="font-bold text-lg mb-4 flex items-center"><i class="fa-solid fa-spider mr-2 text-primary"></i> Weakness Radar</h3>
                 <p class="text-xs text-slate-500 mb-2">Mastery across recent sub-topics</p>
@@ -269,7 +268,7 @@
                         </div>
                         <p class="text-xs text-indigo-200 mb-6">Deep focus ambient tracks powered by Suno AI.</p>
                     </div>
-
+                    
                     <div class="bg-black/40 rounded-xl p-4 flex items-center gap-4 backdrop-blur-md border border-white/10">
                         <button class="w-12 h-12 bg-primary rounded-full flex items-center justify-center hover:scale-105 transition shadow-[0_0_15px_rgba(99,102,241,0.5)] shrink-0">
                             <i class="fa-solid fa-play ml-1"></i>
@@ -293,15 +292,15 @@
                     </div>
                     <button class="text-xs text-primary font-bold hover:underline hidden sm:block">View Channel</button>
                 </div>
-
+                
                 <div class="flex gap-4 overflow-x-auto custom-scroll pb-4 snap-x">
                     <div class="min-w-[240px] bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm group cursor-pointer relative border border-slate-100 dark:border-slate-700 snap-start">
                         <div class="h-32 bg-slate-800 relative flex items-center justify-center">
-                            <img src="/pictures/neelaxmi.png" class="h-16 w-16 opacity-50 grayscale" alt="Thumbnail">
-                            <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition backdrop-blur-sm">
-                                <i class="fa-solid fa-play text-white text-3xl drop-shadow-lg"></i>
-                            </div>
-                            <span class="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] px-1.5 py-0.5 rounded font-mono">12:45</span>
+                             <img src="/pictures/neelaxmi.png" class="h-16 w-16 opacity-50 grayscale" alt="Thumbnail">
+                             <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition backdrop-blur-sm">
+                                 <i class="fa-solid fa-play text-white text-3xl drop-shadow-lg"></i>
+                             </div>
+                             <span class="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] px-1.5 py-0.5 rounded font-mono">12:45</span>
                         </div>
                         <div class="p-4">
                             <p class="text-sm font-bold truncate">Physics Espresso: Kinematics Simulator</p>
@@ -311,10 +310,10 @@
                     <div class="min-w-[240px] bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm group cursor-pointer relative border border-slate-100 dark:border-slate-700 snap-start">
                         <div class="h-32 bg-slate-800 relative flex items-center justify-center">
                             <i class="fa-solid fa-music text-slate-600 text-4xl"></i>
-                            <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition backdrop-blur-sm">
-                                <i class="fa-solid fa-play text-white text-3xl drop-shadow-lg"></i>
-                            </div>
-                            <span class="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] px-1.5 py-0.5 rounded font-mono">3:20</span>
+                             <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition backdrop-blur-sm">
+                                 <i class="fa-solid fa-play text-white text-3xl drop-shadow-lg"></i>
+                             </div>
+                             <span class="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] px-1.5 py-0.5 rounded font-mono">3:20</span>
                         </div>
                         <div class="p-4">
                             <p class="text-sm font-bold truncate">New Study Track - Chorus / Verse Focus</p>
@@ -344,7 +343,7 @@
                         </tr>
                     </thead>
                     <tbody id="history-table-body" class="divide-y divide-slate-100 dark:divide-slate-700/50">
-                    </tbody>
+                        </tbody>
                 </table>
                 <div id="no-history-msg" class="p-12 text-center text-slate-400 hidden flex-col items-center">
                     <i class="fa-solid fa-ghost text-4xl mb-3 opacity-20"></i>
@@ -467,9 +466,9 @@
             <div class="space-y-3">
                 <input type="text" id="edit-name" placeholder="Full Name" class="w-full p-3 border rounded-lg dark:bg-slate-700 dark:border-slate-600 focus:ring-2 focus:ring-primary outline-none transition">
                 <select id="edit-class" class="w-full p-3 border rounded-lg dark:bg-slate-700 dark:border-slate-600 focus:ring-2 focus:ring-primary outline-none transition">
-                    <option value="11">Class 11</option>
-                    <option value="12">Class 12</option>
-                    <option value="12+">Class 12+ (Dropper)</option>
+                     <option value="11">Class 11</option>
+                     <option value="12">Class 12</option>
+                     <option value="12+">Class 12+ (Dropper)</option>
                 </select>
             </div>
             <div class="flex justify-end gap-3 mt-6">
@@ -516,20 +515,22 @@
     <div id="certificate-container" style="display: none; position: absolute; left: -9999px; top: -9999px; width: 1123px; height: 794px; background: white;">
         <div class="w-full h-full border-[20px] border-double border-indigo-900 p-12 relative flex flex-col items-center justify-center bg-slate-50" style="font-family: serif;">
             <img src="/pictures/neelaxmi.png" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; opacity: 0.04; filter: grayscale(100%); pointer-events: none;">
-
+            
             <div style="text-align: center; margin-bottom: 2rem; position: relative; z-index: 10;">
                 <img src="/pictures/neelaxmi.png" style="width: 100px; height: 100px; border-radius: 50%; border: 2px solid #312e81; margin: 0 auto 1rem auto; display: block;">
                 <h1 style="font-size: 3.5rem; color: #312e81; font-weight: bold; margin-bottom: 0.5rem; letter-spacing: 2px;">CERTIFICATE</h1>
                 <h2 style="font-family: sans-serif; font-size: 1.5rem; color: #d97706; font-weight: bold; letter-spacing: 5px; text-transform: uppercase;">Of Achievement</h2>
             </div>
-
+            
             <p style="font-size: 1.25rem; color: #475569; margin-bottom: 0.5rem; font-style: italic;">This is to certify that</p>
             <h3 id="cert-name" style="font-size: 2.5rem; font-weight: bold; color: #1e293b; border-bottom: 2px solid #cbd5e1; padding: 0 40px 10px 40px; margin-bottom: 2rem; display: inline-block;">Student Name</h3>
-
+            
             <p style="font-family: sans-serif; font-size: 1.1rem; line-height: 1.8; color: #334155; max-width: 800px; text-align: center; margin-bottom: 3rem;">
-                Has demonstrated exceptional dedication and consistency at <strong style="color: #312e81;">NEELAXMI & SAKSEN</strong>. They have successfully attempted <strong id="cert-questions">0</strong> questions across <strong id="cert-tests">0</strong>                assessment sessions, achieving a cumulative accuracy of <strong id="cert-accuracy">0%</strong>.
+                Has demonstrated exceptional dedication and consistency at <strong style="color: #312e81;">NEELAXMI & SAKSEN</strong>.
+                They have successfully attempted <strong id="cert-questions">0</strong> questions across <strong id="cert-tests">0</strong> assessment sessions,
+                achieving a cumulative accuracy of <strong id="cert-accuracy">0%</strong>.
             </p>
-
+            
             <div style="display: flex; justify-content: space-between; width: 100%; padding: 0 80px; margin-top: 2rem;">
                 <div style="text-align: center;">
                     <p id="cert-date" style="font-family: sans-serif; font-weight: bold; color: #475569; border-top: 1px solid #94a3b8; padding-top: 10px; min-width: 150px;">Date</p>
@@ -539,7 +540,7 @@
                     <p style="font-family: sans-serif; font-weight: bold; color: #475569; border-top: 1px solid #94a3b8; padding-top: 10px; min-width: 150px;">Signature</p>
                 </div>
             </div>
-
+            
             <div style="position: absolute; bottom: 20px; left: 0; width: 100%; text-align: center; font-size: 0.8rem; color: #94a3b8; font-family: sans-serif;">
                 Verified ID: <span id="cert-id">UNKNOWN</span> • Generated via Neelaxmi Quiz Center
             </div>
@@ -549,7 +550,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-
+    
     <script>
         // --- FIREBASE INIT ---
         const firebaseConfig = {
@@ -1443,5 +1444,4 @@
     </script>
     <script src="/js/head-loader.js"></script>
 </body>
-
 </html>

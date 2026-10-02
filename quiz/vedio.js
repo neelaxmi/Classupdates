@@ -1,4 +1,3 @@
-// video.js
 
 const videoEls = {
     view: document.getElementById('view-video'),
@@ -6,19 +5,14 @@ const videoEls = {
     notesArea: document.getElementById('video-notes-area'),
 };
 
-// Global Player State
+
 let player; 
 let updateInterval;
 let currentVideoId = '';
-const COMPANY_LOGO_URL = '/pictures/neelaxmi.png'; // Path to your logo
+const COMPANY_LOGO_URL = '/pictures/neelaxmi.png'; 
 
-/**
- * 1. Robust URL Parser
- * Handles Shorts, Live, Standard, and Time params (t=120s)
- */
 const parseVideoData = (url) => {
     try {
-        // Regex to catch ID and potential 't' (time) parameter
         const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*)(?:.*[?&]t=(\w+))?/;
         const match = url.match(regExp);
 
@@ -35,13 +29,9 @@ const parseVideoData = (url) => {
     }
 };
 
-/**
- * 2. Main Loader Function
- */
 const loadVideoSolution = async (quizId) => {
     console.group(`🎬 Video Solution: ${quizId}`);
     
-    // Reset Container
     videoEls.container.innerHTML = `
         <div class="flex flex-col items-center justify-center h-[400px] bg-slate-900 rounded-xl">
             <span class="loader w-12 h-12 border-4 border-t-red-600 border-slate-700 rounded-full animate-spin"></span>
@@ -49,7 +39,6 @@ const loadVideoSolution = async (quizId) => {
         </div>
     `;
 
-    // Ensure YouTube API is loaded
     await ensureYouTubeApiLoaded();
 
     try {
@@ -71,9 +60,6 @@ const loadVideoSolution = async (quizId) => {
     console.groupEnd();
 };
 
-/**
- * 3. Render the Custom Player UI
- */
 const renderCustomPlayer = (videoId, startTime = 0) => {
     videoEls.container.innerHTML = `
         <div id="video-wrapper" class="video-wrapper relative w-full pb-[56.25%] bg-black rounded-xl overflow-hidden shadow-2xl group paused">
@@ -119,7 +105,6 @@ const renderCustomPlayer = (videoId, startTime = 0) => {
         <div id="snapshots-container" class="mt-6 grid grid-cols-2 md:grid-cols-3 gap-4"></div>
     `;
 
-    // Initialize YouTube API Player
     player = new YT.Player('yt-player-placeholder', {
         videoId: videoId,
         playerVars: {
