@@ -109,30 +109,29 @@
                 </button>
                 
                 <div class="relative my-6">
-    <div class="absolute inset-0 flex items-center">
-        <span class="w-full border-t border-slate-300 dark:border-slate-600"></span>
-    </div>
-    <div class="relative flex justify-center text-xs uppercase">
-        <span class="bg-white dark:bg-slate-800 px-2 text-slate-500 font-bold">Or continue with</span>
-    </div>
-</div>
+                    <div class="absolute inset-0 flex items-center">
+                        <span class="w-full border-t border-slate-300 dark:border-slate-600"></span>
+                    </div>
+                    <div class="relative flex justify-center text-xs uppercase">
+                        <span class="bg-white dark:bg-slate-800 px-2 text-slate-500 font-bold">Or continue with</span>
+                    </div>
+                </div>
 
-<div class="grid grid-cols-2 gap-4">
-    <button id="google-login-btn" class="flex items-center justify-center gap-2 py-3 px-4 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm">
-        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5" alt="Google">
-        <span class="text-sm font-bold text-slate-700 dark:text-slate-200">Google</span>
-    </button>
+                <div class="grid grid-cols-2 gap-4">
+                    <button id="google-login-btn" class="flex items-center justify-center gap-2 py-3 px-4 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5" alt="Google">
+                        <span class="text-sm font-bold text-slate-700 dark:text-slate-200">Google</span>
+                    </button>
 
-<div class="telegram-login-wrapper" style="display: flex; justify-content: center; margin-top: 10px;">
-    <script async src="https://telegram.org/js/telegram-widget.js?22" 
-            data-telegram-login="Tokenudomainsiopbot" 
-            data-size="large" 
-            data-userpic="false"
-            data-onauth="onTelegramAuth(user)" 
-            data-request-access="write"></script>
-</div>
-
-</div>
+                    <div class="telegram-login-wrapper" style="display: flex; justify-content: center; margin-top: 10px;">
+                        <script async src="https://telegram.org/js/telegram-widget.js?22" 
+                                data-telegram-login="Tokenudomainsiopbot" 
+                                data-size="large" 
+                                data-userpic="false"
+                                data-onauth="onTelegramAuth(user)" 
+                                data-request-access="write"></script>
+                    </div>
+                </div>
 
                 <div class="text-center mt-6">
                     <button id="auth-toggle-mode" class="text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-indigo-600 transition">
@@ -178,21 +177,28 @@
     </script>
     
     <script>
-    firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-            console.log("User detected, checking destination...");
-            
-            const params = new URLSearchParams(window.location.search);
-            const quizId = params.get('uid');
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                console.log("User detected, checking destination...");
+                
+                const params = new URLSearchParams(window.location.search);
+                const quizId = params.get('uid');
 
-            if (!quizId) {
-                window.location.href = 'dashboard.html';
-            } else {
-                console.log("Quiz ID detected, staying on auth page to load quiz logic.");
+                if (!quizId) {
+                    const redirectUrl = sessionStorage.getItem('redirectUrl');
+                    if (redirectUrl) {
+                        sessionStorage.removeItem('redirectUrl');
+                        window.location.href = redirectUrl;
+                    } else {
+                        // Fallback to dashboard if no previous page was stored
+                        window.location.href = 'dashboard.html';
+                    }
+                } else {
+                    console.log("Quiz ID detected, staying on auth page to load quiz logic.");
+                }
             }
-        }
-    });
-</script>
-<script src="/js/head-loader.js"></script>
+        });
+    </script>
+    <script src="/js/head-loader.js"></script>
 </body>
 </html>
