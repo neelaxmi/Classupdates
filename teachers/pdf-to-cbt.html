@@ -931,11 +931,13 @@ dialog h2 {
       <p class="sub" style="margin: 0;">Turn a question PDF and its answer key into an interactive browser quiz instantly.</p>
     </div>
 
-    <section class="card" id="gate">
-      <h2>🔒 Sign in required</h2>
-      <p class="help" style="margin: 0;">Your Gemini key and imported quizzes are securely tied to your account. <a href="/quiz/auth.html" style="font-weight: 600;">Go to sign in</a>, then refresh or reopen this page.</p>
-    </section>
-
+<section class="card" id="gate">
+  <h2>🔒 Sign in required</h2>
+  <p class="help" style="margin: 0;">
+    Your Gemini key and imported quizzes are securely tied to your account.
+    <a href="/quiz/auth.html" style="font-weight: 600;" onclick="sessionStorage.setItem('redirectUrl', window.location.href);">Go to sign in</a>, then refresh or reopen this page.
+  </p>
+</section>
     <section class="card" id="policyGate" hidden>
       <h2>📄 Accept policy to continue</h2>
       <p class="help" style="margin: 0 0 16px;">Please read and accept our <a href="#" data-open="policyDlg" style="font-weight: 600;">terms & policy</a> before you create your first quiz.</p>
